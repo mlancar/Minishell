@@ -1,7 +1,7 @@
 #include "minishell.h"
 #include "pipex.h"
 
-int	init_lst(t_lst_cmd **cmd)
+int	init_lst(t_lst_cmd **argv)
 {
 	t_lst_cmd	*lst_new;
 
@@ -9,11 +9,11 @@ int	init_lst(t_lst_cmd **cmd)
 	lst_new = ft_lst_new_cmd();
 	if (!lst_new)
 		return (0);
-	ft_lst_add_back_cmd(lst_new, cmd);
+	ft_lst_add_back_cmd(lst_new, argv);
 	return (1);
 }
 
-void	test_pipex(t_lst_cmd *cmd, char **env)
+void	test_pipex(t_lst_cmd *argv, char **env)
 {
 	int	i;
 	int	y;
@@ -23,29 +23,29 @@ void	test_pipex(t_lst_cmd *cmd, char **env)
 	i = 1;
 	y = 1;
 	x = 1;
-	while (cmd != NULL)
+	while (argv != NULL)
 	{
 		printf("_______________________\n");
-		printf("Maillon numero %d cmd\n\n", i);
-		while (cmd->arg != NULL)
+		printf("Maillon numero %d argv\n\n", i);
+		while (argv->info != NULL)
 		{
 			printf("Maillon numero %d arg\n\n", y);
-			printf("name = %s\n", cmd->arg->name);
-			printf("arg = %s\n", cmd->arg->arg);
-			cmd->arg = cmd->arg->next;
+			printf("name = %s\n", argv->info->name);
+			printf("arg = %s\n", argv->info->arg);
+			argv->info = argv->info->next;
 			y++;
 		}
-		while (cmd->file != NULL)
+		while (argv->file != NULL)
 		{
 			printf("Maillon numero %d file\n\n", x);
-			printf("infile = %s\n", cmd->file->infile);
-			printf("outfile = %s\n", cmd->file->outfile);
-			printf("outfile_type = %d\n", cmd->file->outfile_type);
-			printf("limiter = %s\n", cmd->file->limiter);
-			cmd->file = cmd->file->next;
+			printf("infile = %s\n", argv->file->infile);
+			printf("outfile = %s\n", argv->file->outfile);
+			printf("outfile_type = %d\n", argv->file->outfile_type);
+			printf("limiter = %s\n", argv->file->limiter);
+			argv->file = argv->file->next;
 			x++;
 		}
-		cmd = cmd->next;
+		argv = argv->next;
 		i++;
 		y = 1;
 		x = 1;
@@ -54,18 +54,18 @@ void	test_pipex(t_lst_cmd *cmd, char **env)
 
 int	manage(char *prompt, char **env)
 {
-	t_lst_cmd	*cmd;
+	t_lst_cmd	*argv;
 
 	(void) env;
-	cmd = NULL;
-	if (!check_prompt(prompt, cmd))
+	argv = NULL;
+	if (!check_prompt(prompt, argv))
 		return (1);
-	if (!init_lst(&cmd))
+	if (!init_lst(&argv))
 		return (0);
-	if (!fill_lst(prompt, cmd))
+	if (!fill_lst(prompt, argv) && argv)
 		return (1);
-	//test_pipex(cmd, env);
-	main_pipex(cmd, env);
+	//test_pipex(argv, env);
+	main_pipex(argv, env);
 	//PAS OUBLIER DE FREE
 	return (1);
 }

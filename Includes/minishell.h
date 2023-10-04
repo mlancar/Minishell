@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 17:15:11 by auferran          #+#    #+#             */
-/*   Updated: 2023/10/03 17:11:43 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/04 16:57:46 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,14 @@
 # define INFILE 1
 # define OUTFILE 2
 
-typedef struct s_lst_arg
+typedef struct s_lst_info
 {
 	char				*name;
 	char				*arg;
-	struct s_lst_arg	*next;
-}						t_lst_arg;
+	int					fd_next;
+	int					fd_prev;
+	struct s_lst_info	*next;
+}						t_lst_info;
 
 typedef struct s_lst_file
 {
@@ -44,7 +46,7 @@ typedef struct s_lst_file
 
 typedef struct s_lst_cmd
 {
-	struct s_lst_arg	*arg;
+	struct s_lst_info	*info;
 	struct s_lst_file	*file;
 	struct s_lst_cmd	*next;
 }						t_lst_cmd;
@@ -72,7 +74,7 @@ typedef struct s_struct_fill
 {
 	int					i;
 	t_lst_cmd		*tmp;
-	t_lst_arg		*arg;
+	t_lst_info		*arg;
 	t_lst_file		*file;
 }						t_struct_fill;
 
@@ -95,17 +97,17 @@ int			fill_lst(char *prompt, t_lst_cmd *cmd);
 char		*dup_str(char *prompt, char c, int *i, int nb);
 
 t_lst_cmd	*ft_lst_new_cmd(void);
-t_lst_arg	*ft_lst_new_arg(void);
+t_lst_info	*ft_lst_new_arg(void);
 t_lst_file	*ft_lst_new_file(void);
-t_lst_cmd	*ft_lst_last_cmd(t_lst_cmd *cmd);
+t_lst_cmd	*ft_lst_last_cmd(t_lst_cmd *argv);
 void		ft_lst_add_back_cmd(t_lst_cmd *lst_new, t_lst_cmd **lst);\
-void		ft_lst_add_back_arg(t_lst_arg *arg_new, t_lst_arg **arg);
+void		ft_lst_add_back_arg(t_lst_info *arg_new, t_lst_info **arg);
 void		ft_lst_add_back_file(t_lst_file *file_new, t_lst_file **file);
 void		ft_lst_clear_cmd(t_lst_cmd **cmd);
-void		ft_lst_clear_arg(t_lst_arg **arg);
+void		ft_lst_clear_arg(t_lst_info **arg);
 void		ft_lst_clear_file(t_lst_file **file);
-int			ft_lst_size_cmd(t_lst_cmd *cmd);
-int			ft_lst_size_arg(t_lst_arg *arg);
+int			ft_lst_size_cmd(t_lst_cmd *argv);
+int			ft_lst_size_arg(t_lst_info *arg);
 
 int			in_quote(char *str, int c, int *in_s_quote, int *in_d_quote);
 

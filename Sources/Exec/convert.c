@@ -6,96 +6,94 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 19:05:44 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/03 14:13:35 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/04 20:13:38 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-char	**convert(t_lst_cmd *cmd)
+char	**convert(t_lst_cmd *argv)
 {
 	int	i;
-	char **cmd_name;
+	char **argv_name;
 	int	size_list;
-	t_lst_arg	*start;
+	t_lst_info	*start;
 
-	start = cmd->arg;
-	size_list = ft_lst_size_arg(cmd->arg) + 1;
+	dprintf(2, "ici %p\n", argv->info);
+	dprintf(2, "la %p\n", argv);
+
+	start = argv->info;
+	size_list = ft_lst_size_arg(argv->info) + 1;
 	//printf("size list = %d\n", size_list);
-	cmd_name = NULL;
+	argv_name = NULL;
 	i = 0;
-	cmd_name = malloc(sizeof(char*) * size_list);
-	if (!cmd_name)
+	argv_name = malloc(sizeof(char*) * size_list);
+	if (!argv_name)
 		return (NULL);
-	//printf("cmd->arg->arg = %s\n", cmd->arg->arg);
-	while (cmd->arg != NULL)
+	//printf("argv->arg->arg = %s\n", argv->arg->arg);
+	while (argv->info != NULL)
 	{
-		if (cmd->arg->name != NULL)
+		if (argv->info->name != NULL)
 		{
-			cmd_name[i] = cmd->arg->name;
-			// printf("cmd->arg->name = %s\n", cmd->arg->name);
-			// printf("cmd_name = %s\n", cmd_name[i]);
+			argv_name[i] = argv->info->name;
+			//printf("argv->info->name = %s\n", argv->info->name);
+			// printf("argv_name = %s\n", argv_name[i]);
 			i++;
 		}
-		else if (cmd->arg->arg != NULL)
+		else if (argv->info->arg != NULL)
 		{
-			cmd_name[i] = cmd->arg->arg;
-			// printf("cmd->arg->arg = %s\n", cmd->arg->arg);
-			// printf("cmd_arg = %s\n", cmd_name[i]);
+			argv_name[i] = argv->info->arg;
+			//printf("argv->info->arg = %s\n", argv->info->arg);
+			// printf("argv_arg = %s\n", argv_name[i]);
 			i++;
 		}
-		cmd->arg = cmd->arg->next;
+		argv->info = argv->info->next;
 	}
-	cmd_name[i] = NULL;
-	// i = 0;
-	// while (cmd_name[i])
-	// {
-	// 	//printf("cmd_name = %s\n", cmd_name[i]);
-	// 	i++;
-	// }
-	cmd->arg = start;
-
-	return (cmd_name);
+	argv_name[i] = NULL;
+	argv->info = start;
+	return (argv_name);
 }
 
-int	init_struct(t_pipex *pipex_cmd, t_lst_cmd *cmd)
+int	init_struct(t_pipex *cmd, t_lst_cmd *argv)
 {
-	pipex_cmd->infile = 0;
-	pipex_cmd->outfile = 1;
+	cmd->infile = 0;
+	cmd->outfile = 1;
 	//printf("cmd->file->limiter = %p\n", &cmd->file->limiter);
-	if (cmd->file)
+	if (argv->file)
 	{
-		pipex_cmd->if_here_doc = 1;
+		cmd->if_here_doc = 1;
 		
-		pipex_cmd->max = ft_lst_size_arg(cmd->arg);
-		if (cmd->file->outfile)
-			open_outfile(pipex_cmd, cmd->file->outfile);
+		cmd->max = ft_lst_size_arg(argv->info);
+		if (argv->file->outfile)
+			open_outfile(cmd, argv->file->outfile);
 		else
-			pipex_cmd->outfile = 1;
+			cmd->outfile = 1;
 	}
-	else if (cmd->file == NULL)
+	else if (argv->file == NULL)
 	{
-		pipex_cmd->if_here_doc = 0;
-		if (cmd->file)
+		cmd->if_here_doc = 0;
+		if (argv->file)
 		{
-			if (cmd->file->infile)
-				open_infile(pipex_cmd, cmd->file->infile);
-			else if (!cmd->file->infile)
-				pipex_cmd->infile = 0;
-			if (cmd->file->outfile)
-				open_outfile(pipex_cmd, cmd->file->outfile);
-			else if (!cmd->file->outfile)
-				pipex_cmd->outfile = 1;
+			if (argv->file->infile)
+				open_infile(cmd, argv->file->infile);
+			else if (!argv->file->infile)
+				cmd->infile = 0;
+			if (argv->file->outfile)
+				open_outfile(cmd, argv->file->outfile);
+			else if (!argv->file->outfile)
+				cmd->outfile = 1;
 		}
 	}
 	else
 		return (0);
-	pipex_cmd->max = list_size(cmd);
-	//printf("cmd max = %d\n", pipex_cmd->max);
-	pipex_cmd->index = 0;
-	pipex_cmd->index_pid = 1;
-	pipex_cmd->first = 1;
-	pipex_cmd->path = NULL;
-	pipex_cmd->last = pipex_cmd->max;
+	cmd->max = list_size(argv);
+	//argv->info->fd_next = -1;
+	//argv->info->fd_prev = -1;
+	//printf("cmd max = %d\n", cmd->max);
+	cmd->index = 0;
+	cmd->index_pid = 0;
+	cmd->first = 0;
+	cmd->path = NULL;
+	cmd->last = cmd->max;
 	return (1);
 }

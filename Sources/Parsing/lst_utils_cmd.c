@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lst_utils_cmd.c                                    :+:      :+:    :+:   */
+/*   lst_utils_argv.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,66 +12,66 @@
 
 #include "minishell.h"
 
-int	ft_lst_size_cmd(t_lst_cmd *cmd)
+int	ft_lst_size_cmd(t_lst_cmd *argv)
 {
 	int			i;
 
-	if (!cmd)
+	if (!argv)
 		return (0);
 	i = 0;
-	while (cmd != NULL)
+	while (argv != NULL)
 	{
-		cmd = cmd->next;
+		argv = argv->next;
 		i++;
 	}
 	return (i);
 }
 
-void	ft_lst_clear_cmd(t_lst_cmd **cmd)
+void	ft_lst_clear_cmd(t_lst_cmd **argv)
 {
 	int			i;
 	int			size;
 	t_lst_cmd	*tmp;
 
-	if (!(*cmd))
+	if (!(*argv))
 		return ;
 	i = 0;
-	size = ft_lst_size_cmd(*cmd);
+	size = ft_lst_size_cmd(*argv);
 	while (i < size)
 	{
-		tmp = (*cmd)->next;
-		free(*cmd);
-		*cmd = tmp;
+		tmp = (*argv)->next;
+		free(*argv);
+		*argv = tmp;
 		i++;
 	}
-	*cmd = NULL;
+	*argv = NULL;
 }
 
-t_lst_cmd	*ft_lst_last_cmd(t_lst_cmd *cmd)
+t_lst_cmd	*ft_lst_last_cmd(t_lst_cmd *argv)
 {
 	int	i;
 	int	size;
 
 	i = 0;
-	size = ft_lst_size_cmd(cmd);
+	size = ft_lst_size_cmd(argv);
 	while (i < size - 1)
 	{
-		cmd = cmd->next;
+		argv = argv->next;
 		i++;
 	}
-	return (cmd);
+	return (argv);
 }
 
-void	ft_lst_add_back_cmd(t_lst_cmd *lst_new, t_lst_cmd **cmd)
+void	ft_lst_add_back_cmd(t_lst_cmd *lst_new, t_lst_cmd **argv)
 {
 	t_lst_cmd	*tmp;
 
-	if (!(*cmd))
+	if (!(*argv))
 	{
-		*cmd = lst_new;
+		*argv = lst_new;
 		return ;
 	}
-	tmp = ft_lst_last_cmd(*cmd);
+	tmp = ft_lst_last_cmd(*argv);
 	tmp->next = lst_new;
 }
 

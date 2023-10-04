@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 21:28:45 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/03 17:16:52 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/04 17:34:38 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,61 +19,63 @@ void	free_tab(char **tab)
 	i = 0;
 	if (!tab)
 		return ;
+	
 	while (tab[i])
 	{
+		//printf("tab = %p\n", &tab);
 		free(tab[i]);
 		i++;
 	}
 	free(tab);
 }
 
-void	free_and_exit(char *str, t_pipex *pipex_cmd)
+void	free_and_exit(char *str, t_pipex *cmd)
 {
-	free_tab(pipex_cmd->name);
-	free(pipex_cmd->path);
-	free(pipex_cmd->pid);
+	free_tab(cmd->name);
+	free(cmd->path);
+	free(cmd->pid);
 	perror(str);
 	exit(EXIT_FAILURE);
 }
 
-void	error_access_cmd(t_pipex *pipex_cmd)
+void	error_access_cmd(t_pipex *cmd)
 {
-	ft_putstr_fd(pipex_cmd->name[pipex_cmd->index], 2);
+	ft_putstr_fd(cmd->name[cmd->index], 2);
 	write(2, ": command not found\n", 20);
-	error_cmd(127, pipex_cmd);
+	error_cmd(127, cmd);
 }
 
-void	error_cmd(int return_value, t_pipex *pipex_cmd)
+void	error_cmd(int return_value, t_pipex *cmd)
 {
 	//printf("error exec\n");
-	free_tab(pipex_cmd->name);
-	free(pipex_cmd->path);
-	free(pipex_cmd->pid);
-	check_close(pipex_cmd->fd[0]);
-	check_close(pipex_cmd->fd[1]);
-	check_close(pipex_cmd->outfile);
-	if (pipex_cmd->if_here_doc == 0)
-		check_close(pipex_cmd->infile);
+	free_tab(cmd->name);
+	free(cmd->path);
+	free(cmd->pid);
+	check_close(cmd->fd[0]);
+	check_close(cmd->fd[1]);
+	check_close(cmd->outfile);
+	if (cmd->if_here_doc == 0)
+		check_close(cmd->infile);
 	else
-		check_close(pipex_cmd->fd_tmp);
-	if ((pipex_cmd->index_pid != pipex_cmd->first) && (pipex_cmd->index_pid != pipex_cmd->last))
-		check_close(pipex_cmd->previous_fd);
+		check_close(cmd->fd_tmp);
+	if ((cmd->index_pid != cmd->first) && (cmd->index_pid != cmd->last))
+		check_close(cmd->previous_fd);
 	exit(return_value);
 }
 
-void	error_empty_string(t_pipex *pipex_cmd)
+void	error_empty_string(t_pipex *cmd)
 {
-	ft_putstr_fd(pipex_cmd->argv[pipex_cmd->index], 2);
+	ft_putstr_fd(cmd->argv[cmd->index], 2);
 	write(2, ": command not found\n", 20);
-	free(pipex_cmd->pid);
-	check_close(pipex_cmd->fd[0]);
-	check_close(pipex_cmd->fd[1]);
-	check_close(pipex_cmd->outfile);
-	if (pipex_cmd->if_here_doc == 0)
-		check_close(pipex_cmd->infile);
+	free(cmd->pid);
+	check_close(cmd->fd[0]);
+	check_close(cmd->fd[1]);
+	check_close(cmd->outfile);
+	if (cmd->if_here_doc == 0)
+		check_close(cmd->infile);
 	else
-		check_close(pipex_cmd->fd_tmp);
-	if ((pipex_cmd->index_pid != pipex_cmd->first) && (pipex_cmd->index_pid != pipex_cmd->last))
-		check_close(pipex_cmd->previous_fd);
+		check_close(cmd->fd_tmp);
+	if ((cmd->index_pid != cmd->first) && (cmd->index_pid != cmd->last))
+		check_close(cmd->previous_fd);
 	exit(127);
 }

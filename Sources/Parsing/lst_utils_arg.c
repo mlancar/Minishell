@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   lst_utils_arg.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
+/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 15:02:15 by auferran          #+#    #+#             */
-/*   Updated: 2023/09/25 15:04:52 by auferran         ###   ########.fr       */
+/*   Updated: 2023/10/04 15:41:40 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_lst_size_arg(t_lst_arg *arg)
+int	ft_lst_size_arg(t_lst_info *arg)
 {
 	int			i;
 
@@ -27,11 +27,11 @@ int	ft_lst_size_arg(t_lst_arg *arg)
 	return (i);
 }
 
-void	ft_lst_clear_arg(t_lst_arg **arg)
+void	ft_lst_clear_arg(t_lst_info **arg)
 {
 	int			i;
 	int			size;
-	t_lst_arg	*tmp;
+	t_lst_info	*tmp;
 
 	if (!(*arg))
 		return ;
@@ -47,7 +47,7 @@ void	ft_lst_clear_arg(t_lst_arg **arg)
 	*arg = NULL;
 }
 
-t_lst_arg	*ft_lst_last_arg(t_lst_arg *arg)
+t_lst_info	*ft_lst_last_arg(t_lst_info *arg)
 {
 	int	i;
 	int	size;
@@ -62,9 +62,9 @@ t_lst_arg	*ft_lst_last_arg(t_lst_arg *arg)
 	return (arg);
 }
 
-void	ft_lst_add_back_arg(t_lst_arg *arg_new, t_lst_arg **arg)
+void	ft_lst_add_back_arg(t_lst_info *arg_new, t_lst_info **arg)
 {
-	t_lst_arg	*tmp;
+	t_lst_info	*tmp;
 
 	if (!(*arg))
 	{
@@ -75,13 +75,13 @@ void	ft_lst_add_back_arg(t_lst_arg *arg_new, t_lst_arg **arg)
 	tmp->next = arg_new;
 }
 
-t_lst_arg	*ft_lst_new_arg(void)
+t_lst_info	*ft_lst_new_arg(void)
 {
-	t_lst_arg	*lst_new;
+	t_lst_info	*lst_new;
 
-	lst_new = malloc(sizeof(t_lst_arg));
+	lst_new = malloc(sizeof(t_lst_info));
 	if (!lst_new)
 		return (error("MALLOC FAILURE\n"), NULL);
-	ft_memset(lst_new, 0, sizeof(t_lst_arg));
+	ft_memset(lst_new, 0, sizeof(t_lst_info));
 	return (lst_new);
 }

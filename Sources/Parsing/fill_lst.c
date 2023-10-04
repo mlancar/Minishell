@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 15:02:38 by auferran          #+#    #+#             */
-/*   Updated: 2023/10/03 17:11:05 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/04 19:48:56 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,9 @@ int	fill_file(char *prompt, t_lst_file	**file, int *i)
 	return (1);
 }
 
-int	fill_arg(char *prompt, t_lst_arg **arg, int *i)
+int	fill_arg(char *prompt, t_lst_info **arg, int *i)
 {
-	t_lst_arg	*new;
+	t_lst_info	*new;
 
 	new = ft_lst_new_arg();
 	if (!new)
@@ -57,7 +57,7 @@ int	fill_arg(char *prompt, t_lst_arg **arg, int *i)
 	return (1);
 }
 
-int	new_cmd(t_lst_arg **arg, t_lst_file **file, t_lst_cmd **cmd, int *i)
+int	new_cmd(t_lst_info **arg, t_lst_file **file, t_lst_cmd **argv, int *i)
 {
 	t_lst_cmd	*new;
 
@@ -66,14 +66,14 @@ int	new_cmd(t_lst_arg **arg, t_lst_file **file, t_lst_cmd **cmd, int *i)
 	new = ft_lst_new_cmd();
 	if (!new)
 		return (0);
-	ft_lst_add_back_cmd(new, cmd);
+	ft_lst_add_back_cmd(new, argv);
 	*arg = NULL;
 	*file = NULL;
 	(*i)++;
 	return (1);
 }
 
-int	fill_lst(char *prompt, t_lst_cmd *cmd)
+int	fill_lst(char *prompt, t_lst_cmd *argv)
 {
 	t_struct_fill	s;
 
@@ -83,7 +83,7 @@ int	fill_lst(char *prompt, t_lst_cmd *cmd)
 		while (its_white_space(prompt[s.i]))
 			s.i++;
 		if (prompt[s.i] == '|')
-			if (!new_cmd(&s.arg, &s.file, &cmd, &s.i))
+			if (!new_cmd(&s.arg, &s.file, &argv, &s.i))
 				return (0);
 		if (prompt[s.i] && prompt[s.i] != '|' && !its_file(prompt[s.i]))
 		{
@@ -93,8 +93,8 @@ int	fill_lst(char *prompt, t_lst_cmd *cmd)
 		else if (prompt[s.i] && prompt[s.i] != '|')
 			if (!fill_file(prompt, &s.file, &s.i))
 				return (0);
-		s.tmp = ft_lst_last_cmd(cmd);
-		s.tmp->arg = s.arg;
+		s.tmp = ft_lst_last_cmd(argv);
+		s.tmp->info = s.arg;
 		s.tmp->file = s.file;
 	}
 	return (1);

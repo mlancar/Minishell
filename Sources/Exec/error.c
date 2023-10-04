@@ -1,19 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_all.c                                         :+:      :+:    :+:   */
+/*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/16 17:16:04 by auferran          #+#    #+#             */
-/*   Updated: 2023/10/04 15:51:15 by malancar         ###   ########.fr       */
+/*   Created: 2023/09/16 17:16:00 by auferran          #+#    #+#             */
+/*   Updated: 2023/09/16 20:04:46 by auferran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_all(char **prompt, t_lst_cmd **argv)
+void	error(char *str)
 {
-	free(prompt);
-	free(argv);
+	write(2, str, ft_strlen(str));
 }
