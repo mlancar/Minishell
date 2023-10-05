@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 15:02:38 by auferran          #+#    #+#             */
-/*   Updated: 2023/10/04 19:48:56 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/05 14:49:39 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,42 +38,42 @@ int	fill_file(char *prompt, t_lst_file	**file, int *i)
 	return (1);
 }
 
-int	fill_arg(char *prompt, t_lst_info **arg, int *i)
+int	fill_info(char *prompt, t_lst_info **info, int *i)
 {
 	t_lst_info	*new;
 
-	new = ft_lst_new_arg();
+	new = ft_lst_new_info();
 	if (!new)
 		return (0);
-	if (ft_lst_size_arg(*arg) == 0)
+	if (ft_lst_size_info(*info) == 0)
 		if ((new->name = dup_str(prompt, prompt[*i], i, 0)) == NULL)
 			return (0);
-	if (ft_lst_size_arg(*arg) > 0)
+	if (ft_lst_size_info(*info) > 0)
 	{
 		if ((new->arg = dup_str(prompt, prompt[*i], i, 0)) == NULL)
 			return (0);
 	}
-	ft_lst_add_back_arg(new, arg);
+	ft_lst_add_back_info(new, info);
 	return (1);
 }
 
-int	new_cmd(t_lst_info **arg, t_lst_file **file, t_lst_cmd **argv, int *i)
+int	new_argv(t_lst_info **info, t_lst_file **file, t_lst_argv **argv, int *i)
 {
-	t_lst_cmd	*new;
+	t_lst_argv	*new;
 
-	if (!(*arg) && !(*file))
+	if (!(*info) && !(*file))
 		return (error("minishell: syntax error near unexpected token\n"), 0);
-	new = ft_lst_new_cmd();
+	new = ft_lst_new_argv();
 	if (!new)
 		return (0);
-	ft_lst_add_back_cmd(new, argv);
-	*arg = NULL;
+	ft_lst_add_back_argv(new, argv);
+	*info = NULL;
 	*file = NULL;
 	(*i)++;
 	return (1);
 }
 
-int	fill_lst(char *prompt, t_lst_cmd *argv)
+int	fill_lst(char *prompt, t_lst_argv *argv)
 {
 	t_struct_fill	s;
 
@@ -83,18 +83,18 @@ int	fill_lst(char *prompt, t_lst_cmd *argv)
 		while (its_white_space(prompt[s.i]))
 			s.i++;
 		if (prompt[s.i] == '|')
-			if (!new_cmd(&s.arg, &s.file, &argv, &s.i))
+			if (!new_argv(&s.info, &s.file, &argv, &s.i))
 				return (0);
 		if (prompt[s.i] && prompt[s.i] != '|' && !its_file(prompt[s.i]))
 		{
-			if (!fill_arg(prompt, &s.arg, &s.i))
+			if (!fill_info(prompt, &s.info, &s.i))
 				return (0);
 		}
 		else if (prompt[s.i] && prompt[s.i] != '|')
 			if (!fill_file(prompt, &s.file, &s.i))
 				return (0);
-		s.tmp = ft_lst_last_cmd(argv);
-		s.tmp->info = s.arg;
+		s.tmp = ft_lst_last_argv(argv);
+		s.tmp->info = s.info;
 		s.tmp->file = s.file;
 	}
 	return (1);

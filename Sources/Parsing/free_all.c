@@ -6,13 +6,13 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 17:16:04 by auferran          #+#    #+#             */
-/*   Updated: 2023/10/04 15:51:15 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/05 14:27:25 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_all(char **prompt, t_lst_cmd **argv)
+void	free_all(char **prompt, t_lst_argv **argv)
 {
 	free(prompt);
 	free(argv);

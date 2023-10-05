@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 13:28:37 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/04 17:04:22 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/05 17:36:02 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	check_close(int fd)
 		close(fd);
 }
 
-int	check_slash_and_access(t_lst_cmd *argv, t_pipex *cmd)
+int	check_slash_and_access(t_lst_argv *argv, t_cmd *cmd)
 {
 	//printf("argv->info->name %p %s\n", &argv->info->name, argv->info->name);
 	if (ft_strchr(argv->info->name, '/'))
@@ -33,7 +33,7 @@ int	check_slash_and_access(t_lst_cmd *argv, t_pipex *cmd)
 	return (0);
 }
 
-int	check_command(t_lst_cmd *argv, t_pipex *cmd)
+int	check_command(t_lst_argv *argv, t_cmd *cmd)
 {
 	int		i;
 	int		find_path;
@@ -42,8 +42,8 @@ int	check_command(t_lst_cmd *argv, t_pipex *cmd)
 	i = 0;
 	find_path = 0;
 	
-	if (argv->info->name[0] == '\0')
-		error_empty_string(cmd);
+	// if (cmd->argv[cmd->index][0] == '\0')
+	// 	error_empty_string(cmd);
 	//cmd->name = ft_split
 	// while (cmd->name[i])
 	// {
@@ -69,7 +69,7 @@ int	check_command(t_lst_cmd *argv, t_pipex *cmd)
 	return (1);
 }
 
-int	check_access_with_path(t_pipex *cmd, char ***split_path)
+int	check_access_with_path(t_cmd *cmd, char ***split_path)
 {
 	if (access(cmd->path, X_OK) == 0)
 	{
@@ -79,7 +79,7 @@ int	check_access_with_path(t_pipex *cmd, char ***split_path)
 	return (0);
 }
 
-int	check_access(t_lst_cmd *argv, t_pipex *cmd, char *path)
+int	check_access(t_lst_argv *argv, t_cmd *cmd, char *path)
 {
 	char	**split_path;
 	int		i;

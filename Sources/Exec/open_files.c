@@ -6,36 +6,37 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/29 12:13:28 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/04 15:59:37 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/05 18:12:39 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	open_infile(t_pipex *cmd, char *first_arg)
+void	open_infile(t_lst_argv *argv, t_cmd *cmd)
 {
-	cmd->infile = open(first_arg, O_RDONLY);
-	if (cmd->infile == -1)
+	cmd->files.in = open(argv->file->infile, O_RDONLY);
+	if (cmd->files.in == -1)
 		perror("open");
 }
 
-void	open_outfile(t_pipex *cmd, char *last_arg)
+void	open_outfile(t_lst_argv *argv, t_cmd *cmd)
 {
 	if (cmd->if_here_doc == 1)
 	{
-		cmd->outfile = open(last_arg, O_RDWR | O_APPEND | O_CREAT, S_IRUSR
-				| S_IWUSR | S_IRGRP | S_IROTH);
-		if (cmd->outfile == -1)
-		{
-			perror("open");
-			exit(EXIT_FAILURE);
-		}
+		// cmd->files.out = open(argv->file->outfile, O_RDWR | O_APPEND | O_CREAT, S_IRUSR
+		// 		| S_IWUSR | S_IRGRP | S_IROTH);
+		// if (cmd->files.out == -1)
+		// {
+		// 	perror("open");
+		// 	exit(EXIT_FAILURE);
+		// }
+		printf("here_doc\n");
 	}
 	else
 	{
-		cmd->outfile = open(last_arg, O_RDWR | O_TRUNC | O_CREAT, S_IRUSR
+		cmd->files.out = open(argv->file->outfile, O_RDWR | O_TRUNC | O_CREAT, S_IRUSR
 				| S_IWUSR | S_IRGRP | S_IROTH);
-		if (cmd->outfile == -1)
+		if (cmd->files.out == -1)
 		{
 			perror("open");
 			exit(EXIT_FAILURE);

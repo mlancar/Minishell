@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   old_pipex.c                                        :+:      :+:    :+:   */
+/*   null.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 15:17:08 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/05 17:38:25 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/05 17:38:13 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	dup_fd(t_cmd *cmd, int fd_in, int fd_out, int fd_other)
 	}
 }
 
-void	exec_cmd(t_lst_argv *argv, t_cmd *cmd, int fd_in, int fd_out, int fd_other)
+void	exec_cmds(t_lst_argv *argv, t_cmd *cmd, int fd_in, int fd_out, int fd_other)
 {
 	cmd->pid[cmd->index_pid] = fork();
 	if (cmd->pid[cmd->index_pid] < 0)
@@ -63,7 +63,15 @@ void	exec_cmd(t_lst_argv *argv, t_cmd *cmd, int fd_in, int fd_out, int fd_other)
 	{
 		if (check_command(argv, cmd) == 0)
 			error_access_cmd(cmd);
-		dup_fd(cmd, fd_in, fd_out, fd_other);
+		if (cmd->index_pid == cmd->first)
+			dup_first_cmd(argv, cmd);
+		else if (cmd->index_pid == cmd->last)
+			last_cmd(argv, cmd);
+		else if ((cmd->index_pid != cmd->first)
+			&& (cmd->index_pid != cmd->last))
+		{
+			middle_cmd(argv, cmd);
+		}
 		//dprintf(2, "ici fd_in = %d, fd_out = %d, fd_other = %d\n", fd_in, fd_out, fd_other);
 		if (execve(cmd->path, cmd->argv, cmd->envp))
 			error_cmd(0, cmd);
@@ -118,13 +126,7 @@ void	pipex(t_lst_argv *argv, t_cmd *cmd)
 		//dprintf(2, "%p\n", argv->info);
 		cmd->argv = convert(argv);
 		//dprintf(2, "%p\n", argv->info);
-		if (cmd->index_pid == cmd->first)
-			first_cmd(argv, cmd);
-		else if (cmd->index_pid == cmd->last)
-			exec_cmd(argv, cmd, cmd->fd[0], cmd->files->out, cmd->fd[1]);
-		else if ((cmd->index_pid != cmd->first)
-			&& (cmd->index_pid != cmd->last))
-		{
+		
 			//printf("MIDDLE\n");
 			cmd->previous_fd = cmd->fd[0];
 			if (pipe(cmd->fd) == -1)
@@ -137,3 +139,4 @@ void	pipex(t_lst_argv *argv, t_cmd *cmd)
 			argv = argv->next;
 	}
 }
+

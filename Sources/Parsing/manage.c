@@ -1,19 +1,19 @@
 #include "minishell.h"
 #include "pipex.h"
 
-int	init_lst(t_lst_cmd **argv)
+int	init_lst(t_lst_argv **argv)
 {
-	t_lst_cmd	*lst_new;
+	t_lst_argv	*lst_new;
 
 	lst_new = NULL;
-	lst_new = ft_lst_new_cmd();
+	lst_new = ft_lst_new_argv();
 	if (!lst_new)
 		return (0);
-	ft_lst_add_back_cmd(lst_new, argv);
+	ft_lst_add_back_argv(lst_new, argv);
 	return (1);
 }
 
-void	test_pipex(t_lst_cmd *argv, char **env)
+void	test_cmd(t_lst_argv *argv, char **env)
 {
 	int	i;
 	int	y;
@@ -29,9 +29,9 @@ void	test_pipex(t_lst_cmd *argv, char **env)
 		printf("Maillon numero %d argv\n\n", i);
 		while (argv->info != NULL)
 		{
-			printf("Maillon numero %d arg\n\n", y);
+			printf("Maillon numero %d info\n\n", y);
 			printf("name = %s\n", argv->info->name);
-			printf("arg = %s\n", argv->info->arg);
+			printf("info = %s\n", argv->info->arg);
 			argv->info = argv->info->next;
 			y++;
 		}
@@ -54,7 +54,7 @@ void	test_pipex(t_lst_cmd *argv, char **env)
 
 int	manage(char *prompt, char **env)
 {
-	t_lst_cmd	*argv;
+	t_lst_argv	*argv;
 
 	(void) env;
 	argv = NULL;
@@ -62,9 +62,9 @@ int	manage(char *prompt, char **env)
 		return (1);
 	if (!init_lst(&argv))
 		return (0);
-	if (!fill_lst(prompt, argv) && argv)
+	if (!fill_lst(prompt, argv))
 		return (1);
-	//test_pipex(argv, env);
+	//test_cmd(argv, env);
 	main_pipex(argv, env);
 	//PAS OUBLIER DE FREE
 	return (1);

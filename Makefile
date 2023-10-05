@@ -6,7 +6,7 @@
 #    By: malancar <malancar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/03 19:06:48 by malancar          #+#    #+#              #
-#    Updated: 2023/10/04 18:36:19 by malancar         ###   ########.fr        #
+#    Updated: 2023/10/05 18:52:42 by malancar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,8 +35,9 @@ SOURCES_PARSING =	main.c				\
 					free_all.c
 					
 SOURCES_EXEC =		check.c								\
+					init.c								\
 					convert.c							\
-		  			old_pipex.c								\
+		  			exec_cmds.c							\
 		  			pipex_utils.c						\
 		  			pipex_utils_2.c						\
 		  			ft_split.c							\
