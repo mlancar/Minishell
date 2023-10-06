@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 14:53:52 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/05 18:17:55 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/06 15:25:21 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,10 @@ void	get_rand_name(t_cmd *cmd)
 	int	i;
 
 	i = 0;
-	cmd->files.fd_tmp = open("/dev/random", O_RDONLY);
-	if (cmd->files.fd_tmp == -1)
+	cmd->fd.tmp = open("/dev/random", O_RDONLY);
+	if (cmd->fd.tmp == -1)
 		free_and_exit("open", cmd);
-	if (read(cmd->files.fd_tmp, cmd->files.rand_name, 6) == -1)
+	if (read(cmd->fd.tmp, cmd->files.rand_name, 6) == -1)
 		free_and_exit("open", cmd);
 	cmd->files.rand_name[6] = '\0';
 	i = 0;
@@ -50,10 +50,10 @@ void	get_rand_name(t_cmd *cmd)
 		cmd->files.rand_name[i] = cmd->files.rand_name[i] + 97;
 		i++;
 	}
-	close(cmd->files.fd_tmp);
-	cmd->files.fd_tmp = open(cmd->files.rand_name, O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR
+	close(cmd->fd.tmp);
+	cmd->fd.tmp = open(cmd->files.rand_name, O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR
 			| S_IWUSR | S_IRGRP);
-	if (cmd->files.fd_tmp == -1)
+	if (cmd->fd.tmp == -1)
 		free_and_exit("open", cmd);
 }
 
@@ -72,7 +72,7 @@ void	fill_here_doc(char **read_line, char *limiter, t_cmd *cmd)
 	if (*read_line == NULL)
 		write(2, "\nwarning: here-doc delimited by end-of-file\n", 45);
 	if (is_limiter(*read_line, limiter) != 0)
-		ft_putstr_fd(*read_line, cmd->files.fd_tmp);
+		ft_putstr_fd(*read_line, cmd->fd.tmp);
 }
 
 void	open_and_fill_here_doc(t_cmd *cmd, char *limiter)
@@ -88,14 +88,14 @@ void	open_and_fill_here_doc(t_cmd *cmd, char *limiter)
 	}
 	get_next_line(0, 1);
 	free(read_line);
-	close(cmd->files.fd_tmp);
+	close(cmd->fd.tmp);
 }
 
 void	here_doc(char *limiter, t_cmd *cmd)
 {
-	cmd->files.fd_tmp = 0;
+	cmd->fd.tmp = 0;
 	open_and_fill_here_doc(cmd, limiter);
-	cmd->files.fd_tmp = open(cmd->files.rand_name, O_RDONLY);
-	if (cmd->files.fd_tmp == -1)
+	cmd->fd.tmp = open(cmd->files.rand_name, O_RDONLY);
+	if (cmd->fd.tmp == -1)
 		free_and_exit("open", cmd);
 }

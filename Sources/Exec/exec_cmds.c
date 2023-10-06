@@ -12,136 +12,141 @@
 
 #include "pipex.h"
 
-void	last_cmd(t_lst_argv *argv, t_cmd *cmd, int fd_in, int fd_out, int fd_other)
+void	last_cmd(t_lst_argv *argv, t_cmd *cmd)
 {
-	dprintf(2, "last cmd : fd_in = %d, fd_out = %d, fd_other = %d\n", fd_in, fd_out, fd_other);
-	(void)fd_out;
+	printf("\nlast cmd : read = %d, write = %d, close = %d\n", cmd->fd.read, cmd->fd.write, cmd->fd.close);
 	if (cmd->pid[cmd->index_pid] == 0)
 	{
-		if (check_command(argv, cmd) == 0)
-			error_access_cmd(cmd);	
-		if (dup2(fd_in, 1) != -1)
+		if ((dup2(cmd->fd.read, 0) != -1) || (dup2(cmd->fd.write, 1) != -1))
 		{
 			if (check_command(argv, cmd) == 0)
 				error_access_cmd(cmd);
-			check_close(fd_in);
-			check_close(fd_other);
+			check_close(cmd->fd.read);
+			check_close(cmd->fd.close);
 			if (execve(cmd->path, cmd->argv, cmd->envp))
 				error_cmd(0, cmd);
 		}
 	}
 	else
 	{
-		check_close(fd_in);
-		check_close(fd_other);
+		check_close(cmd->fd.read);
+		check_close(cmd->fd.close);
 		
 	}
 }
 
-void	middle_cmd(t_lst_argv *argv, t_cmd *cmd, int fd_in, int fd_out, int fd_other)
+void	middle_cmd(t_lst_argv *argv, t_cmd *cmd)
 {
-
-	(void)fd_in;
-	if (cmd->pid[cmd->index_pid] == 0)
+	printf("\nmiddle cmd : read = %d, write = %d, close = %d\n", cmd->fd.read, cmd->fd.write, cmd->fd.close);
+		if (cmd->pid[cmd->index_pid] == 0)
 	{
-		if ((dup2(fd_out, 1) != -1) || (dup2(fd_other, 0) != -1))
+		if ((dup2(cmd->fd.read, 0) != -1) || (dup2(cmd->fd.write, 1) != -1))
 		{
 			if (check_command(argv, cmd) == 0)
 				error_access_cmd(cmd);
-			check_close(fd_out);
-			check_close(fd_other);
+			check_close(cmd->fd.write);
+			check_close(cmd->fd.read);
 			if (execve(cmd->path, cmd->argv, cmd->envp))
 				error_cmd(0, cmd);
 		}
 	}
 	else
 	{
-		check_close(fd_out);
-		check_close(fd_other);
+		check_close(cmd->fd.write);
+		check_close(cmd->fd.read);
 	}
 }
 
-void	first_cmd(t_lst_argv *argv, t_cmd *cmd, int fd_in, int fd_out, int fd_other)
+void	first_cmd(t_lst_argv *argv, t_cmd *cmd)
 {
-	dprintf(2, "first cmd : fd_in = %d, fd_out = %d, fd_other = %d\n", fd_in, fd_out, fd_other);
+	printf("\nfirst cmd : read = %d, write = %d, close = %d\n", cmd->fd.read, cmd->fd.write, cmd->fd.close);
 	if (cmd->pid[cmd->index_pid] == 0)
 	{
-		if (check_command(argv, cmd) == 0)
-			error_access_cmd(cmd);
-		if ((dup2(fd_out, 1) != -1) || (dup2(fd_in, 0) != -1))
+		if ((dup2(cmd->fd.read, 0) != -1) || (dup2(cmd->fd.write, 1) != -1))
 		{
 			if (check_command(argv, cmd) == 0)
 				error_access_cmd(cmd);
-			check_close(fd_other);
-			check_close(fd_out);
+			check_close(cmd->fd.close);
+			check_close(cmd->fd.write);
 			if (execve(cmd->path, cmd->argv, cmd->envp))
 				error_cmd(0, cmd);
 		}
 	}	
 	else
 	{
-		check_close(fd_other);
-		check_close(fd_out);
+		check_close(cmd->fd.close);
+		check_close(cmd->fd.write);
 	}
 }
 
-void	one_cmd(t_lst_argv *argv, t_cmd *cmd, int fd_in, int fd_out, int fd_other)
+void	one_cmd(t_lst_argv *argv, t_cmd *cmd)
 {
+	printf("\n one cmd : read = %d, write = %d, close = %d\n", cmd->fd.read, cmd->fd.write, cmd->fd.close);
 	if (cmd->pid[cmd->index_pid] == 0)
 	{
 		if (check_command(argv, cmd) == 0)
 			error_access_cmd(cmd);
-		if (dup2(fd_in, 0) != -1)
+		if (dup2(cmd->fd.read, 0) != -1)
 		{
 			if (check_command(argv, cmd) == 0)
 				error_access_cmd(cmd);
-			check_close(fd_other);
-			check_close(fd_out);
 			if (execve(cmd->path, cmd->argv, cmd->envp))
 				error_cmd(0, cmd);
-		}
-		else
-		{
-			check_close(fd_out);
-			check_close(fd_other);
 		}
 	}
 }
 
 void	exec_cmds(t_lst_argv *argv, t_cmd *cmd)
 {
+	//printf("index pid = %d, cmd nbr = %d\n", cmd->index_pid, cmd->nbr - 1);
 	cmd->pid[cmd->index_pid] = fork();
 	if (cmd->pid[cmd->index_pid] < 0)
 		free_and_exit("fork", cmd);
-	if (cmd->index_pid == cmd->nbr - 1)
-		one_cmd(argv, cmd, cmd->files.in, cmd->fd[1], cmd->fd[0]);
 	if (cmd->index_pid == cmd->first)
-		first_cmd(argv, cmd, cmd->files.in, cmd->fd[1], cmd->fd[0]);
+		first_cmd(argv, cmd);
 	else if (cmd->index_pid == cmd->last)
-		last_cmd(argv, cmd, cmd->fd[0], cmd->files.out, cmd->fd[1]);
+		last_cmd(argv, cmd);
 	else if ((cmd->index_pid != cmd->first)
 		&& (cmd->index_pid != cmd->last))
 	{
-		cmd->previous_fd = cmd->fd[0];
-		if (pipe(cmd->fd) == -1)
+		if (pipe(cmd->fd.pipe) == -1)
 			free_and_exit("pipe", cmd);
-		middle_cmd(argv, cmd, cmd->previous_fd, cmd->fd[1], cmd->fd[0]);
+		middle_cmd(argv, cmd);
 	}
+}
+
+void	exec_one_cmd(t_lst_argv *argv, t_cmd *cmd)
+{
+	cmd->argv = convert_list(argv);
+	cmd->fd.read = 0;
+	cmd->fd.write = 1;
+	cmd->fd.close = -1;
+	set_files(argv, cmd);
+	cmd->pid[cmd->index_pid] = fork();
+	if (cmd->pid[cmd->index_pid] < 0)
+		free_and_exit("fork", cmd);
+	one_cmd(argv, cmd);
 }
 
 void	pipex(t_lst_argv *argv, t_cmd *cmd)
 {
-	if (pipe(cmd->fd) == -1)
-		free_and_exit("pipe", cmd);
-	while (cmd->index_pid < cmd->nbr)
+	if (cmd->index_pid == cmd->nbr - 1)
+		exec_one_cmd(argv, cmd);
+	else
 	{
-		cmd->argv = convert_list(argv);
-		init_files(argv, cmd);
-		exec_cmds(argv, cmd);
-		cmd->index++;
-		cmd->index_pid++;
-		if (argv != NULL)
-			argv = argv->next;
+		if (pipe(cmd->fd.pipe) == -1)
+			free_and_exit("pipe", cmd);
+		while (cmd->index_pid < cmd->nbr)
+		{
+			cmd->argv = convert_list(argv);
+			set_fd(cmd);
+			set_files(argv, cmd);
+			exec_cmds(argv, cmd);
+			cmd->index++;
+			cmd->index_pid++;
+			if (argv != NULL)
+				argv = argv->next;
+		}
 	}
 }
 

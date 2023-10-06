@@ -6,13 +6,36 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 18:52:07 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/05 19:03:19 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/06 18:27:37 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	init_files(t_lst_argv *argv, t_cmd *cmd)
+void	set_fd(t_cmd *cmd)
+{
+	if (cmd->index_pid == cmd->first)
+	{
+		cmd->fd.read = 0;
+		cmd->fd.write = cmd->fd.pipe[0];
+		cmd->fd.close = cmd->fd.pipe[1];
+	}
+	else if (cmd->index_pid == cmd->last)
+	{
+		cmd->fd.read = cmd->fd.pipe[1];
+		cmd->fd.write = 1;
+		cmd->fd.close = cmd->fd.pipe[0];
+	}
+	else if ((cmd->index_pid != cmd->first)
+		&& (cmd->index_pid != cmd->last))
+	{
+		cmd->fd.read = cmd->fd.pipe[1];
+		cmd->fd.write = cmd->fd.pipe[0];
+		cmd->fd.close = cmd->fd.pipe[1];
+	}
+}
+
+void	set_files(t_lst_argv *argv, t_cmd *cmd)
 {
 	if (argv->file)
 	{
@@ -22,27 +45,20 @@ void	init_files(t_lst_argv *argv, t_cmd *cmd)
 			cmd->if_here_doc = 0;
 		if (argv->file->infile)
 			open_infile(argv, cmd);
-		else
-			cmd->files.in = 0;
 		if (argv->file->outfile)
 			open_outfile(argv, cmd);
-		else
-			cmd->files.out = 1;
-	}
-	else if (argv->file == NULL)
-	{
-		cmd->files.in = 0;
-		cmd->files.out = 1;
 	}
 }
 
 void	init_struct(t_cmd *cmd, t_lst_argv *argv)
 {
-	init_files(argv, cmd);
+	
 	cmd->nbr = list_size(argv);
 	cmd->index = 0;
 	cmd->index_pid = 0;
 	cmd->first = 0;
 	cmd->path = NULL;
 	cmd->last = cmd->nbr - 1;
+	set_fd(cmd);
+	set_files(argv, cmd);
 }

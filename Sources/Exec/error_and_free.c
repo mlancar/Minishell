@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 21:28:45 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/05 18:17:06 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/06 18:15:33 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,15 +49,15 @@ void	error_cmd(int return_value, t_cmd *cmd)
 	free_tab(cmd->name);
 	free(cmd->path);
 	free(cmd->pid);
-	check_close(cmd->fd[0]);
-	check_close(cmd->fd[1]);
-	check_close(cmd->files.out);
+	check_close(cmd->fd.pipe[0]);
+	check_close(cmd->fd.pipe[1]);
+	check_close(cmd->fd.write);
 	if (cmd->if_here_doc == 0)
-		check_close(cmd->files.in);
+		check_close(cmd->fd.read);
 	else
-		check_close(cmd->files.fd_tmp);
+		check_close(cmd->fd.tmp);
 	if ((cmd->index_pid != cmd->first) && (cmd->index_pid != cmd->last))
-		check_close(cmd->previous_fd);
+		check_close(cmd->fd.close);
 	exit(return_value);
 }
 
@@ -66,14 +66,14 @@ void	error_empty_string(t_cmd *cmd)
 	ft_putstr_fd(cmd->argv[cmd->index], 2);
 	write(2, ": command not found\n", 20);
 	free(cmd->pid);
-	check_close(cmd->fd[0]);
-	check_close(cmd->fd[1]);
-	check_close(cmd->files.out);
+	check_close(cmd->fd.pipe[0]);
+	check_close(cmd->fd.pipe[1]);
+	check_close(cmd->fd.write);
 	if (cmd->if_here_doc == 0)
-		check_close(cmd->files.in);
+		check_close(cmd->fd.read);
 	else
-		check_close(cmd->files.fd_tmp);
+		check_close(cmd->fd.tmp);
 	if ((cmd->index_pid != cmd->first) && (cmd->index_pid != cmd->last))
-		check_close(cmd->previous_fd);
+		check_close(cmd->fd.close);
 	exit(127);
 }
