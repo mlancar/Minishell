@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 18:52:07 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/06 18:27:37 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/07 15:48:37 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,21 +17,21 @@ void	set_fd(t_cmd *cmd)
 	if (cmd->index_pid == cmd->first)
 	{
 		cmd->fd.read = 0;
-		cmd->fd.write = cmd->fd.pipe[0];
-		cmd->fd.close = cmd->fd.pipe[1];
+		cmd->fd.write = cmd->fd.pipe[1];
+		cmd->fd.close = cmd->fd.pipe[0];
 	}
 	else if (cmd->index_pid == cmd->last)
 	{
-		cmd->fd.read = cmd->fd.pipe[1];
+		cmd->fd.read = cmd->fd.pipe[0];
 		cmd->fd.write = 1;
-		cmd->fd.close = cmd->fd.pipe[0];
+		cmd->fd.close = cmd->fd.pipe[1];
 	}
 	else if ((cmd->index_pid != cmd->first)
 		&& (cmd->index_pid != cmd->last))
 	{
-		cmd->fd.read = cmd->fd.pipe[1];
-		cmd->fd.write = cmd->fd.pipe[0];
-		cmd->fd.close = cmd->fd.pipe[1];
+		cmd->fd.read = cmd->fd.pipe[0];
+		cmd->fd.write = cmd->fd.pipe[1];
+		cmd->fd.close = cmd->fd.pipe[0];
 	}
 }
 

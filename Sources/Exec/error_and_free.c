@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_and_free.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 21:28:45 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/06 18:15:33 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/07 16:08:25 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	error_access_cmd(t_cmd *cmd)
 
 void	error_cmd(int return_value, t_cmd *cmd)
 {
-	//printf("error exec\n");
+	printf("error\n");
 	free_tab(cmd->name);
 	free(cmd->path);
 	free(cmd->pid);

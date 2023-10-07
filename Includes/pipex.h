@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 19:47:18 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/05 18:54:54 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/07 15:01:00 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,28 +27,35 @@
 # include "minishell.h"
 
 typedef struct s_files {
-	int		in;
-	int		out;
-	int		fd_tmp;
 	int		here_doc;
 	char	rand_name[7];
 	
 }	t_files;
 
+typedef	struct s_fd {
+	int	read;
+	int	write;
+	int	close;
+	int	tmp;
+	int	pipe[2];
+}	t_fd;
+
 typedef struct s_cmd {
 	char	*path;
 	char	**name;
-	int		fd[2];
-	int		previous_fd;
+	char	**envp;
+	char	**argv;
+	
 	pid_t	*pid;
 	int		index_pid;
+	
 	int		index;
 	int		nbr;
 	int		first;
 	int		last;
+	
 	int		if_here_doc;
-	char	**envp;
-	char	**argv;
+	t_fd	fd;
 	t_files	files;
 	
 }	t_cmd;
@@ -57,13 +64,13 @@ void	open_infile(t_lst_argv *argv, t_cmd *cmd);
 void	open_outfile(t_lst_argv *argv, t_cmd *cmd);
 
 void	pipex(t_lst_argv *argv, t_cmd *cmd);
-void	exec_cmd(t_lst_argv *argv, t_cmd *cmd, int fd_in, int fd_out, int fd_other);
+void	exec_cmd(t_lst_argv *argv, t_cmd *cmd);
 void	exec_cmds(t_lst_argv *argv, t_cmd *cmd);
 
-void	one_cmd(t_lst_argv *argv, t_cmd *cmd, int fd_in, int fd_out, int fd_other);
-void	first_cmd(t_lst_argv *argv, t_cmd *cmd, int fd_in, int fd_out, int fd_other);
-void	middle_cmd(t_lst_argv *argv, t_cmd *cmd, int fd_in, int fd_out, int fd_other);
-void	last_cmd(t_lst_argv *argv, t_cmd *cmd, int fd_in, int fd_out, int fd_other);
+void	one_cmd(t_lst_argv *argv, t_cmd *cmd);
+void	first_cmd(t_lst_argv *argv, t_cmd *cmd);
+void	middle_cmd(t_lst_argv *argv, t_cmd *cmd);
+void	last_cmd(t_lst_argv *argv, t_cmd *cmd);
 
 
 void	open_and_fill_here_doc(t_cmd *cmd, char *limiter);
@@ -91,7 +98,10 @@ void	free_and_exit(char *str, t_cmd *cmd);
 
 char	**convert_list(t_lst_argv*list);
 void	init_struct(t_cmd *cmd, t_lst_argv *argv);
-void	init_files(t_lst_argv *argv, t_cmd *cmd);
+
+void	set_fd(t_cmd *cmd);
+void	set_files(t_lst_argv *argv, t_cmd *cmd);
+
 int		main_pipex(t_lst_argv *argv, char **env);
 
 int		list_size(t_lst_argv*list);

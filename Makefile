@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: malancar <malancar@student.42.fr>          +#+  +:+       +#+         #
+#    By: marvin <marvin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/03 19:06:48 by malancar          #+#    #+#              #
-#    Updated: 2023/10/05 18:52:42 by malancar         ###   ########.fr        #
+#    Updated: 2023/10/07 15:32:31 by marvin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -64,7 +64,7 @@ RM = rm -rf
 all:	 $(NAME)
 
 $(NAME):	Objects/ $(OBJS)
-			$(CC) $(FLAGS) -lreadline -o $(NAME) $(OBJS)
+			$(CC) $(FLAGS) -o $(NAME) $(OBJS) -lreadline
 
 Objects/%.o: 	%.c
 				@mkdir -p $(dir $@)

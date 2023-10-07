@@ -17,7 +17,7 @@ void	last_cmd(t_lst_argv *argv, t_cmd *cmd)
 	printf("\nlast cmd : read = %d, write = %d, close = %d\n", cmd->fd.read, cmd->fd.write, cmd->fd.close);
 	if (cmd->pid[cmd->index_pid] == 0)
 	{
-		if ((dup2(cmd->fd.read, 0) != -1) || (dup2(cmd->fd.write, 1) != -1))
+		if ((dup2(cmd->fd.read, 0) != -1) && (dup2(cmd->fd.write, 1) != -1))
 		{
 			if (check_command(argv, cmd) == 0)
 				error_access_cmd(cmd);
@@ -26,6 +26,8 @@ void	last_cmd(t_lst_argv *argv, t_cmd *cmd)
 			if (execve(cmd->path, cmd->argv, cmd->envp))
 				error_cmd(0, cmd);
 		}
+		else
+			error_cmd(0, cmd);
 	}
 	else
 	{
@@ -40,7 +42,7 @@ void	middle_cmd(t_lst_argv *argv, t_cmd *cmd)
 	printf("\nmiddle cmd : read = %d, write = %d, close = %d\n", cmd->fd.read, cmd->fd.write, cmd->fd.close);
 		if (cmd->pid[cmd->index_pid] == 0)
 	{
-		if ((dup2(cmd->fd.read, 0) != -1) || (dup2(cmd->fd.write, 1) != -1))
+		if ((dup2(cmd->fd.read, 0) != -1) && (dup2(cmd->fd.write, 1) != -1))
 		{
 			if (check_command(argv, cmd) == 0)
 				error_access_cmd(cmd);
@@ -49,6 +51,8 @@ void	middle_cmd(t_lst_argv *argv, t_cmd *cmd)
 			if (execve(cmd->path, cmd->argv, cmd->envp))
 				error_cmd(0, cmd);
 		}
+		else
+			error_cmd(0, cmd);
 	}
 	else
 	{
@@ -62,7 +66,7 @@ void	first_cmd(t_lst_argv *argv, t_cmd *cmd)
 	printf("\nfirst cmd : read = %d, write = %d, close = %d\n", cmd->fd.read, cmd->fd.write, cmd->fd.close);
 	if (cmd->pid[cmd->index_pid] == 0)
 	{
-		if ((dup2(cmd->fd.read, 0) != -1) || (dup2(cmd->fd.write, 1) != -1))
+		if ((dup2(cmd->fd.read, 0) != -1) && (dup2(cmd->fd.write, 1) != -1))
 		{
 			if (check_command(argv, cmd) == 0)
 				error_access_cmd(cmd);
@@ -71,7 +75,9 @@ void	first_cmd(t_lst_argv *argv, t_cmd *cmd)
 			if (execve(cmd->path, cmd->argv, cmd->envp))
 				error_cmd(0, cmd);
 		}
-	}	
+		else
+			error_cmd(0, cmd);
+	}
 	else
 	{
 		check_close(cmd->fd.close);
@@ -93,6 +99,8 @@ void	one_cmd(t_lst_argv *argv, t_cmd *cmd)
 			if (execve(cmd->path, cmd->argv, cmd->envp))
 				error_cmd(0, cmd);
 		}
+		else
+			error_cmd(0, cmd);
 	}
 }
 
