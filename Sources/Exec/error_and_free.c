@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_and_free.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 21:28:45 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/07 16:08:25 by marvin           ###   ########.fr       */
+/*   Updated: 2023/10/08 13:00:13 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	free_tab(char **tab)
 
 void	free_and_exit(char *str, t_cmd *cmd)
 {
+	dprintf(2, "free and exit\n");
 	free_tab(cmd->name);
 	free(cmd->path);
 	free(cmd->pid);
@@ -38,6 +39,7 @@ void	free_and_exit(char *str, t_cmd *cmd)
 
 void	error_access_cmd(t_cmd *cmd)
 {
+	dprintf(2, "error access\n");
 	ft_putstr_fd(cmd->name[cmd->index], 2);
 	write(2, ": command not found\n", 20);
 	error_cmd(127, cmd);
@@ -45,7 +47,7 @@ void	error_access_cmd(t_cmd *cmd)
 
 void	error_cmd(int return_value, t_cmd *cmd)
 {
-	printf("error\n");
+	dprintf(2, "error\n");
 	free_tab(cmd->name);
 	free(cmd->path);
 	free(cmd->pid);

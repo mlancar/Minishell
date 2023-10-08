@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 19:47:18 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/07 15:01:00 by marvin           ###   ########.fr       */
+/*   Updated: 2023/10/08 12:22:41 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef	struct s_fd {
 	int	read;
 	int	write;
 	int	close;
+	int	previous;
 	int	tmp;
 	int	pipe[2];
 }	t_fd;
@@ -71,7 +72,7 @@ void	one_cmd(t_lst_argv *argv, t_cmd *cmd);
 void	first_cmd(t_lst_argv *argv, t_cmd *cmd);
 void	middle_cmd(t_lst_argv *argv, t_cmd *cmd);
 void	last_cmd(t_lst_argv *argv, t_cmd *cmd);
-
+void	exec_one_cmd(t_lst_argv *argv, t_cmd *cmd);
 
 void	open_and_fill_here_doc(t_cmd *cmd, char *limiter);
 void	here_doc(char *limiter, t_cmd *cmd);

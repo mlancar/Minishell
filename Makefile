@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: marvin <marvin@student.42.fr>              +#+  +:+       +#+         #
+#    By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/03 19:06:48 by malancar          #+#    #+#              #
-#    Updated: 2023/10/07 15:32:31 by marvin           ###   ########.fr        #
+#    Updated: 2023/10/08 15:24:38 by lcalvie          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,7 +37,7 @@ SOURCES_PARSING =	main.c				\
 SOURCES_EXEC =		check.c								\
 					init.c								\
 					convert.c							\
-		  			exec_cmds.c							\
+		  			new_exec_cmds.c							\
 		  			pipex_utils.c						\
 		  			pipex_utils_2.c						\
 		  			ft_split.c							\

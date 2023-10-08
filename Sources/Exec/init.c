@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 18:52:07 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/07 15:48:37 by marvin           ###   ########.fr       */
+/*   Updated: 2023/10/08 13:53:34 by lcalvie          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	set_fd(t_cmd *cmd)
 	else if ((cmd->index_pid != cmd->first)
 		&& (cmd->index_pid != cmd->last))
 	{
-		cmd->fd.read = cmd->fd.pipe[0];
+		cmd->fd.read = cmd->fd.previous;
 		cmd->fd.write = cmd->fd.pipe[1];
 		cmd->fd.close = cmd->fd.pipe[0];
 	}
@@ -59,6 +59,6 @@ void	init_struct(t_cmd *cmd, t_lst_argv *argv)
 	cmd->first = 0;
 	cmd->path = NULL;
 	cmd->last = cmd->nbr - 1;
-	set_fd(cmd);
-	set_files(argv, cmd);
+	// set_fd(cmd);
+	// set_files(argv, cmd);
 }
