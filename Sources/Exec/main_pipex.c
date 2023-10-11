@@ -13,7 +13,7 @@
 #include "pipex.h"
 #include "minishell.h"
 
-int	main_pipex(t_lst_cmd *argv, char **env, t_lst_env *env_list)
+int	main_pipex(t_lst_cmd *argv, char **env, t_lst_env **env_list)
 {
 	t_cmd	cmd;
 	int		status;
@@ -24,7 +24,7 @@ int	main_pipex(t_lst_cmd *argv, char **env, t_lst_env *env_list)
 	cmd.pid = malloc(sizeof(pid_t) * cmd.nbr);
 	if (!cmd.pid)
 		return (write(1, "pid error\n", 10), 0);
-	pipex(argv, &cmd);
+	pipex(argv, &cmd, env_list);
 	while (cmd.index_pid >= 0)
 	{
 		waitpid(cmd.pid[cmd.index_pid], &status, 0);

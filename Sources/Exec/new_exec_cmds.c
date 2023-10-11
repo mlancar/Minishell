@@ -1,16 +1,14 @@
 
 #include "pipex.h"
 
-void	one_cmd(t_lst_cmd *argv, t_cmd *cmd)
+void	one_cmd(t_lst_cmd *argv, t_cmd *cmd, t_lst_env **env_list)
 {
 	//printf("\n one cmd : read = %d, write = %d, close = %d\n", cmd->fd.read, cmd->fd.write, cmd->fd.close);
 	if (cmd->pid[cmd->index_pid] == 0)
 	{
-		if (check_command(argv, cmd) == 0)
-			error_access_cmd(cmd);
 		if (dup2(cmd->fd.read, 0) != -1)
 		{
-			if (check_command(argv, cmd) == 0)
+			if (check_command(argv, cmd, env_list) == 0)
 				error_access_cmd(cmd);
 			check_close(cmd->fd.read);
 			if (execve(cmd->path, cmd->argv, cmd->env))
@@ -23,7 +21,7 @@ void	one_cmd(t_lst_cmd *argv, t_cmd *cmd)
 	check_close(cmd->fd.write);
 }
 
-void	exec_one_cmd(t_lst_cmd *argv, t_cmd *cmd)
+void	exec_one_cmd(t_lst_cmd *argv, t_cmd *cmd, t_lst_env **env_list)
 {
 	cmd->argv = convert_list(argv);
 	cmd->fd.read = 0;
@@ -33,7 +31,7 @@ void	exec_one_cmd(t_lst_cmd *argv, t_cmd *cmd)
 	cmd->pid[cmd->index_pid] = fork();
 	if (cmd->pid[cmd->index_pid] < 0)
 		free_and_exit("fork", cmd);
-	one_cmd(argv, cmd);
+	one_cmd(argv, cmd, env_list);
 }
 
 void	close_fd_child(t_lst_cmd *argv, t_cmd *cmd)
@@ -44,7 +42,7 @@ void	close_fd_child(t_lst_cmd *argv, t_cmd *cmd)
 		check_close(cmd->fd.read);
 	else
 	{
-		dprintf(2, "cmd%dICI LA\n", cmd->index_pid);
+		//dprintf(2, "cmd%dICI LA\n", cmd->index_pid);
 		check_close(cmd->fd.write);
 		check_close(cmd->fd.read);
 		check_close(cmd->fd.close);
@@ -69,7 +67,7 @@ void	close_fd_parent(t_lst_cmd *argv, t_cmd *cmd)
 }
 
 
-void	new_exec_cmds(t_lst_cmd *argv, t_cmd *cmd)
+void	new_exec_cmds(t_lst_cmd *argv, t_cmd *cmd, t_lst_env **env_list)
 {
 	set_fd(cmd);
 	set_files(argv, cmd);
@@ -81,7 +79,7 @@ void	new_exec_cmds(t_lst_cmd *argv, t_cmd *cmd)
 	{
 		if ((dup2(cmd->fd.read, 0) != -1) && (dup2(cmd->fd.write, 1) != -1))
 		{
-			if (check_command(argv, cmd) == 0)
+			if (check_command(argv, cmd, env_list) == 0)
 				error_access_cmd(cmd);
 			close_fd_child(argv, cmd);
 			if (execve(cmd->path, cmd->argv, cmd->env))
@@ -94,10 +92,10 @@ void	new_exec_cmds(t_lst_cmd *argv, t_cmd *cmd)
 		close_fd_parent(argv, cmd);
 }
 
-void	pipex(t_lst_cmd *argv, t_cmd *cmd)
+void	pipex(t_lst_cmd *argv, t_cmd *cmd, t_lst_env **env_list)
 {
 	if (cmd->index_pid == cmd->nbr - 1)
-		exec_one_cmd(argv, cmd);
+		exec_one_cmd(argv, cmd, env_list);
 	else
 	{
 		if (pipe(cmd->fd.pipe) == -1)
@@ -112,7 +110,7 @@ void	pipex(t_lst_cmd *argv, t_cmd *cmd)
 			if (pipe(cmd->fd.pipe) == -1)
 				free_and_exit("pipe", cmd);
 			}
-			new_exec_cmds(argv, cmd);
+			new_exec_cmds(argv, cmd, env_list);
 			cmd->index++;
 			cmd->index_pid++;
 			if (argv != NULL)

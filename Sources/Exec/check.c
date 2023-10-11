@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 13:28:37 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/11 15:35:58 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/11 16:35:51 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	check_slash_and_access(t_lst_cmd *argv, t_cmd *cmd)
 	return (0);
 }
 
-int	check_command(t_lst_cmd *argv, t_cmd *cmd)
+int	check_command(t_lst_cmd *argv, t_cmd *cmd, t_lst_env **env_list)
 {
 	int		i;
 	int		find_path;
@@ -41,7 +41,7 @@ int	check_command(t_lst_cmd *argv, t_cmd *cmd)
 
 	i = 0;
 	find_path = 0;
-	
+	(void)env_list;
 	// if (cmd->argv[cmd->index][0] == '\0')
 	// 	error_empty_string(cmd);
 	//cmd->name = ft_split
