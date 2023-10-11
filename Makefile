@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+         #
+#    By: malancar <malancar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/03 19:06:48 by malancar          #+#    #+#              #
-#    Updated: 2023/10/08 15:24:38 by lcalvie          ###   ########.fr        #
+#    Updated: 2023/10/11 16:02:24 by malancar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,17 +27,24 @@ SOURCES_PARSING =	main.c				\
 					dup_str.c			\
 					check_prompt.c		\
 					error.c				\
-					lst_utils_cmd.c		\
-					lst_utils_arg.c		\
-					lst_utils_file.c	\
+					lst_cmd_utils.c		\
+					lst_arg_utils.c		\
+					lst_file_utils.c	\
 					quote.c				\
 					prompt_utils.c		\
-					free_all.c
+					free_all.c			\
+					init_lst_env.c		\
+					lst_env_utils.c		\
+					manage_dollar.c		\
+					manage_dollar_utils.c	\
+					token.c				\
+					quote2.c			\
+					
 					
 SOURCES_EXEC =		check.c								\
 					init.c								\
 					convert.c							\
-		  			new_exec_cmds.c							\
+		  			new_exec_cmds.c						\
 		  			pipex_utils.c						\
 		  			pipex_utils_2.c						\
 		  			ft_split.c							\

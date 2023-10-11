@@ -3,41 +3,43 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 17:16:09 by auferran          #+#    #+#             */
-/*   Updated: 2023/10/05 14:25:55 by malancar         ###   ########.fr       */
+/*   Updated: 2023/09/16 20:04:49 by auferran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	main(int infoc, char **infov, char **env)
+int	main(int argc, char **argv, char **env)
 {
-	char	*prompt;
+	char		*prompt;
+	t_lst_env	*lst_env;
 
-	(void) infov;
-	(void) env;
-	if (infoc == 1)
+	(void) argv;
+	prompt = NULL;
+	lst_env = NULL;
+	init_lst_env(env, &lst_env);
+	if (argc == 1)
 	{
 		manage_sig();
 		while (1)
 		{
 			prompt = readline("(auferran&malancar)-[~/minishell]$ ");
-			if (!prompt || !ft_strcmp("exit", prompt))
+			add_history(prompt);
+			if (!prompt)
 			{
-				if (!ft_strcmp("exit", prompt))
-					free(prompt);
 				printf("exit\n");
-				return (0) ;
+				break;
 			}
-			else if (prompt && !manage(prompt, env))
-			{
-				free(prompt);
-				return (0) ;
-			}
+			manage(prompt, env, &lst_env);
 			free(prompt);
 		}
+		if (prompt)
+			free(prompt);
+		rl_clear_history();
+		ft_lst_clear_env(&lst_env);
 	}
 	return (0);
 }

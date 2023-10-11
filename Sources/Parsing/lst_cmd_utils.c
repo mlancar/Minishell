@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lst_utils_argv.c                                    :+:      :+:    :+:   */
+/*   lst_utils_cmd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,76 +12,56 @@
 
 #include "minishell.h"
 
-int	ft_lst_size_argv(t_lst_argv *argv)
+int	ft_lst_size_cmd(t_lst_cmd *cmd)
 {
 	int			i;
 
-	if (!argv)
+	if (!cmd)
 		return (0);
 	i = 0;
-	while (argv != NULL)
+	while (cmd != NULL)
 	{
-		argv = argv->next;
+		cmd = cmd->next;
 		i++;
 	}
 	return (i);
 }
 
-void	ft_lst_clear_argv(t_lst_argv **argv)
-{
-	int			i;
-	int			size;
-	t_lst_argv	*tmp;
-
-	if (!(*argv))
-		return ;
-	i = 0;
-	size = ft_lst_size_argv(*argv);
-	while (i < size)
-	{
-		tmp = (*argv)->next;
-		free(*argv);
-		*argv = tmp;
-		i++;
-	}
-	*argv = NULL;
-}
-
-t_lst_argv	*ft_lst_last_argv(t_lst_argv *argv)
+t_lst_cmd	*ft_lst_last_cmd(t_lst_cmd *cmd)
 {
 	int	i;
 	int	size;
 
 	i = 0;
-	size = ft_lst_size_argv(argv);
+	size = ft_lst_size_cmd(cmd);
 	while (i < size - 1)
 	{
-		argv = argv->next;
+		cmd = cmd->next;
 		i++;
 	}
-	return (argv);
+	return (cmd);
 }
 
-void	ft_lst_add_back_argv(t_lst_argv *lst_new, t_lst_argv **argv)
+void	ft_lst_add_back_cmd(t_lst_cmd *lst_new, t_lst_cmd **cmd)
 {
-	t_lst_argv	*tmp;
+	t_lst_cmd	*tmp;
 
-	if (!(*argv))
+	if (!(*cmd))
 	{
-		*argv = lst_new;
+		*cmd = lst_new;
 		return ;
 	}
-	tmp = ft_lst_last_argv(*argv);
+	tmp = ft_lst_last_cmd(*cmd);
 	tmp->next = lst_new;
 }
 
-t_lst_argv	*ft_lst_new_argv(void)
+t_lst_cmd	*ft_lst_new_cmd(void)
 {
-	t_lst_argv	*lst_new;
+	t_lst_cmd	*lst_new;
 
-	lst_new = malloc(sizeof(t_lst_argv));
+	lst_new = malloc(sizeof(t_lst_cmd));
 	if (!lst_new)
 		return (error("MALLOC FAILURE\n"), NULL);
-	ft_memset(lst_new, 0, sizeof(t_lst_argv));
+	ft_memset(lst_new, 0, sizeof(t_lst_cmd));
 	return (lst_new);
 }

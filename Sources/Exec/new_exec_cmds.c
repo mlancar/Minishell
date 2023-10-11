@@ -1,7 +1,7 @@
 
 #include "pipex.h"
 
-void	one_cmd(t_lst_argv *argv, t_cmd *cmd)
+void	one_cmd(t_lst_cmd *argv, t_cmd *cmd)
 {
 	//printf("\n one cmd : read = %d, write = %d, close = %d\n", cmd->fd.read, cmd->fd.write, cmd->fd.close);
 	if (cmd->pid[cmd->index_pid] == 0)
@@ -13,7 +13,7 @@ void	one_cmd(t_lst_argv *argv, t_cmd *cmd)
 			if (check_command(argv, cmd) == 0)
 				error_access_cmd(cmd);
 			check_close(cmd->fd.read);
-			if (execve(cmd->path, cmd->argv, cmd->envp))
+			if (execve(cmd->path, cmd->argv, cmd->env))
 				error_cmd(0, cmd);
 		}
 		else
@@ -23,7 +23,7 @@ void	one_cmd(t_lst_argv *argv, t_cmd *cmd)
 	check_close(cmd->fd.write);
 }
 
-void	exec_one_cmd(t_lst_argv *argv, t_cmd *cmd)
+void	exec_one_cmd(t_lst_cmd *argv, t_cmd *cmd)
 {
 	cmd->argv = convert_list(argv);
 	cmd->fd.read = 0;
@@ -36,10 +36,10 @@ void	exec_one_cmd(t_lst_argv *argv, t_cmd *cmd)
 	one_cmd(argv, cmd);
 }
 
-void	close_fd_child(t_lst_argv *argv, t_cmd *cmd)
+void	close_fd_child(t_lst_cmd *argv, t_cmd *cmd)
 {
 	(void)argv;
-	dprintf(2, "\n cmd%d : child : read = %d, write = %d, close = %d\n", cmd->index_pid, cmd->fd.read, cmd->fd.write, cmd->fd.close);
+	//dprintf(2, "\n cmd%d : child : read = %d, write = %d, close = %d\n", cmd->index_pid, cmd->fd.read, cmd->fd.write, cmd->fd.close);
 	if (cmd->index_pid == cmd->last)
 		check_close(cmd->fd.read);
 	else
@@ -51,10 +51,10 @@ void	close_fd_child(t_lst_argv *argv, t_cmd *cmd)
 	}
 }
 
-void	close_fd_parent(t_lst_argv *argv, t_cmd *cmd)
+void	close_fd_parent(t_lst_cmd *argv, t_cmd *cmd)
 {
 	(void)argv;
-	printf("\nparent : read = %d, write = %d, close = %d\n", cmd->fd.read, cmd->fd.write, cmd->fd.close);
+	//printf("\nparent : read = %d, write = %d, close = %d\n", cmd->fd.read, cmd->fd.write, cmd->fd.close);
 	if (cmd->index_pid == cmd->last)
 	{
 		check_close(cmd->fd.read);
@@ -69,11 +69,11 @@ void	close_fd_parent(t_lst_argv *argv, t_cmd *cmd)
 }
 
 
-void	new_exec_cmds(t_lst_argv *argv, t_cmd *cmd)
+void	new_exec_cmds(t_lst_cmd *argv, t_cmd *cmd)
 {
 	set_fd(cmd);
 	set_files(argv, cmd);
-	printf("read = %d, write = %d, close = %d\n", cmd->fd.read, cmd->fd.write, cmd->fd.close);
+	//printf("read = %d, write = %d, close = %d\n", cmd->fd.read, cmd->fd.write, cmd->fd.close);
 	cmd->pid[cmd->index_pid] = fork();
 	if (cmd->pid[cmd->index_pid] < 0)
 		free_and_exit("fork", cmd);
@@ -84,7 +84,7 @@ void	new_exec_cmds(t_lst_argv *argv, t_cmd *cmd)
 			if (check_command(argv, cmd) == 0)
 				error_access_cmd(cmd);
 			close_fd_child(argv, cmd);
-			if (execve(cmd->path, cmd->argv, cmd->envp))
+			if (execve(cmd->path, cmd->argv, cmd->env))
 				error_cmd(0, cmd);
 		}
 		else
@@ -94,7 +94,7 @@ void	new_exec_cmds(t_lst_argv *argv, t_cmd *cmd)
 		close_fd_parent(argv, cmd);
 }
 
-void	pipex(t_lst_argv *argv, t_cmd *cmd)
+void	pipex(t_lst_cmd *argv, t_cmd *cmd)
 {
 	if (cmd->index_pid == cmd->nbr - 1)
 		exec_one_cmd(argv, cmd);
@@ -120,3 +120,11 @@ void	pipex(t_lst_argv *argv, t_cmd *cmd)
 		}
 	}
 }
+
+//printf("name = %s\n", cmd->name[0]);
+// if (cmd->if_here_doc == 1)
+// {
+// 	here_doc(cmd->argv[2], cmd);
+// 	exec_argv(argv, cmd->fd_tmp, cmd->fd[1], cmd->fd[0], cmd);
+// 	unlink(cmd->rand_name);
+// }

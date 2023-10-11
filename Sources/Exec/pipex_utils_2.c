@@ -24,7 +24,7 @@ int	ft_strcmp_cmd(char *s1, char *s2)
 	return (s1[i] - s2[i]);
 }
 
-int	list_size(t_lst_argv *list)
+int	list_size(t_lst_cmd *list)
 {
 	int			size;
 

@@ -3,16 +3,51 @@
 /*                                                        :::      ::::::::   */
 /*   fill_lst.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 15:02:38 by auferran          #+#    #+#             */
-/*   Updated: 2023/10/05 14:49:39 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/03 17:14:53 by auferran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	fill_file(char *prompt, t_lst_file	**file, int *i)
+int	new_cmd(t_lst_arg **arg, t_lst_file **file, t_lst_cmd **cmd, int *i)
+{
+	t_lst_cmd	*new;
+
+	if (!(*arg) && !(*file))
+		return (error("minishell: syntax error near unexpected token\n"), 0);
+	new = ft_lst_new_cmd();
+	if (!new)
+		return (0);
+	ft_lst_add_back_cmd(new, cmd);
+	*arg = NULL;
+	*file = NULL;
+	(*i)++;
+	return (1);
+}
+
+int	check_and_new_cmd(char *prompt, t_struct_fill *s, t_lst_cmd **cmd)
+{
+	int	i;
+
+	i = s->i;
+	i++;
+	while (prompt[i] && prompt[i] != '|')
+	{
+		if (prompt[i] != ' ')
+			break ;
+		i++;
+	}
+	if (prompt[i] == '|')
+		return (error("minishell: syntax error near unexpected token\n"), 0);
+	if (!new_cmd(&s->arg, &s->file, cmd, &s->i))
+				return (0);
+	return (1);
+}
+
+int	fill_file(char *prompt, t_lst_file	**file, int *i, t_lst_env *lst_env)
 {
 	t_lst_file	*new;
 
@@ -20,60 +55,44 @@ int	fill_file(char *prompt, t_lst_file	**file, int *i)
 	if (!new)
 		return (0);
 	if (its_file(prompt[*i]) == INFILE && !its_file(prompt[*i + 1]))
-		if ((new->infile = dup_str(prompt, prompt[*i], i, FILE)) == NULL)
-			return (0);
+		if ((new->infile = dup_str(prompt, i, FILE, lst_env)) == NULL)
+			return (ft_lst_clear_file(&new), 0);
 	if (its_file(prompt[*i]) == OUTFILE && !its_file(prompt[*i + 1]))
-		if ((new->outfile = dup_str(prompt, prompt[*i], i, FILE)) == NULL)
-			return (0);
+		if ((new->outfile = dup_str(prompt, i, FILE, lst_env)) == NULL)
+			return (ft_lst_clear_file(&new), 0);
 	if (its_file(prompt[*i]) == INFILE && its_file(prompt[*i + 1]) == INFILE)
-		if ((new->limiter = dup_str(prompt, prompt[*i], i, FILE)) == NULL)
-			return (0);
+		if ((new->limiter = dup_str(prompt, i, FILE, lst_env)) == NULL)
+			return (ft_lst_clear_file(&new), 0);
 	if (its_file(prompt[*i]) == OUTFILE && its_file(prompt[*i + 1]) == OUTFILE)
 	{
 		new->outfile_type = 1;
-		if ((new->infile = dup_str(prompt, prompt[*i], i, FILE)) == NULL)
-			return (0);
+		if ((new->infile = dup_str(prompt, i, FILE, lst_env)) == NULL)
+			return (ft_lst_clear_file(&new), 0);
 	}
 	ft_lst_add_back_file(new, file);
 	return (1);
 }
 
-int	fill_info(char *prompt, t_lst_info **info, int *i)
+int	fill_arg(char *prompt, t_lst_arg **arg, int *i, t_lst_env *lst_env)
 {
-	t_lst_info	*new;
+	t_lst_arg	*new;
 
-	new = ft_lst_new_info();
+	new = ft_lst_new_arg();
 	if (!new)
 		return (0);
-	if (ft_lst_size_info(*info) == 0)
-		if ((new->name = dup_str(prompt, prompt[*i], i, 0)) == NULL)
-			return (0);
-	if (ft_lst_size_info(*info) > 0)
+	if (ft_lst_size_arg(*arg) == 0)
+		if ((new->name = dup_str(prompt, i, 0, lst_env)) == NULL)
+			return (ft_lst_clear_arg(&new), 0);
+	if (ft_lst_size_arg(*arg) > 0)
 	{
-		if ((new->arg = dup_str(prompt, prompt[*i], i, 0)) == NULL)
-			return (0);
+		if ((new->arg = dup_str(prompt, i, 0, lst_env)) == NULL)
+			return (ft_lst_clear_arg(&new), 0);
 	}
-	ft_lst_add_back_info(new, info);
+	ft_lst_add_back_arg(new, arg);
 	return (1);
 }
 
-int	new_argv(t_lst_info **info, t_lst_file **file, t_lst_argv **argv, int *i)
-{
-	t_lst_argv	*new;
-
-	if (!(*info) && !(*file))
-		return (error("minishell: syntax error near unexpected token\n"), 0);
-	new = ft_lst_new_argv();
-	if (!new)
-		return (0);
-	ft_lst_add_back_argv(new, argv);
-	*info = NULL;
-	*file = NULL;
-	(*i)++;
-	return (1);
-}
-
-int	fill_lst(char *prompt, t_lst_argv *argv)
+int	fill_lst(char *prompt, t_lst_cmd *cmd, t_lst_env *lst_env)
 {
 	t_struct_fill	s;
 
@@ -82,19 +101,19 @@ int	fill_lst(char *prompt, t_lst_argv *argv)
 	{
 		while (its_white_space(prompt[s.i]))
 			s.i++;
-		if (prompt[s.i] == '|')
-			if (!new_argv(&s.info, &s.file, &argv, &s.i))
+		if (prompt[s.i] && prompt[s.i] == '|')
+			if (!check_and_new_cmd(prompt, &s, &cmd))
 				return (0);
 		if (prompt[s.i] && prompt[s.i] != '|' && !its_file(prompt[s.i]))
 		{
-			if (!fill_info(prompt, &s.info, &s.i))
-				return (0);
+			if (!fill_arg(prompt, &s.arg, &s.i, lst_env))
+				return (ft_lst_clear_arg(&s.arg), 0);
 		}
 		else if (prompt[s.i] && prompt[s.i] != '|')
-			if (!fill_file(prompt, &s.file, &s.i))
-				return (0);
-		s.tmp = ft_lst_last_argv(argv);
-		s.tmp->info = s.info;
+			if (!fill_file(prompt, &s.file, &s.i, lst_env))
+				return (ft_lst_clear_file(&s.file), 0);
+		s.tmp = ft_lst_last_cmd(cmd);
+		s.tmp->arg = s.arg;
 		s.tmp->file = s.file;
 	}
 	return (1);

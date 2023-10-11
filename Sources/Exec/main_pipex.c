@@ -11,13 +11,15 @@
 /* ************************************************************************** */
 
 #include "pipex.h"
+#include "minishell.h"
 
-int	main_pipex(t_lst_argv *argv, char **env)
+int	main_pipex(t_lst_cmd *argv, char **env, t_lst_env *env_list)
 {
 	t_cmd	cmd;
 	int		status;
 
-	cmd.envp = env;
+	cmd.env = env;
+	(void)env_list;
 	init_struct(&cmd, argv);
 	cmd.pid = malloc(sizeof(pid_t) * cmd.nbr);
 	if (!cmd.pid)

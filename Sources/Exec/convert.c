@@ -6,45 +6,45 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 19:05:44 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/05 18:52:53 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/11 15:31:18 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-char	**convert_list(t_lst_argv *argv)
+char	**convert_list(t_lst_cmd *argv)
 {
 	int	i;
 	char **argv_name;
 	int	size_list;
-	t_lst_info	*start;
+	t_lst_arg	*start;
 
-	start = argv->info;
-	size_list = ft_lst_size_info(argv->info) + 1;
+	start = argv->arg;
+	size_list = ft_lst_size_arg(argv->arg) + 1;
 	//printf("size list = %d\n", size_list);
 	argv_name = NULL;
 	i = 0;
 	argv_name = malloc(sizeof(char*) * size_list);
 	if (!argv_name)
 		return (NULL);
-	//printf("argv->info->info = %s\n", argv->info->info);
-	while (argv->info != NULL)
+	//printf("argv->arg->arg = %s\n", argv->arg->arg);
+	while (argv->arg != NULL)
 	{
-		if (argv->info->name != NULL)
+		if (argv->arg->name != NULL)
 		{
-			argv_name[i] = argv->info->name;
-			// printf("argv->info->name = %s\n", argv->info->name);
+			argv_name[i] = argv->arg->name;
+			// printf("argv->arg->name = %s\n", argv->arg->name);
 			// printf("argv_name = %s\n", argv_name[i]);
 			i++;
 		}
-		else if (argv->info->arg != NULL)
+		else if (argv->arg->arg != NULL)
 		{
-			argv_name[i] = argv->info->arg;
-			// printf("argv->info->info = %s\n", argv->info->info);
-			// printf("argv_info = %s\n", argv_name[i]);
+			argv_name[i] = argv->arg->arg;
+			// printf("argv->arg->arg = %s\n", argv->arg->arg);
+			// printf("argv_arg = %s\n", argv_name[i]);
 			i++;
 		}
-		argv->info = argv->info->next;
+		argv->arg = argv->arg->next;
 	}
 	argv_name[i] = NULL;
 	// i = 0;
@@ -53,6 +53,6 @@ char	**convert_list(t_lst_argv *argv)
 	// 	//printf("argv_name = %s\n", argv_name[i]);
 	// 	i++;
 	// }
-	argv->info = start;
+	argv->arg = start;
 	return (argv_name);
 }

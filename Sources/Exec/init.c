@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
+/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 18:52:07 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/08 13:53:34 by lcalvie          ###   ########.fr       */
+/*   Updated: 2023/10/11 15:31:18 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	set_fd(t_cmd *cmd)
 	}
 }
 
-void	set_files(t_lst_argv *argv, t_cmd *cmd)
+void	set_files(t_lst_cmd *argv, t_cmd *cmd)
 {
 	if (argv->file)
 	{
@@ -50,7 +50,7 @@ void	set_files(t_lst_argv *argv, t_cmd *cmd)
 	}
 }
 
-void	init_struct(t_cmd *cmd, t_lst_argv *argv)
+void	init_struct(t_cmd *cmd, t_lst_cmd *argv)
 {
 	
 	cmd->nbr = list_size(argv);
