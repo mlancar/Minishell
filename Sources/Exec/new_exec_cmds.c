@@ -3,11 +3,12 @@
 
 void	one_cmd(t_lst_cmd *argv, t_cmd *cmd, t_lst_env **env_list)
 {
-	//printf("\n one cmd : read = %d, write = %d, close = %d\n", cmd->fd.read, cmd->fd.write, cmd->fd.close);
+	//printf("\n one cmd : fd.tmp = %d, read = %d, write = %d, close = %d\n", cmd->fd.tmp, cmd->fd.read, cmd->fd.write, cmd->fd.close);
 	if (cmd->pid[cmd->index_pid] == 0)
 	{
 		if (dup2(cmd->fd.read, 0) != -1)
 		{
+			
 			if (check_command(argv, cmd, env_list) == 0)
 				error_access_cmd(cmd);
 			check_close(cmd->fd.read);
@@ -27,12 +28,26 @@ void	exec_one_cmd(t_lst_cmd *argv, t_cmd *cmd, t_lst_env **env_list)
 	cmd->fd.read = 0;
 	cmd->fd.write = 1;
 	cmd->fd.close = -1;
+	//printf("fd.read = %d\n", cmd->fd.read);
+
 	set_files(argv, cmd);
+	//printf("fd.read = %d\n", cmd->fd.read);
+	if (cmd->if_here_doc == 1)
+	{
+		here_doc(argv->file->limiter, cmd);
+		cmd->fd.read = cmd->fd.tmp;
+		unlink(cmd->files.rand_name);
+	}
 	cmd->pid[cmd->index_pid] = fork();
 	if (cmd->pid[cmd->index_pid] < 0)
 		free_and_exit("fork", cmd);
 	one_cmd(argv, cmd, env_list);
 }
+
+//REDIRECTION :
+//ls <in <<stop<in2<<stop>out<<onstopcettefois!
+//ouvrir dnas l'ordre les infile outfile et cas d'echec quitter
+//en cas de reussite utiliser les derniers infile outfile dans l'ordre
 
 void	close_fd_child(t_lst_cmd *argv, t_cmd *cmd)
 {
@@ -71,6 +86,12 @@ void	new_exec_cmds(t_lst_cmd *argv, t_cmd *cmd, t_lst_env **env_list)
 {
 	set_fd(cmd);
 	set_files(argv, cmd);
+	if (cmd->if_here_doc == 1)
+	{
+		dprintf(2, "cc\n");
+		here_doc(cmd->argv[2], cmd);
+		unlink(cmd->files.rand_name);
+	}
 	//printf("read = %d, write = %d, close = %d\n", cmd->fd.read, cmd->fd.write, cmd->fd.close);
 	cmd->pid[cmd->index_pid] = fork();
 	if (cmd->pid[cmd->index_pid] < 0)
@@ -118,11 +139,3 @@ void	pipex(t_lst_cmd *argv, t_cmd *cmd, t_lst_env **env_list)
 		}
 	}
 }
-
-//printf("name = %s\n", cmd->name[0]);
-// if (cmd->if_here_doc == 1)
-// {
-// 	here_doc(cmd->argv[2], cmd);
-// 	exec_argv(argv, cmd->fd_tmp, cmd->fd[1], cmd->fd[0], cmd);
-// 	unlink(cmd->rand_name);
-// }
