@@ -6,17 +6,11 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 13:28:37 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/11 16:35:51 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/16 16:23:38 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-void	check_close(int fd)
-{
-	if (fd > 2)
-		close(fd);
-}
 
 int	check_slash_and_access(t_lst_cmd *argv, t_cmd *cmd)
 {

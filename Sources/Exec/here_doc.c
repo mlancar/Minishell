@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 14:53:52 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/13 17:08:08 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/18 14:45:23 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,11 @@ void	fill_here_doc(char **read_line, char *limiter, t_cmd *cmd)
 		ft_putstr_fd(*read_line, cmd->fd.tmp);
 }
 
-void	open_and_fill_here_doc(t_cmd *cmd, char *limiter)
+void	here_doc(char *limiter, t_cmd *cmd)
 {
 	char	*read_line;
-
+	
+	cmd->fd.tmp = 0;
 	get_rand_name(cmd);
 	fill_here_doc(&read_line, limiter, cmd);
 	while (is_limiter(read_line, limiter) != 0)
@@ -81,12 +82,6 @@ void	open_and_fill_here_doc(t_cmd *cmd, char *limiter)
 	get_next_line(0, 1);
 	free(read_line);
 	check_close(cmd->fd.tmp);
-}
-
-void	here_doc(char *limiter, t_cmd *cmd)
-{
-	cmd->fd.tmp = 0;
-	open_and_fill_here_doc(cmd, limiter);
 	cmd->fd.tmp = open(cmd->files.rand_name, O_RDONLY);
 	if (cmd->fd.tmp == -1)
 		free_and_exit("open", cmd);

@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 18:52:07 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/13 18:16:30 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/18 15:04:17 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,13 @@
 
 void	set_fd(t_cmd *cmd)
 {
-	if (cmd->index_pid == cmd->first)
+	if (cmd->nbr == 1)
+	{
+		cmd->fd.read = 0;
+		cmd->fd.write = 1;
+		cmd->fd.close = -1;
+	}
+	else if (cmd->index_pid == cmd->first)
 	{
 		cmd->fd.read = 0;
 		cmd->fd.write = cmd->fd.pipe[1];
@@ -35,7 +41,7 @@ void	set_fd(t_cmd *cmd)
 	}
 }
 
-void	set_files(t_lst_cmd *argv, t_cmd *cmd)
+void	set_redirections(t_lst_cmd *argv, t_cmd *cmd)
 {
 	if (argv->file)
 	{
@@ -55,7 +61,6 @@ void	set_files(t_lst_cmd *argv, t_cmd *cmd)
 
 void	init_struct(t_cmd *cmd, t_lst_cmd *argv)
 {
-	
 	cmd->nbr = list_size(argv);
 	cmd->index = 0;
 	cmd->index_pid = 0;
@@ -63,6 +68,6 @@ void	init_struct(t_cmd *cmd, t_lst_cmd *argv)
 	cmd->path = NULL;
 	cmd->last = cmd->nbr - 1;
 	cmd->if_here_doc = 0;
-	// set_fd(cmd);
-	// set_files(argv, cmd);
+	cmd->fd.tmp = -1;
+
 }
