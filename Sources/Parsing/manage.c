@@ -65,7 +65,7 @@ void	manage(char *prompt, char **env, t_lst_env **lst_env)
 	if (!fill_lst(prompt, cmd, *lst_env))
 		return (free_all(&cmd));
 	//test_pipex(cmd, env, *lst_env);
-	main_pipex(cmd, env, lst_env); 
+	main_exec(cmd, env, lst_env); 
 	free_all(&cmd);
 	return ;
 }

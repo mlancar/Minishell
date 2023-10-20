@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 14:53:52 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/18 14:45:23 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/20 16:27:06 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	get_rand_name(t_cmd *cmd)
 
 void	fill_here_doc(char **read_line, char *limiter, t_cmd *cmd)
 {
-	write(1, "here_doc> ", 10);
+	write(1, "> ", 2);
 	*read_line = get_next_line(0, 0);
 	if (*read_line == NULL)
 		write(2, "\nwarning: here-doc delimited by end-of-file\n", 45);

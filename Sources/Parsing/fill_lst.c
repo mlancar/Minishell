@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fill_lst.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
+/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 15:02:38 by auferran          #+#    #+#             */
-/*   Updated: 2023/10/03 17:14:53 by auferran         ###   ########.fr       */
+/*   Updated: 2023/10/20 18:13:39 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	fill_file(char *prompt, t_lst_file	**file, int *i, t_lst_env *lst_env)
 	if (its_file(prompt[*i]) == OUTFILE && its_file(prompt[*i + 1]) == OUTFILE)
 	{
 		new->outfile_type = 1;
-		if ((new->infile = dup_str(prompt, i, FILE, lst_env)) == NULL)
+		if ((new->outfile = dup_str(prompt, i, FILE, lst_env)) == NULL)
 			return (ft_lst_clear_file(&new), 0);
 	}
 	ft_lst_add_back_file(new, file);

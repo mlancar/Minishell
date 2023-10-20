@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 19:47:18 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/18 13:42:11 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/20 16:44:16 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,15 +64,9 @@ typedef struct s_cmd {
 void	open_infile(t_lst_cmd *argv, t_cmd *cmd);
 void	open_outfile(t_lst_cmd *argv, t_cmd *cmd);
 
-void	pipex(t_lst_cmd *argv, t_cmd *cmd, t_lst_env **env_list);
-void	exec_cmd(t_lst_cmd *argv, t_cmd *cmd);
-void	exec_cmds(t_lst_cmd *argv, t_cmd *cmd);
-
-void	one_cmd(t_lst_cmd *argv, t_cmd *cmd, t_lst_env **env_list);
-void	first_cmd(t_lst_cmd *argv, t_cmd *cmd);
-void	middle_cmd(t_lst_cmd *argv, t_cmd *cmd);
-void	last_cmd(t_lst_cmd *argv, t_cmd *cmd);
-void	exec_one_cmd(t_lst_cmd *argv, t_cmd *cmd, t_lst_env **env_list);
+int		main_exec(t_lst_cmd *argv, char **env, t_lst_env **env_list);
+void	pipe_cmd(t_lst_cmd *argv, t_cmd *cmd, t_lst_env **env_list);
+void	fork_and_exec_cmd(t_lst_cmd *argv, t_cmd *cmd, t_lst_env **env_list);
 
 void	open_and_fill_here_doc(t_cmd *cmd, char *limiter);
 void	here_doc(char *limiter, t_cmd *cmd);
@@ -81,7 +75,6 @@ int		is_limiter(char *str, char *limiter);
 
 int		check_command(t_lst_cmd *argv, t_cmd *cmd, t_lst_env **env_list);
 int		check_access(t_lst_cmd *argv, t_cmd *cmd, char *path);
-void	check_close(int fd);
 int		check_slash_and_access(t_lst_cmd *argv, t_cmd *cmd);
 
 void	close_fd_child(t_lst_cmd *argv, t_cmd *cmd);
@@ -101,14 +94,18 @@ void	error_cmd(int return_value, t_cmd *cmd);
 void	free_tab(char **tab);
 void	free_and_exit(char *str, t_cmd *cmd);
 
-char	**convert_list(t_lst_cmd*list);
-void	init_struct(t_cmd *cmd, t_lst_cmd *argv);
+char	**convert_list(t_lst_cmd *list);
+int		list_size(t_lst_cmd *list);
 
+void	init_struct(t_cmd *cmd, t_lst_cmd *argv);
 void	set_fd(t_cmd *cmd);
 void	set_redirections(t_lst_cmd *argv, t_cmd *cmd);
 
-int		main_pipex(t_lst_cmd *argv, char **env, t_lst_env **env_list);
 
-int		list_size(t_lst_cmd*list);
+// void	one_cmd(t_lst_cmd *argv, t_cmd *cmd, t_lst_env **env_list);
+// void	first_cmd(t_lst_cmd *argv, t_cmd *cmd);
+// void	middle_cmd(t_lst_cmd *argv, t_cmd *cmd);
+// void	last_cmd(t_lst_cmd *argv, t_cmd *cmd);
+// void	exec_one_cmd(t_lst_cmd *argv, t_cmd *cmd, t_lst_env **env_list);
 
 #endif

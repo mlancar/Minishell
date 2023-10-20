@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_and_free.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lcalvie <lcalvie@student.42.fr>            +#+  +:+       +#+        */
+/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 21:28:45 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/08 13:00:13 by lcalvie          ###   ########.fr       */
+/*   Updated: 2023/10/20 19:03:53 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ void	error_access_cmd(t_cmd *cmd)
 
 void	error_cmd(int return_value, t_cmd *cmd)
 {
-	dprintf(2, "error\n");
-	free_tab(cmd->name);
+	//dprintf(2, "error\n");
+	free_tab(cmd->argv);
 	free(cmd->path);
 	free(cmd->pid);
 	check_close(cmd->fd.pipe[0]);

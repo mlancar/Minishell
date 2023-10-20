@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 18:52:07 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/18 15:04:17 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/20 18:45:19 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,9 @@ void	set_redirections(t_lst_cmd *argv, t_cmd *cmd)
 		else
 			cmd->if_here_doc = 0;
 		if (argv->file->infile)
+		{
 			open_infile(argv, cmd);
+		}
 		if (argv->file->outfile)
 			open_outfile(argv, cmd);
 	}
