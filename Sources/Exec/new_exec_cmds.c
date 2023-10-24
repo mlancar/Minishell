@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 12:53:39 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/20 19:31:32 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/24 15:39:54 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void redirection(t_lst_cmd *argv, t_cmd *cmd)
 	}
 }
 
-void	fork_and_exec_cmd(t_lst_cmd *argv, t_cmd *cmd, t_lst_env **env_list)
+void	fork_and_exec_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s)
 {
 	set_fd(cmd);
 	redirection(argv, cmd);
@@ -49,7 +49,7 @@ void	fork_and_exec_cmd(t_lst_cmd *argv, t_cmd *cmd, t_lst_env **env_list)
 			error_cmd(0, cmd);
 		if (cmd->nbr != 0 && dup2(cmd->fd.write, 1) == -1)
 			error_cmd(0, cmd);
-		if (check_command(argv, cmd, env_list) == 0)
+		if (check_command(argv, cmd, s) == 0)
 			error_access_cmd(cmd);
 		close_fd_child(argv, cmd);
 		if (execve(cmd->path, cmd->argv, cmd->env))
@@ -59,7 +59,7 @@ void	fork_and_exec_cmd(t_lst_cmd *argv, t_cmd *cmd, t_lst_env **env_list)
 		close_fd_parent(argv, cmd);
 }
 
-void	pipe_cmd(t_lst_cmd *argv, t_cmd *cmd, t_lst_env **env_list)
+void	pipe_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s)
 {
 	if (cmd->index_pid != cmd->nbr - 1 && pipe(cmd->fd.pipe) == -1)
 		free_and_exit("pipe", cmd);
@@ -73,7 +73,7 @@ void	pipe_cmd(t_lst_cmd *argv, t_cmd *cmd, t_lst_env **env_list)
 		if (pipe(cmd->fd.pipe) == -1)
 			free_and_exit("pipe", cmd);
 		}
-		fork_and_exec_cmd(argv, cmd, env_list);
+		fork_and_exec_cmd(argv, cmd, s);
 		cmd->index++;
 		cmd->index_pid++;
 		if (argv != NULL)

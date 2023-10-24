@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 19:47:18 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/20 16:44:16 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/24 17:12:09 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,16 +64,16 @@ typedef struct s_cmd {
 void	open_infile(t_lst_cmd *argv, t_cmd *cmd);
 void	open_outfile(t_lst_cmd *argv, t_cmd *cmd);
 
-int		main_exec(t_lst_cmd *argv, char **env, t_lst_env **env_list);
-void	pipe_cmd(t_lst_cmd *argv, t_cmd *cmd, t_lst_env **env_list);
-void	fork_and_exec_cmd(t_lst_cmd *argv, t_cmd *cmd, t_lst_env **env_list);
+int		main_exec(t_lst_cmd *argv, t_struct_env *s);
+void	pipe_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s);
+void	fork_and_exec_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s);
 
 void	open_and_fill_here_doc(t_cmd *cmd, char *limiter);
 void	here_doc(char *limiter, t_cmd *cmd);
 void	fill_here_doc(char **read_line, char *limiter, t_cmd *cmd);
 int		is_limiter(char *str, char *limiter);
 
-int		check_command(t_lst_cmd *argv, t_cmd *cmd, t_lst_env **env_list);
+int		check_command(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s);
 int		check_access(t_lst_cmd *argv, t_cmd *cmd, char *path);
 int		check_slash_and_access(t_lst_cmd *argv, t_cmd *cmd);
 
@@ -95,11 +95,24 @@ void	free_tab(char **tab);
 void	free_and_exit(char *str, t_cmd *cmd);
 
 char	**convert_list(t_lst_cmd *list);
+char	**convert_list_env(t_struct_env *s);
 int		list_size(t_lst_cmd *list);
+int		ft_lst_size_env(t_lst_env *lst_env);
 
 void	init_struct(t_cmd *cmd, t_lst_cmd *argv);
 void	set_fd(t_cmd *cmd);
 void	set_redirections(t_lst_cmd *argv, t_cmd *cmd);
+
+int		builtins_echo(char **argv);
+int		builtins_pwd(char **argv);
+int		builtins_export(char **argv, t_struct_env *s);
+int		builtins_env(char **argv, t_lst_env *env_list);
+
+int		exec_builtins(t_cmd *cmd, t_struct_env *s);
+int		its_option(char **argv);
+int		its_valid(char *str);
+void	print_export(t_lst_env *lst_export);
+int		check_egal(char *str);
 
 
 // void	one_cmd(t_lst_cmd *argv, t_cmd *cmd, t_lst_env **env_list);

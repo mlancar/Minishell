@@ -6,7 +6,7 @@
 #    By: malancar <malancar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/03 19:06:48 by malancar          #+#    #+#              #
-#    Updated: 2023/10/11 16:02:24 by malancar         ###   ########.fr        #
+#    Updated: 2023/10/24 16:47:46 by malancar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,41 +19,49 @@ NAME	= minishell
 HEADER = ./Includes
 HDR = $(HEADER)/pipex.h $(HEADER)/minishell.h
 
-SOURCES_PARSING =	main.c				\
-					manage.c			\
-					manage_sig.c		\
-					utils.c				\
-					fill_lst.c			\
-					dup_str.c			\
-					check_prompt.c		\
-					error.c				\
-					lst_cmd_utils.c		\
-					lst_arg_utils.c		\
-					lst_file_utils.c	\
-					quote.c				\
-					prompt_utils.c		\
-					free_all.c			\
-					init_lst_env.c		\
-					lst_env_utils.c		\
-					manage_dollar.c		\
-					manage_dollar_utils.c	\
-					token.c				\
-					quote2.c			\
+SOURCES_PARSING =	main.c                  \
+                    manage.c                \
+                    manage_sig.c            \
+                    utils.c				    \
+                    fill_lst.c			    \
+                    dup_str.c               \
+                    check_prompt.c          \
+                    error.c		            \
+                    lst_cmd_utils.c		    \
+                    lst_arg_utils.c		    \
+                    lst_file_utils.c        \
+                    quote.c			        \
+                    prompt_utils.c	        \
+                    free_all.c	            \
+                    init_lst_env.c	        \
+                    init_lst_env_2.c			\
+                    lst_env_utils.c	        \
+                    manage_dollar.c		    \
+                    manage_dollar_utils.c	\
+                    token.c				    \
+                    quote_2.c               \
 					
 					
-SOURCES_EXEC =		check.c								\
-					init.c								\
-					convert.c							\
-		  			new_exec_cmds.c						\
-		  			pipex_utils.c						\
-		  			pipex_utils_2.c						\
-		  			ft_split.c							\
-		  			open_files.c						\
-		  			error_and_free.c					\
-		  			main_pipex.c						\
-		  			here_doc.c							\
-				  	Get_next_line/get_next_line.c		\
-					Get_next_line/get_next_line_utils.c
+SOURCES_EXEC =		check.c							\
+                    init.c							\
+                    convert.c						\
+                    new_exec_cmds.c					\
+                    pipex_utils.c					\
+                    pipex_utils_2.c					\
+                    ft_split.c						\
+                    open_files.c					\
+                    error_and_free.c				\
+                    main_pipex.c					\
+                    here_doc.c						\
+                    close.c							\
+					builtins_echo.c					\
+					builtins_env.c					\
+					builtins_export.c				\
+					builtins_pwd.c					\
+					builtins_export_2.c				\
+					search_builtins.c				\
+                    Get_next_line/get_next_line.c	\
+                    Get_next_line/get_next_line_utils.c
 
 SRCS_PARSING = $(addprefix ./Sources/Parsing/, $(SOURCES_PARSING))
 

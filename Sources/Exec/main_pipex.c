@@ -13,18 +13,17 @@
 #include "pipex.h"
 #include "minishell.h"
 
-int	main_exec(t_lst_cmd *argv, char **env, t_lst_env **env_list)
+int	main_exec(t_lst_cmd *argv, t_struct_env *s)
 {
 	t_cmd	cmd;
 	int		status;
 
-	cmd.env = env;
-	(void)env_list;
+	cmd.env = convert_list_env(s);
 	init_struct(&cmd, argv);
 	cmd.pid = malloc(sizeof(pid_t) * cmd.nbr);
 	if (!cmd.pid)
 		return (write(1, "pid error\n", 10), 0);
-	pipe_cmd(argv, &cmd, env_list);
+	pipe_cmd(argv, &cmd, s);
 	cmd.index_pid--;
 	while (cmd.index_pid >= 0)
 	{

@@ -22,6 +22,15 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
+int	ft_isalpha(int character)
+{
+	if ((character >= 'A' && character <= 'Z')
+		|| (character >= 'a' && character <= 'z'))
+		return (1);
+	else
+		return (0);
+}
+
 void	*ft_memset(void *pointer, int value, size_t count)
 {
 	size_t			i;

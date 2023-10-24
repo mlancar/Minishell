@@ -19,12 +19,15 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
+# include <string.h>
 
 # define SINGLE_QUOTE 39
 # define DOUBLE_QUOTE 34
 # define FILE 1
 # define INFILE 1
 # define OUTFILE 2
+
+extern	int g_exit;
 
 typedef struct s_lst_arg
 {
@@ -54,6 +57,12 @@ typedef struct s_lst_env
 	char				*line;
 	struct s_lst_env	*next;
 }						t_lst_env;
+
+typedef struct s_struct_env
+{
+	t_lst_env	*lst_env;
+	t_lst_env	*lst_export;
+}				t_struct_env;
 
 typedef struct s_struct_quote
 {
@@ -94,18 +103,23 @@ void		error(char *str);
 
 void		free_all(t_lst_cmd **cmd);
 
-void		manage(char *prompt, char **env, t_lst_env **lst_env);
+void		manage(char *prompt, char **env, t_struct_env *s);
 
 int			manage_sig(void);
 
 int			ft_strlen(char *str);
+int			ft_isalpha(int character);
 void		*ft_memset(void *pointer, int value, size_t count);
 int			ft_strcmp(const char *first, const char *second);
 
 int			strlen_env(char *str);
 int			cmp_env(char *first, int *i, char *second, t_struct_strdup *s);
 
-void		init_lst_env(char **env, t_lst_env **lst_env);
+void		init_lst_env(char **env, t_struct_env *s);
+
+void		swap_export(char **str1, char **str2);
+void		sort_export(t_lst_env **lst_export);
+void		join_declare_x(t_lst_env **lst_export);
 
 int			check_prompt(char *prompt, t_lst_cmd *cmd);
 

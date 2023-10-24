@@ -12,15 +12,17 @@
 
 #include "minishell.h"
 
+int	g_exit;
+
 int	main(int argc, char **argv, char **env)
 {
-	char		*prompt;
-	t_lst_env	*lst_env;
+	char			*prompt;
+	t_struct_env	s;
 
 	(void) argv;
 	prompt = NULL;
-	lst_env = NULL;
-	init_lst_env(env, &lst_env);
+	ft_memset(&s, 0, sizeof(t_struct_env));
+	init_lst_env(env, &s);
 	if (argc == 1)
 	{
 		manage_sig();
@@ -33,13 +35,14 @@ int	main(int argc, char **argv, char **env)
 				printf("exit\n");
 				break;
 			}
-			manage(prompt, env, &lst_env);
+			manage(prompt, env, &s);
 			free(prompt);
 		}
 		if (prompt)
 			free(prompt);
 		rl_clear_history();
-		ft_lst_clear_env(&lst_env);
+		ft_lst_clear_env(&s.lst_env);
+		ft_lst_clear_env(&s.lst_export);
 	}
 	return (0);
 }
