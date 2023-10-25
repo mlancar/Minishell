@@ -6,7 +6,7 @@
 #    By: malancar <malancar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/03 19:06:48 by malancar          #+#    #+#              #
-#    Updated: 2023/10/24 16:47:46 by malancar         ###   ########.fr        #
+#    Updated: 2023/10/25 16:45:11 by malancar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,7 +59,7 @@ SOURCES_EXEC =		check.c							\
 					builtins_export.c				\
 					builtins_pwd.c					\
 					builtins_export_2.c				\
-					search_builtins.c				\
+					builtins.c				        \
                     Get_next_line/get_next_line.c	\
                     Get_next_line/get_next_line_utils.c
 

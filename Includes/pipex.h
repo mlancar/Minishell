@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 19:47:18 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/24 17:12:09 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/25 16:49:23 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,14 +66,16 @@ void	open_outfile(t_lst_cmd *argv, t_cmd *cmd);
 
 int		main_exec(t_lst_cmd *argv, t_struct_env *s);
 void	pipe_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s);
-void	fork_and_exec_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s);
+void	fork_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s);
+void	exec_cmd(t_cmd *cmd, t_struct_env *s);
+void	one_cmd_and_builtin(t_cmd *cmd, t_struct_env *s);
 
 void	open_and_fill_here_doc(t_cmd *cmd, char *limiter);
 void	here_doc(char *limiter, t_cmd *cmd);
 void	fill_here_doc(char **read_line, char *limiter, t_cmd *cmd);
 int		is_limiter(char *str, char *limiter);
 
-int		check_command(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s);
+int		check_command(t_lst_cmd *argv, t_cmd *cmd);
 int		check_access(t_lst_cmd *argv, t_cmd *cmd, char *path);
 int		check_slash_and_access(t_lst_cmd *argv, t_cmd *cmd);
 
@@ -108,6 +110,7 @@ int		builtins_pwd(char **argv);
 int		builtins_export(char **argv, t_struct_env *s);
 int		builtins_env(char **argv, t_lst_env *env_list);
 
+int		check_builtins(t_cmd *cmd);
 int		exec_builtins(t_cmd *cmd, t_struct_env *s);
 int		its_option(char **argv);
 int		its_valid(char *str);

@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 13:28:37 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/24 17:33:11 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/25 17:40:44 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	check_slash_and_access(t_lst_cmd *argv, t_cmd *cmd)
 	return (0);
 }
 
-int	check_command(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s)
+int	check_command(t_lst_cmd *argv, t_cmd *cmd)
 {
 	int		i;
 	int		find_path;
@@ -35,10 +35,13 @@ int	check_command(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s)
 
 	i = 0;
 	find_path = 0;
-	if (exec_builtins(cmd, s) == 1)
+	if (check_builtins(cmd) == 1)
 	{
-		
+		//printf("ici : cmd->argv = %s, cmd->index_pid = %d\n", cmd->argv[0], cmd->index_pid);
+		return (1);
 	}
+	//printf("la : cmd->argv = %s, cmd->index_pid = %d\n", cmd->argv[0], cmd->index_pid);
+	//changer cette merde :
 	while (cmd->env[i])
 	{
 		if (cmd->env[i][0] == 'P' && cmd->env[i][1] == 'A' &&

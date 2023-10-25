@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 12:53:39 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/24 15:39:54 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/25 17:49:48 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,45 @@ void redirection(t_lst_cmd *argv, t_cmd *cmd)
 			here_doc(argv->file->limiter, cmd);
 			check_close(cmd->fd.read);
 			cmd->fd.read = cmd->fd.tmp;
-			//printf("fd tmp = %d\n", cmd->fd.tmp);
 			unlink(cmd->files.rand_name);
 		}
 		argv->file = argv->file->next;
 	}
 }
 
-void	fork_and_exec_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s)
+void	one_cmd_and_builtin(t_cmd *cmd, t_struct_env *s)
+{
+	(void)s;
+	if (dup2(cmd->fd.read, 0) == -1) 
+		error_cmd(0, cmd);
+	if (cmd->nbr != 0 && dup2(cmd->fd.write, 1) == -1)
+		error_cmd(0, cmd);
+	if (exec_builtins(cmd, s) == 0)
+		error_cmd(0, cmd);
+}
+
+void	exec_cmd(t_cmd *cmd, t_struct_env *s)
+{
+		if (check_builtins(cmd) == 1)
+		{
+			if (exec_builtins(cmd, s) == 0)
+				error_cmd(0, cmd);
+		}
+		else
+		{
+			if (execve(cmd->path, cmd->argv, cmd->env))
+				error_cmd(0, cmd);
+		}
+}
+//changer nom:
+void	fork_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s)
 {
 	set_fd(cmd);
 	redirection(argv, cmd);
+	if (check_command(argv, cmd) == 0)
+		error_access_cmd(cmd);
+	if (check_builtins(cmd) == 1 && cmd->nbr == 1)
+		return (one_cmd_and_builtin(cmd, s));
 	cmd->pid[cmd->index_pid] = fork();
 	if (cmd->pid[cmd->index_pid] < 0)
 		free_and_exit("fork", cmd);
@@ -48,12 +76,9 @@ void	fork_and_exec_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s)
 		if (dup2(cmd->fd.read, 0) == -1) 
 			error_cmd(0, cmd);
 		if (cmd->nbr != 0 && dup2(cmd->fd.write, 1) == -1)
-			error_cmd(0, cmd);
-		if (check_command(argv, cmd, s) == 0)
-			error_access_cmd(cmd);
+			error_cmd(0, cmd);	
 		close_fd_child(argv, cmd);
-		if (execve(cmd->path, cmd->argv, cmd->env))
-			error_cmd(0, cmd);
+		exec_cmd(cmd, s);
 	}
 	else
 		close_fd_parent(argv, cmd);
@@ -66,6 +91,7 @@ void	pipe_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s)
 	while (cmd->index_pid < cmd->nbr)
 	{
 		cmd->argv = convert_list(argv);
+		//printf("ici : cmd->argv = %s, cmd->index_pid = %d\n", cmd->argv[0], cmd->index_pid);
 		cmd->fd.previous = cmd->fd.pipe[0];
 		if ((cmd->index_pid != cmd->first)
 			&& (cmd->index_pid != cmd->last))
@@ -73,7 +99,7 @@ void	pipe_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s)
 		if (pipe(cmd->fd.pipe) == -1)
 			free_and_exit("pipe", cmd);
 		}
-		fork_and_exec_cmd(argv, cmd, s);
+		fork_cmd(argv, cmd, s);
 		cmd->index++;
 		cmd->index_pid++;
 		if (argv != NULL)
