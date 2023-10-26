@@ -16,7 +16,7 @@ int	its_option_echo(char *str)
 	return (1);
 }
 
-int	builtins_echo(char **argv)
+int	builtins_echo(t_cmd *cmd)
 {
 	int	i;
 	int	option;
@@ -25,20 +25,20 @@ int	builtins_echo(char **argv)
 	i = 1;
 	option = 0;
 	arg = 0;
-	while (argv[i])
+	while (cmd->argv[i])
 	{
-		if (its_option_echo(argv[i]) && arg == 0)
+		if (its_option_echo(cmd->argv[i]) && arg == 0)
 			option = 1;
-		else if (argv[i])
+		else if (cmd->argv[i])
 		{
 			arg = 1;
-			printf("%s", argv[i]);
-			if (argv[i + 1])
-				printf(" ");
+			ft_putstr_fd(cmd->argv[i], cmd->fd.write);
+			if (cmd->argv[i + 1])
+				ft_putstr_fd(" ", cmd->fd.write);
 		}
 		i++;
 	}
 	if (option == 0)
-		printf("\n");
+		ft_putstr_fd("\n", cmd->fd.write);
 	return (1);
 }

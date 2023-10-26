@@ -15,21 +15,20 @@ int	its_option(char **argv)
 	return (0);
 }
 
-int	builtins_pwd(char **argv)
+int	builtins_pwd(t_cmd *cmd)
 {
 	char	*pwd;
 
-	if (its_option(argv))
+	if (its_option(cmd->argv))
 		return (0);
-	pwd = malloc (sizeof(char) * 2048);
+	pwd = getcwd(NULL, 0);
 	if (!pwd)
-		return (error("MALLOC FAILURE\n"), 0);
-	if (!getcwd(pwd, 2048))
 	{
 		free(pwd);
 		return (error("getcwd FAILURE\n"), 0);
 	}
-	printf("%s\n", pwd);
+	ft_putstr_fd(pwd, cmd->fd.write);
+	ft_putstr_fd("\n", cmd->fd.write);
 	free (pwd);
 	return (1);
 }

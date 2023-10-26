@@ -24,6 +24,11 @@ int	main_exec(t_lst_cmd *argv, t_struct_env *s)
 	if (!cmd.pid)
 		return (write(1, "pid error\n", 10), 0);
 	pipe_cmd(argv, &cmd, s);
+	if (check_builtins(&cmd) == 1 && cmd.nbr == 1)
+	{
+		free(cmd.pid);
+		return (0);
+	}
 	cmd.index_pid--;
 	while (cmd.index_pid >= 0)
 	{

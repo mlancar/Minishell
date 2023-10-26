@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 21:28:45 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/20 19:03:53 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/26 18:43:21 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	free_tab(char **tab)
 void	free_and_exit(char *str, t_cmd *cmd)
 {
 	dprintf(2, "free and exit\n");
-	free_tab(cmd->name);
+	free_tab(cmd->argv);
 	free(cmd->path);
 	free(cmd->pid);
 	perror(str);
@@ -39,8 +39,10 @@ void	free_and_exit(char *str, t_cmd *cmd)
 
 void	error_access_cmd(t_cmd *cmd)
 {
-	dprintf(2, "error access\n");
-	ft_putstr_fd(cmd->name[cmd->index], 2);
+	//dprintf(2, "error access\n");
+	if (cmd->argv[0] == NULL)
+		error_cmd(127, cmd);
+	ft_putstr_fd(cmd->argv[0], 2);
 	write(2, ": command not found\n", 20);
 	error_cmd(127, cmd);
 }

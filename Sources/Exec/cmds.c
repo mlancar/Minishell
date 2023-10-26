@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   new_exec_cmds.c                                    :+:      :+:    :+:   */
+/*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 12:53:39 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/25 17:49:48 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/26 19:57:52 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,13 @@ void redirection(t_lst_cmd *argv, t_cmd *cmd)
 	}
 }
 
-void	one_cmd_and_builtin(t_cmd *cmd, t_struct_env *s)
+void	one_cmd_and_builtin(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s)
 {
 	(void)s;
-	if (dup2(cmd->fd.read, 0) == -1) 
-		error_cmd(0, cmd);
-	if (cmd->nbr != 0 && dup2(cmd->fd.write, 1) == -1)
-		error_cmd(0, cmd);
 	if (exec_builtins(cmd, s) == 0)
 		error_cmd(0, cmd);
+	close_fd_parent(argv, cmd);
+	return ;
 }
 
 void	exec_cmd(t_cmd *cmd, t_struct_env *s)
@@ -52,6 +50,7 @@ void	exec_cmd(t_cmd *cmd, t_struct_env *s)
 		{
 			if (exec_builtins(cmd, s) == 0)
 				error_cmd(0, cmd);
+			exit(EXIT_SUCCESS);
 		}
 		else
 		{
@@ -67,7 +66,7 @@ void	fork_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s)
 	if (check_command(argv, cmd) == 0)
 		error_access_cmd(cmd);
 	if (check_builtins(cmd) == 1 && cmd->nbr == 1)
-		return (one_cmd_and_builtin(cmd, s));
+		return (one_cmd_and_builtin(argv, cmd, s));
 	cmd->pid[cmd->index_pid] = fork();
 	if (cmd->pid[cmd->index_pid] < 0)
 		free_and_exit("fork", cmd);

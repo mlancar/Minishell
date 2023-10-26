@@ -1,11 +1,12 @@
 #include "pipex.h"
 #include "minishell.h"
 
-void	print_export(t_lst_env *lst_export)
+void	print_export(t_cmd *cmd, t_lst_env *lst_export)
 {
 	while (lst_export)
 	{
-		printf("%s\n", lst_export->line);
+		ft_putstr_fd(lst_export->line, cmd->fd.write);
+		ft_putstr_fd("\n", cmd->fd.write);
 		lst_export = lst_export->next;
 	}
 }
