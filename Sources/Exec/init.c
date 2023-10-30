@@ -6,38 +6,38 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 18:52:07 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/20 18:45:19 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/30 15:59:46 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	set_fd(t_cmd *cmd)
+void	init_fd(t_cmd *cmd)
 {
 	if (cmd->nbr == 1)
 	{
 		cmd->fd.read = 0;
 		cmd->fd.write = 1;
-		cmd->fd.close = -1;
+		cmd->fd.other_pipe = -1;
 	}
 	else if (cmd->index_pid == cmd->first)
 	{
 		cmd->fd.read = 0;
 		cmd->fd.write = cmd->fd.pipe[1];
-		cmd->fd.close = cmd->fd.pipe[0];
+		cmd->fd.other_pipe = cmd->fd.pipe[0];
 	}
 	else if (cmd->index_pid == cmd->last)
 	{
 		cmd->fd.read = cmd->fd.pipe[0];
 		cmd->fd.write = 1;
-		cmd->fd.close = cmd->fd.pipe[1];
+		cmd->fd.other_pipe = cmd->fd.pipe[1];
 	}
 	else if ((cmd->index_pid != cmd->first)
 		&& (cmd->index_pid != cmd->last))
 	{
 		cmd->fd.read = cmd->fd.previous;
 		cmd->fd.write = cmd->fd.pipe[1];
-		cmd->fd.close = cmd->fd.pipe[0];
+		cmd->fd.other_pipe = cmd->fd.pipe[0];
 	}
 }
 

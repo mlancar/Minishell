@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 14:53:52 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/20 16:27:06 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/30 16:23:23 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ void	get_rand_name(t_cmd *cmd)
 		cmd->files.rand_name[i] = cmd->files.rand_name[i] + 97;
 		i++;
 	}
-	check_close(cmd->fd.tmp);
+	//dprintf(2, "fd tmp = %d\n", cmd->fd.tmp);
+	check_close(cmd, cmd->fd.tmp);
 	cmd->fd.tmp = open(cmd->files.rand_name, O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR
 			| S_IWUSR | S_IRGRP);
 	if (cmd->fd.tmp == -1)
@@ -81,7 +82,7 @@ void	here_doc(char *limiter, t_cmd *cmd)
 	}
 	get_next_line(0, 1);
 	free(read_line);
-	check_close(cmd->fd.tmp);
+	check_close(cmd, cmd->fd.tmp);
 	cmd->fd.tmp = open(cmd->files.rand_name, O_RDONLY);
 	if (cmd->fd.tmp == -1)
 		free_and_exit("open", cmd);

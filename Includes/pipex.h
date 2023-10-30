@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 19:47:18 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/26 20:29:50 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/30 15:59:34 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ typedef struct s_files {
 typedef	struct s_fd {
 	int	read;
 	int	write;
-	int	close;
+	int	other_pipe;
 	int	previous;
 	int	tmp;
 	int	pipe[2];
@@ -66,9 +66,9 @@ void	open_outfile(t_lst_cmd *argv, t_cmd *cmd);
 
 int		main_exec(t_lst_cmd *argv, t_struct_env *s);
 void	pipe_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s);
-void	fork_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s);
+void	setup_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s);
 void	exec_cmd(t_cmd *cmd, t_struct_env *s);
-void	one_cmd_and_builtin(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s);
+void	one_cmd_and_builtin(t_cmd *cmd, t_struct_env *s);
 
 void	open_and_fill_here_doc(t_cmd *cmd, char *limiter);
 void	here_doc(char *limiter, t_cmd *cmd);
@@ -79,9 +79,10 @@ int		check_command(t_lst_cmd *argv, t_cmd *cmd);
 int		check_access(t_lst_cmd *argv, t_cmd *cmd, char *path);
 int		check_slash_and_access(t_lst_cmd *argv, t_cmd *cmd);
 
-void	close_fd_child(t_lst_cmd *argv, t_cmd *cmd);
-void	close_fd_parent(t_lst_cmd *argv, t_cmd *cmd);
-void	check_close(int fd);
+void	close_fd_child(t_cmd *cmd);
+void	close_fd_parent(t_cmd *cmd);
+void	close_fd(t_cmd *cmd);
+void	check_close(t_cmd *cmd, int fd);
 
 int		ft_strchr(char *str, char c);
 char	**ft_split(char *str, char c);
@@ -102,12 +103,12 @@ int		list_size(t_lst_cmd *list);
 int		ft_lst_size_env(t_lst_env *lst_env);
 
 void	init_struct(t_cmd *cmd, t_lst_cmd *argv);
-void	set_fd(t_cmd *cmd);
+void	init_fd(t_cmd *cmd);
 void	set_redirections(t_lst_cmd *argv, t_cmd *cmd);
 
 int		builtins_echo(t_cmd *cmd);
 int		builtins_pwd(t_cmd *cmd);
-int		builtins_export(char **argv, t_struct_env *s);
+int		builtins_export(t_cmd *cmd, t_struct_env *s);
 int		builtins_env(t_cmd *cmd, t_lst_env *env_list);
 
 int		check_builtins(t_cmd *cmd);

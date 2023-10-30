@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 13:28:37 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/26 19:51:59 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/30 12:32:46 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,7 @@ int	check_command(t_lst_cmd *argv, t_cmd *cmd)
 		return (0);
 	}	
 	if (check_builtins(cmd) == 1)
-	{
-		//printf("cc builtin\n");
-		//printf("ici : cmd->argv = %s, cmd->index_pid = %d\n", cmd->argv[0], cmd->index_pid);
 		return (1);
-	}
-	printf("cc ici\n");
 	//printf("la : cmd->argv = %s, cmd->index_pid = %d\n", cmd->argv[0], cmd->index_pid);
 	//changer cette merde :
 	while (cmd->env[i])

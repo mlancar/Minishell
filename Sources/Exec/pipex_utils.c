@@ -30,9 +30,15 @@ void	ft_putstr_fd(char *str, int fd)
 {
 	int	len;
 
+	// int fd_test = open("test.c", O_RDONLY);
+	// if (fd_test == -1)
+	// 	perror("open");
+	//printf("fd test = %d\n", fd_test);
+	//printf("fd = %d\n", fd);
 	len = ft_strlen(str);
 	if (write(fd, str, len) == -1)
 		perror("write");
+	// close(fd_test);
 }
 
 char	*ft_strcat(char *dest, char *src)
