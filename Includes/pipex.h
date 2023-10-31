@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 19:47:18 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/30 15:59:34 by malancar         ###   ########.fr       */
+/*   Updated: 2023/10/31 16:43:06 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <errno.h>
+# include <dirent.h>
 # include "../Sources/Exec/Get_next_line/get_next_line.h"
 # include "minishell.h"
 
@@ -90,6 +91,7 @@ char	*ft_strdup(char *s1);
 char	*ft_strjoin(char *s1, char *s2, char c);
 void	ft_putstr_fd(char *str, int fd);
 int		ft_strcmp_cmd(char *s1, char *s2);
+int		ft_strncmp(char *s1, char *s2, int n);
 
 void	error_access_cmd(t_cmd *cmd);
 void	error_empty_string(t_cmd *cmd);
@@ -110,6 +112,7 @@ int		builtins_echo(t_cmd *cmd);
 int		builtins_pwd(t_cmd *cmd);
 int		builtins_export(t_cmd *cmd, t_struct_env *s);
 int		builtins_env(t_cmd *cmd, t_lst_env *env_list);
+int		builtin_cd(t_cmd *cmd);
 
 int		check_builtins(t_cmd *cmd);
 int		exec_builtins(t_cmd *cmd, t_struct_env *s);
@@ -117,12 +120,5 @@ int		its_option(char **argv);
 int		its_valid(char *str);
 void	print_export(t_cmd *cmd, t_lst_env *lst_export);
 int		check_egal(char *str);
-
-
-// void	one_cmd(t_lst_cmd *argv, t_cmd *cmd, t_lst_env **env_list);
-// void	first_cmd(t_lst_cmd *argv, t_cmd *cmd);
-// void	middle_cmd(t_lst_cmd *argv, t_cmd *cmd);
-// void	last_cmd(t_lst_cmd *argv, t_cmd *cmd);
-// void	exec_one_cmd(t_lst_cmd *argv, t_cmd *cmd, t_lst_env **env_list);
 
 #endif
