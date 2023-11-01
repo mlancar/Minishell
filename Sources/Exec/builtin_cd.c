@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 18:53:30 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/31 18:05:09 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/01 16:27:57 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,12 +68,11 @@ int	builtin_cd(t_cmd *cmd)
 	}
 	//printf("%s %s\n", cmd->argv[0], cmd->argv[1]);
 	dir = opendir(path);
-	//printf("%p\n", dir);
 	if (!dir)
 	{
 		error_cd(cmd);
 	}
-	//printf("cc\n");
 	chdir(path);
+	closedir(dir);
 	return (1);
 }

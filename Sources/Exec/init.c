@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 18:52:07 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/30 15:59:46 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/01 17:03:10 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,5 +71,6 @@ void	init_struct(t_cmd *cmd, t_lst_cmd *argv)
 	cmd->last = cmd->nbr - 1;
 	cmd->if_here_doc = 0;
 	cmd->fd.tmp = -1;
+	cmd->argv = NULL;
 
 }

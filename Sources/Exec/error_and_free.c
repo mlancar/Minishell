@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 21:28:45 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/31 17:57:39 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/01 17:09:38 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	free_tab(char **tab)
 	i = 0;
 	if (!tab)
 		return ;
+	//printf("tab = %s\n", tab[0]);
 	while (tab[i])
 	{
 		free(tab[i]);

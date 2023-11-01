@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 12:53:39 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/30 16:32:53 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/01 16:39:04 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	pipe_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s)
 		free_and_exit("pipe", cmd);
 	while (cmd->index_pid < cmd->nbr)
 	{
-		cmd->argv = convert_list(argv);
+		convert_list(cmd, argv);
 		//printf("ici : cmd->argv = %s, cmd->index_pid = %d\n", cmd->argv[0], cmd->index_pid);
 		cmd->fd.previous = cmd->fd.pipe[0];
 		if ((cmd->index_pid != cmd->first)

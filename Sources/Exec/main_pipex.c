@@ -18,7 +18,7 @@ int	main_exec(t_lst_cmd *argv, t_struct_env *s)
 	t_cmd	cmd;
 	int		status;
 
-	cmd.env = convert_list_env(s);
+	convert_list_env(&cmd, s);
 	init_struct(&cmd, argv);
 	cmd.pid = malloc(sizeof(pid_t) * cmd.nbr);
 	if (!cmd.pid)

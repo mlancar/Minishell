@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 19:47:18 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/31 16:43:06 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/01 16:41:22 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,8 @@ void	error_cmd(int return_value, t_cmd *cmd);
 void	free_tab(char **tab);
 void	free_and_exit(char *str, t_cmd *cmd);
 
-char	**convert_list(t_lst_cmd *list);
-char	**convert_list_env(t_struct_env *s);
+void	convert_list(t_cmd *cmd, t_lst_cmd *list);
+void	convert_list_env(t_cmd *cmd, t_struct_env *s);
 int		list_size(t_lst_cmd *list);
 int		ft_lst_size_env(t_lst_env *lst_env);
 
@@ -113,6 +113,7 @@ int		builtins_pwd(t_cmd *cmd);
 int		builtins_export(t_cmd *cmd, t_struct_env *s);
 int		builtins_env(t_cmd *cmd, t_lst_env *env_list);
 int		builtin_cd(t_cmd *cmd);
+int		builtin_exit(t_cmd *cmd);
 
 int		check_builtins(t_cmd *cmd);
 int		exec_builtins(t_cmd *cmd, t_struct_env *s);
