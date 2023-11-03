@@ -6,23 +6,12 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 18:53:30 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/01 16:27:57 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/03 17:48:34 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 #include "minishell.h"
-
-void	error_cd(t_cmd *cmd)
-{
-	ft_putstr_fd(cmd->argv[0], 2);
-	ft_putstr_fd(": ", 2);
-	ft_putstr_fd(cmd->argv[1], 2);
-	ft_putstr_fd(": ", 2);
-	ft_putstr_fd(strerror(errno), 2);
-	ft_putstr_fd("\n", 2);
-	error_cmd(127, cmd);
-}
 
 int	get_home_path(t_cmd *cmd)
 {
@@ -43,15 +32,28 @@ int	get_home_path(t_cmd *cmd)
 	return (0);
 }
 
+void		error_cd(t_cmd *cmd)
+{
+	if (cmd->argv[2])
+		printf("%s: too many arguments\n", cmd->argv[0]);
+	else
+		printf("%s: %s: %s\n", cmd->argv[0], cmd->argv[1], strerror(errno));
+	
+}
+
 int	builtin_cd(t_cmd *cmd)
 {
-	DIR		*dir;
 	char	*path;
 	int		i;
+	int		len;
 
+	len = 0;
 	i = 0;
-	dir = 0;
 	path = cmd->argv[1];
+	while (cmd->argv[len])
+		len++;
+	if (len > 2)
+		return (error_cd(cmd), 0);
 	if (path == NULL)
 	{
 		i = get_home_path(cmd);
@@ -66,13 +68,7 @@ int	builtin_cd(t_cmd *cmd)
 		//printf("home_path = %s\n", path);
 		
 	}
-	//printf("%s %s\n", cmd->argv[0], cmd->argv[1]);
-	dir = opendir(path);
-	if (!dir)
-	{
-		error_cd(cmd);
-	}
-	chdir(path);
-	closedir(dir);
+	if (chdir(path) == -1)
+		return (error_cd(cmd), 0);
 	return (1);
 }

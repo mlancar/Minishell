@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 12:53:39 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/01 16:39:04 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/03 18:33:03 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,11 @@ void	exec_cmd(t_cmd *cmd, t_struct_env *s)
 				error_cmd(0, cmd);
 			//printf("close fd builtin\n");
 			close_fd(cmd);
+			//tout free
+			free(cmd->path);
+			free(cmd->pid);
+			free(cmd->argv);
+			free(cmd->env);
 			exit(EXIT_SUCCESS);
 		}
 		else

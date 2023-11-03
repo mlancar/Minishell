@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 19:05:44 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/01 17:06:26 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/03 18:12:55 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,10 @@ void	convert_list(t_cmd *cmd, t_lst_cmd *argv)
 
 	start = argv->arg;
 	size_list = ft_lst_size_arg(argv->arg) + 1;
-	// if (cmd->argv != NULL)
-	// {
-	// 	printf("cc\n");
-	// 	free_tab(cmd->argv);
-	// }
+	if (cmd->argv != NULL)
+	{
+		free(cmd->argv);//pas freetab parce que free dans liste chainee
+	}
 	i = 0;
 	cmd->argv = malloc(sizeof(char*) * size_list);
 	if (!cmd->argv)

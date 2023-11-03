@@ -27,6 +27,10 @@ int	main_exec(t_lst_cmd *argv, t_struct_env *s)
 	if (check_builtins(&cmd) == 1 && cmd.nbr == 1)
 	{
 		free(cmd.pid);
+		//remplacer par fonction qui  free tout
+		free(cmd.env);
+		free(cmd.argv);
+		//
 		return (0);
 	}
 	cmd.index_pid--;
@@ -36,5 +40,6 @@ int	main_exec(t_lst_cmd *argv, t_struct_env *s)
 		cmd.index_pid--;
 	}
 	free(cmd.pid);
+	free(cmd.env);
 	return (0);
 }
