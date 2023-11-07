@@ -6,11 +6,11 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 18:52:07 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/01 17:03:10 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/07 18:49:32 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "exec.h"
 
 void	init_fd(t_cmd *cmd)
 {
@@ -41,24 +41,23 @@ void	init_fd(t_cmd *cmd)
 	}
 }
 
-void	set_redirections(t_lst_cmd *argv, t_cmd *cmd)
+int		set_redirections(t_lst_cmd *argv, t_cmd *cmd)
 {
 	if (argv->file)
 	{
 		if (argv->file->limiter)
-		{
 			cmd->if_here_doc = 1;
-			
-		}
 		else
 			cmd->if_here_doc = 0;
 		if (argv->file->infile)
 		{
-			open_infile(argv, cmd);
+			if (open_infile(argv, cmd) == 0)
+				return (0);
 		}
 		if (argv->file->outfile)
 			open_outfile(argv, cmd);
 	}
+	return (1);
 }
 
 void	init_struct(t_cmd *cmd, t_lst_cmd *argv)

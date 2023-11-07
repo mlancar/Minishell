@@ -6,19 +6,22 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/29 12:13:28 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/30 15:42:46 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/07 17:44:39 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "exec.h"
 
-void	open_infile(t_lst_cmd *argv, t_cmd *cmd)
+int	open_infile(t_lst_cmd *argv, t_cmd *cmd)
 {
 	check_close(cmd, cmd->fd.read);
 	cmd->fd.read = open(argv->file->infile, O_RDONLY);
 	if (cmd->fd.read == -1)
-		perror("open");
-	//printf("infile = %d\n", cmd->fd.read);
+	{
+		print_error(argv, cmd);
+		return (0);
+	}
+	return (1);
 }
 
 void	open_outfile(t_lst_cmd *argv, t_cmd *cmd)
@@ -29,10 +32,7 @@ void	open_outfile(t_lst_cmd *argv, t_cmd *cmd)
 		cmd->fd.write = open(argv->file->outfile, O_RDWR | O_TRUNC | O_CREAT, S_IRUSR
 				| S_IWUSR | S_IRGRP | S_IROTH);
 		if (cmd->fd.write == -1)
-		{
-			perror("open");
-			exit(EXIT_FAILURE);
-		}	
+			error_cmd(argv, cmd, 1);
 	}
 	else
 	{
@@ -40,10 +40,6 @@ void	open_outfile(t_lst_cmd *argv, t_cmd *cmd)
 		cmd->fd.write = open(argv->file->outfile, O_RDWR | O_APPEND | O_CREAT, S_IRUSR
 				| S_IWUSR | S_IRGRP | S_IROTH);
 		if (cmd->fd.write == -1)
-		{
-			perror("open");
-			exit(EXIT_FAILURE);
-		}	
+			error_cmd(argv, cmd, 1);
 	}
-	//printf("outfile = %d\n", cmd->fd.write);
 }

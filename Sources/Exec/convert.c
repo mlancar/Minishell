@@ -6,11 +6,11 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 19:05:44 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/03 18:12:55 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/07 14:02:01 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "exec.h"
 
 void	convert_list(t_cmd *cmd, t_lst_cmd *argv)
 {

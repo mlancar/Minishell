@@ -6,11 +6,11 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 13:28:37 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/30 12:32:46 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/07 14:02:01 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "exec.h"
 
 int	check_slash_and_access(t_lst_cmd *argv, t_cmd *cmd)
 {

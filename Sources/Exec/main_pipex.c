@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "exec.h"
 #include "minishell.h"
 
 int	main_exec(t_lst_cmd *argv, t_struct_env *s)

@@ -1,5 +1,5 @@
 #include "minishell.h"
-#include "pipex.h"
+#include "exec.h"
 
 int	init_lst(t_lst_cmd **cmd)
 {

@@ -6,11 +6,11 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 16:23:15 by malancar          #+#    #+#             */
-/*   Updated: 2023/10/30 16:02:26 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/07 14:02:01 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "exec.h"
 
 void	check_close(t_cmd *cmd, int fd)
 {

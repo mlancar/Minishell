@@ -6,46 +6,45 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 12:53:39 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/03 18:33:03 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/07 18:56:29 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "exec.h"
 
-void redirection(t_lst_cmd *argv, t_cmd *cmd)
+int 	redirections(t_lst_cmd *argv, t_cmd *cmd)
 {
 	while (argv->file)
 	{
-		set_redirections(argv, cmd);
+		if (set_redirections(argv, cmd) == 0)
+			return (0);
 		if (cmd->if_here_doc == 1)
 		{
-			here_doc(argv->file->limiter, cmd);
-			//dprintf(2, "fd tmp heredoc = %d\n", cmd->fd.tmp);
+			here_doc(argv->file->limiter, cmd, argv);
 			check_close(cmd, cmd->fd.read);
 			cmd->fd.read = cmd->fd.tmp;
-			//dprintf(2, "fd read heredoc = %d\n", cmd->fd.read);
 			unlink(cmd->files.rand_name);
 		}
 		argv->file = argv->file->next;
 	}
+	return (1);
 }
 
-void	one_cmd_and_builtin(t_cmd *cmd, t_struct_env *s)
+void	one_cmd_and_builtin(t_cmd *cmd, t_struct_env *s, t_lst_cmd *argv)
 {
 	(void)s;
-	if (exec_builtins(cmd, s) == 0)
-		error_cmd(0, cmd);
+	if (exec_builtins(cmd, s, argv) == 0)
+		error_cmd(argv, cmd, 126);
 	close_fd_parent(cmd);
 	return ;
 }
 
-void	exec_cmd(t_cmd *cmd, t_struct_env *s)
+void	exec_cmd(t_cmd *cmd, t_struct_env *s, t_lst_cmd *argv)
 {
 		if (check_builtins(cmd) == 1)
 		{
-			if (exec_builtins(cmd, s) == 0)
-				error_cmd(0, cmd);
-			//printf("close fd builtin\n");
+			if (exec_builtins(cmd, s, argv) == 0)
+				error_cmd(argv, cmd, 126);
 			close_fd(cmd);
 			//tout free
 			free(cmd->path);
@@ -57,40 +56,41 @@ void	exec_cmd(t_cmd *cmd, t_struct_env *s)
 		else
 		{
 			if (execve(cmd->path, cmd->argv, cmd->env))
-				error_cmd(0, cmd);
+				error_cmd(argv, cmd, 126);
 		}
 }
 
-void	setup_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s)
+int	setup_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s)
 {
 	init_fd(cmd);
-	redirection(argv, cmd);
+	if (redirections(argv, cmd) == 0)
+		return (0);
 	if (check_command(argv, cmd) == 0)
-		error_access_cmd(cmd);
+		return (error_access_cmd(argv, cmd), 0);
 	if (check_builtins(cmd) == 1 && cmd->nbr == 1)
-		return (one_cmd_and_builtin(cmd, s));
+		return (one_cmd_and_builtin(cmd, s, argv), 0);
 	cmd->pid[cmd->index_pid] = fork();
 	if (cmd->pid[cmd->index_pid] < 0)
-		free_and_exit("fork", cmd);
+		error_cmd(argv, cmd, 1);
 	if (cmd->pid[cmd->index_pid] == 0)
 	{
 		if (check_builtins(cmd) == 0)
 		{
-			//printf("cmd = %s cc pas builtin\n", cmd->argv[0]);
 			if (dup2(cmd->fd.read, 0) == -1 || dup2(cmd->fd.write, 1) == -1) 
-				error_cmd(0, cmd);
+				error_cmd(argv, cmd, 126);
 			close_fd_child(cmd);
 		}
-		exec_cmd(cmd, s);
+		exec_cmd(cmd, s, argv);
 	}
 	else
 		close_fd_parent(cmd);
+	return (1);
 }
 
 void	pipe_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s)
 {
 	if (cmd->index_pid != cmd->nbr - 1 && pipe(cmd->fd.pipe) == -1)
-		free_and_exit("pipe", cmd);
+		error_cmd(argv, cmd, 1);
 	while (cmd->index_pid < cmd->nbr)
 	{
 		convert_list(cmd, argv);
@@ -100,7 +100,7 @@ void	pipe_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s)
 			&& (cmd->index_pid != cmd->last))
 		{
 		if (pipe(cmd->fd.pipe) == -1)
-			free_and_exit("pipe", cmd);
+			error_cmd(argv, cmd, 1);
 		}
 		setup_cmd(argv, cmd, s);
 		cmd->index++;

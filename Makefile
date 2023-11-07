@@ -6,7 +6,7 @@
 #    By: malancar <malancar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/03 19:06:48 by malancar          #+#    #+#              #
-#    Updated: 2023/11/01 14:06:21 by malancar         ###   ########.fr        #
+#    Updated: 2023/11/07 18:43:44 by malancar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ FLAGS	:= -Wextra -Werror -Wall -g
 NAME	= minishell
 
 HEADER = ./Includes
-HDR = $(HEADER)/pipex.h $(HEADER)/minishell.h
+HDR = $(HEADER)/exec.h $(HEADER)/minishell.h
 
 SOURCES_PARSING =	main.c                  \
                     manage.c                \
@@ -46,21 +46,21 @@ SOURCES_EXEC =		check.c							\
                     init.c							\
                     convert.c						\
                     cmds.c					        \
-                    pipex_utils.c					\
-                    pipex_utils_2.c					\
+                    exec_utils.c					\
+                    exec_utils_2.c					\
                     ft_split.c						\
                     open_files.c					\
                     error_and_free.c				\
                     main_pipex.c					\
                     here_doc.c						\
                     close.c							\
-					builtin_echo.c					\
-					builtin_env.c					\
-					builtin_export.c				\
-					builtin_pwd.c					\
-					builtin_export_2.c				\
-                    builtin_cd.c					\
-                    builtin_exit.c                  \
+					Builtins/builtin_echo.c			\
+					Builtins/builtin_env.c			\
+					Builtins/builtin_export.c		\
+					Builtins/builtin_pwd.c			\
+					Builtins/builtin_export_2.c		\
+                    Builtins/builtin_cd.c			\
+                    Builtins/builtin_exit.c			\
 					builtins.c				        \
                     Get_next_line/get_next_line.c	\
                     Get_next_line/get_next_line_utils.c
