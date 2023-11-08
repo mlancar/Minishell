@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef cmd_H
-# define cmd_H
+#ifndef EXEC_H
+# define EXEC_H
 
 # include <stdlib.h>
 # include <stdio.h>
@@ -30,7 +30,7 @@
 typedef struct s_files {
 	int		here_doc;
 	char	rand_name[7];
-	
+	int		line;
 }	t_files;
 
 typedef	struct s_fd {
@@ -59,7 +59,6 @@ typedef struct s_cmd {
 	int		if_here_doc;
 	t_fd	fd;
 	t_files	files;
-	
 }	t_cmd;
 
 int		open_infile(t_lst_cmd *argv, t_cmd *cmd);
@@ -90,9 +89,12 @@ char	**ft_split(char *str, char c);
 char	*ft_strdup(char *s1);
 char	*ft_strjoin(char *s1, char *s2, char c);
 void	ft_putstr_fd(char *str, int fd);
+void	ft_putnbr_fd(int n, int fd);
+void	ft_putchar_fd(char c, int fd);
 int		ft_strcmp_cmd(char *s1, char *s2);
 int		ft_strncmp(char *s1, char *s2, int n);
 int		ft_atoi(char *str);
+char	*ft_strcat(char *dest, char *src);
 
 void	error_access_cmd(t_lst_cmd *argv, t_cmd *cmd);
 void	error_empty_string(t_cmd *cmd);
@@ -120,6 +122,7 @@ int		check_builtins(t_cmd *cmd);
 int		exec_builtins(t_cmd *cmd, t_struct_env *s, t_lst_cmd *argv);
 void	error_builtins(t_cmd *cmd);
 int		builtin_arg_nbr(t_cmd *cmd);
+int		get_env_line(t_cmd *cmd, char *str);
 
 void	print_export(t_cmd *cmd, t_lst_env *lst_export);
 int		its_valid(char *str);

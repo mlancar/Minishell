@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 18:52:07 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/07 18:49:32 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/08 16:57:42 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	init_fd(t_cmd *cmd)
 	}
 }
 
-int		set_redirections(t_lst_cmd *argv, t_cmd *cmd)
+int	set_redirections(t_lst_cmd *argv, t_cmd *cmd)
 {
 	if (argv->file)
 	{
@@ -71,5 +71,4 @@ void	init_struct(t_cmd *cmd, t_lst_cmd *argv)
 	cmd->if_here_doc = 0;
 	cmd->fd.tmp = -1;
 	cmd->argv = NULL;
-
 }

@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 19:05:44 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/07 14:02:01 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/08 17:10:33 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,18 @@
 
 void	convert_list(t_cmd *cmd, t_lst_cmd *argv)
 {
-	int	i;
-	int	size_list;
+	int			i;
+	int			size_list;
 	t_lst_arg	*start;
 
 	start = argv->arg;
 	size_list = ft_lst_size_arg(argv->arg) + 1;
 	if (cmd->argv != NULL)
-	{
 		free(cmd->argv);//pas freetab parce que free dans liste chainee
-	}
 	i = 0;
-	cmd->argv = malloc(sizeof(char*) * size_list);
+	cmd->argv = malloc(sizeof(char *) * size_list);
 	if (!cmd->argv)
-		return;
+		return ;
 	while (argv->arg != NULL)
 	{
 		if (argv->arg->name != NULL)
@@ -48,15 +46,15 @@ void	convert_list(t_cmd *cmd, t_lst_cmd *argv)
 
 void	convert_list_env(t_cmd *cmd, t_struct_env *s)
 {
-	int				i;
-	int				size_list;
+	int			i;
+	int			size_list;
 	t_lst_env	*start;
 
 	start = s->lst_env;
 	size_list = ft_lst_size_env(s->lst_env) + 1;
 	cmd->env = NULL;
 	i = 0;
-	cmd->env = malloc(sizeof(char*) * size_list);
+	cmd->env = malloc(sizeof(char *) * size_list);
 	if (!cmd->env)
 		return ;
 	while (s->lst_env != NULL)

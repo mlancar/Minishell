@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 13:50:22 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/07 18:42:52 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/08 17:37:15 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 // For Example: If we execute a statement exit(9999)
 // then it will execute exit(15) as 9999%256 = 15.
 
-int		check_exit_code(t_cmd *cmd, int exit_code)
+int	check_exit_code(t_cmd *cmd, int exit_code)
 {
 	(void)cmd;
 	while (exit_code > 255)
@@ -37,16 +37,20 @@ void	free_exec_and_parsing(t_lst_cmd *argv, t_cmd *cmd)
 	free(cmd->pid);
 }
 
-int		is_arg_numeric(t_cmd *cmd)
+int	is_arg_numeric(t_cmd *cmd)
 {
 	int	i;
 
-	i  = 0;
+	i = 0;
 	while (cmd->argv[1][i])
 	{
-		while (cmd->argv[1][i] && (cmd->argv[1][i] >= '0' && cmd->argv[1][i] <= '9'))
+		while (cmd->argv[1][i] && (cmd->argv[1][i] >= '0'
+			&& cmd->argv[1][i] <= '9'))
+		{
 			i++;
-		if (cmd->argv[1][i] && (cmd->argv[1][i] != '-' || cmd->argv[1][i] != '+'))
+		}
+		if (cmd->argv[1][i] && (cmd->argv[1][i] != '-'
+			|| cmd->argv[1][i] != '+'))
 		{
 			ft_putstr_fd("exit\n", 2);
 			ft_putstr_fd("minihsell: ", 2);
@@ -61,18 +65,33 @@ int		is_arg_numeric(t_cmd *cmd)
 	return (1);
 }
 
-int		builtin_exit(t_lst_cmd *argv, t_cmd *cmd)
+int	check_arg(t_cmd *cmd, int *exit_code)
+{
+	int	nbr_arg;
+	
+	nbr_arg = builtin_arg_nbr(cmd);
+	if (nbr_arg > 1)
+	{
+		if (is_arg_numeric(cmd) == 0)
+			free_and_exit(cmd, 2);
+		*exit_code = ft_atoi(cmd->argv[1]);
+		if  (nbr_arg > 2)
+		{
+			ft_putstr_fd("exit\n", 2);
+			return (0);
+		}
+	}
+	return (1);
+}
+
+int	builtin_exit(t_lst_cmd *argv, t_cmd *cmd)
 {
 	int	exit_code;
 	
-	if (is_arg_numeric(cmd) == 0)
-		free_and_exit(cmd, 2);
-	exit_code = ft_atoi(cmd->argv[1]);
-	if (builtin_arg_nbr(cmd) == -1)
-	{
-		ft_putstr_fd("exit\n", 2);
-		return (error_builtins(cmd), -1);
-	}
+	exit_code = 0;
+	//long max = 9223372036854775807
+	if (check_arg(cmd, &exit_code) == 0)
+		return (0);
 	exit_code = check_exit_code(cmd, exit_code);
 	free_exec_and_parsing(argv, cmd);
 	if (cmd->nbr != 1)

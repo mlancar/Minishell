@@ -28,21 +28,13 @@ int	ft_strncmp(char *s1, char *s2, int n)
 {
 	int	i;
 
-	//printf("s1 = %s s2 = %s\n", s1, s2);
 	i = 0;
 	if (!s1 || !s2)
 		return (-1);
-	while ((s1[i] && s2[i]) && (s1[i] == s2[i]) && i <= n)
-	{
-		//printf("s1 = %c s2 = %c i = %d\n", s1[i], s2[i], i);
-		//printf("la i = %d\n", i);
+	while (i < n - 1 && s1[i] != '\0' && s2[i] != '\0' && s1[i] == s2[i])
 		i++;
-	}
-	//printf("ici i = %d\n", i);
-	//printf("%d\n", s1[i] - s2[i]);
 	if (i == 5)
 		return (0);
-	//printf("%c - %c = %d\n", s1[i], s2[i], s1[i] - s2[i]);
 	return (s1[i] - s2[i]);
 }
 
@@ -84,5 +76,6 @@ int	ft_atoi(char *str)
 		result = (result * 10) + (str[i] - 48);
 		i++;
 	}
+	//long max 9223372036854775807
 	return (result * sign);
 }

@@ -6,13 +6,13 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 12:53:39 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/07 18:56:29 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/08 17:08:57 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
-int 	redirections(t_lst_cmd *argv, t_cmd *cmd)
+int	redirections(t_lst_cmd *argv, t_cmd *cmd)
 {
 	while (argv->file)
 	{
@@ -41,23 +41,23 @@ void	one_cmd_and_builtin(t_cmd *cmd, t_struct_env *s, t_lst_cmd *argv)
 
 void	exec_cmd(t_cmd *cmd, t_struct_env *s, t_lst_cmd *argv)
 {
-		if (check_builtins(cmd) == 1)
-		{
-			if (exec_builtins(cmd, s, argv) == 0)
-				error_cmd(argv, cmd, 126);
-			close_fd(cmd);
-			//tout free
-			free(cmd->path);
-			free(cmd->pid);
-			free(cmd->argv);
-			free(cmd->env);
-			exit(EXIT_SUCCESS);
-		}
-		else
-		{
-			if (execve(cmd->path, cmd->argv, cmd->env))
-				error_cmd(argv, cmd, 126);
-		}
+	if (check_builtins(cmd) == 1)
+	{
+		if (exec_builtins(cmd, s, argv) == 0)
+			error_cmd(argv, cmd, 126);
+		close_fd(cmd);
+		//tout free
+		free(cmd->path);
+		free(cmd->pid);
+		free(cmd->argv);
+		free(cmd->env);
+		exit(EXIT_SUCCESS);
+	}
+	else
+	{
+		if (execve(cmd->path, cmd->argv, cmd->env))
+			error_cmd(argv, cmd, 126);
+	}
 }
 
 int	setup_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s)
@@ -76,7 +76,7 @@ int	setup_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s)
 	{
 		if (check_builtins(cmd) == 0)
 		{
-			if (dup2(cmd->fd.read, 0) == -1 || dup2(cmd->fd.write, 1) == -1) 
+			if (dup2(cmd->fd.read, 0) == -1 || dup2(cmd->fd.write, 1) == -1)
 				error_cmd(argv, cmd, 126);
 			close_fd_child(cmd);
 		}
@@ -94,13 +94,12 @@ void	pipe_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s)
 	while (cmd->index_pid < cmd->nbr)
 	{
 		convert_list(cmd, argv);
-		//printf("ici : cmd->argv = %s, cmd->index_pid = %d\n", cmd->argv[0], cmd->index_pid);
 		cmd->fd.previous = cmd->fd.pipe[0];
 		if ((cmd->index_pid != cmd->first)
 			&& (cmd->index_pid != cmd->last))
 		{
-		if (pipe(cmd->fd.pipe) == -1)
-			error_cmd(argv, cmd, 1);
+			if (pipe(cmd->fd.pipe) == -1)
+				error_cmd(argv, cmd, 1);
 		}
 		setup_cmd(argv, cmd, s);
 		cmd->index++;

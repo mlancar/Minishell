@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 14:53:52 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/07 19:00:59 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/08 17:06:50 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,29 +50,24 @@ void	get_rand_name(t_cmd *cmd)
 		cmd->files.rand_name[i] = cmd->files.rand_name[i] + 97;
 		i++;
 	}
-	//dprintf(2, "fd tmp = %d\n", cmd->fd.tmp);
 	check_close(cmd, cmd->fd.tmp);
-	cmd->fd.tmp = open(cmd->files.rand_name, O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR
-			| S_IWUSR | S_IRGRP);
+	cmd->fd.tmp = open(cmd->files.rand_name, O_WRONLY | O_TRUNC
+			| O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP);
 	if (cmd->fd.tmp == -1)
 		free_and_exit(cmd, 1);
 }
 
-void	fill_here_doc(char **read_line, char *limiter, t_cmd *cmd, t_lst_cmd *argv)
+void	fill_here_doc(char **read_line, char *limiter, t_cmd *cmd,
+t_lst_cmd *argv)
 {
-	int	line;
-
-	line = 0;
+	cmd->files.line++;
 	write(1, "> ", 2);
 	*read_line = get_next_line(0, 0);
-	line++;
-	
 	if (*read_line == NULL)
 	{
 		ft_putstr_fd("\nminishell: warning: here-document at line ", 2);
-		//add line
-		//ft_putstr_fd()
-		ft_putstr_fd("delimited by end-of-file (wanted `", 2);
+		ft_putnbr_fd(cmd->files.line, 2);
+		ft_putstr_fd(" delimited by end-of-file (wanted `", 2);
 		ft_putstr_fd(argv->file->limiter, 2);
 		ft_putstr_fd("')\n", 2);
 	}
@@ -83,8 +78,9 @@ void	fill_here_doc(char **read_line, char *limiter, t_cmd *cmd, t_lst_cmd *argv)
 void	here_doc(char *limiter, t_cmd *cmd, t_lst_cmd *argv)
 {
 	char	*read_line;
-	
+
 	cmd->fd.tmp = 0;
+	cmd->files.line = 0;
 	get_rand_name(cmd);
 	fill_here_doc(&read_line, limiter, cmd, argv);
 	while (is_limiter(read_line, limiter) != 0)

@@ -6,30 +6,68 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 18:53:30 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/07 16:10:06 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/08 17:14:15 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 #include "minishell.h"
 
-int	get_home_path(t_cmd *cmd)
+void	set_oldpwd_var(t_cmd *cmd)
 {
+	int	pwd;
+	int	oldpwd;
 	int	i;
+	int	j;
 
-	i = 0;
-	while (cmd->env[i])
+	pwd = get_env_line(cmd, "PWD=");
+	oldpwd = get_env_line(cmd, "OLDPWD=");
+	i = 4;
+	j = 7;
+	//free(cmd->env[oldpwd]);
+	cmd->env[oldpwd] = malloc(sizeof(char) * ft_strlen(cmd->env[pwd]) + j + 1);
+	if (!cmd->env[oldpwd])
+		return ;
+	cmd->env[oldpwd] = strcpy(cmd->env[oldpwd], "OLDPWD=");
+	while (cmd->env[pwd][i])
 	{
-		//printf("env[i] = %s\n", cmd->env[i]);
-		if (ft_strncmp("HOME=", cmd->env[i], 4) == 0)
-		{
-			//printf("la i = %d\n", i);
-			return (i);
-		}
-		//printf("i = %d\n", i);
+		cmd->env[oldpwd][j] = cmd->env[pwd][i];
 		i++;
+		j++;
 	}
-	return (0);
+	cmd->env[oldpwd][j] = '\0';
+	//printf("oldpwd = %s\n", cmd->env[oldpwd]);
+}
+
+void	set_pwd_var(t_cmd *cmd)
+{
+	int		pwd;
+	char	*pwd_var;
+	int		i;
+	int		j;
+
+	i = 4;
+	j = 0;
+	pwd = get_env_line(cmd, "PWD=");
+	pwd_var = getcwd(NULL, 0);
+	if (!pwd_var)
+	{
+		free(pwd_var);
+		return ;
+	}
+	//free(cmd->env[oldpwd]);
+	cmd->env[pwd] = malloc(sizeof(char) * ft_strlen(pwd_var) + i + 1);
+	if (!cmd->env[pwd])
+		return ;
+	cmd->env[pwd] = strcpy(cmd->env[pwd], "PWD=");
+	while (pwd_var[j])
+	{
+		cmd->env[pwd][i] = pwd_var[j];
+		i++;
+		j++;
+	}
+	cmd->env[pwd][i] = '\0';
+	//printf("apres pwd = %s\n", cmd->env[pwd]);
 }
 
 int	builtin_cd(t_cmd *cmd)
@@ -42,11 +80,10 @@ int	builtin_cd(t_cmd *cmd)
 	i = 0;
 	path = cmd->argv[1];
 	if (builtin_arg_nbr(cmd) == -1)
-		 return (error_builtins(cmd), 0);
+		return (error_builtins(cmd), 0);
 	if (path == NULL)
 	{
-		i = get_home_path(cmd);
-		//printf("%d\n",get_home_path(cmd));
+		i = get_env_line(cmd, "HOME=");
 		if (i == 0)
 		{
 			ft_putstr_fd(cmd->argv[0], 2);
@@ -54,10 +91,10 @@ int	builtin_cd(t_cmd *cmd)
 			return (0);
 		}
 		path = &cmd->env[i][5];
-		//printf("home_path = %s\n", path);
-		
 	}
 	if (chdir(path) == -1)
 		return (error_builtins(cmd), 0);
+	set_oldpwd_var(cmd);
+	set_pwd_var(cmd);
 	return (1);
 }

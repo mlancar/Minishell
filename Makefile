@@ -6,7 +6,7 @@
 #    By: malancar <malancar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/03 19:06:48 by malancar          #+#    #+#              #
-#    Updated: 2023/11/07 18:43:44 by malancar         ###   ########.fr        #
+#    Updated: 2023/11/08 17:01:42 by malancar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,9 +51,10 @@ SOURCES_EXEC =		check.c							\
                     ft_split.c						\
                     open_files.c					\
                     error_and_free.c				\
-                    main_pipex.c					\
+                    main_exec.c						\
                     here_doc.c						\
                     close.c							\
+					print_fd.c						\
 					Builtins/builtin_echo.c			\
 					Builtins/builtin_env.c			\
 					Builtins/builtin_export.c		\
@@ -61,7 +62,8 @@ SOURCES_EXEC =		check.c							\
 					Builtins/builtin_export_2.c		\
                     Builtins/builtin_cd.c			\
                     Builtins/builtin_exit.c			\
-					builtins.c				        \
+					Builtins/builtins.c				\
+					Builtins/builtins_utils.c		\
                     Get_next_line/get_next_line.c	\
                     Get_next_line/get_next_line_utils.c
 
