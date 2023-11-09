@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 13:50:22 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/08 17:37:15 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/09 17:20:29 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,13 @@
 // For Example: If we execute a statement exit(9999)
 // then it will execute exit(15) as 9999%256 = 15.
 
-int	check_exit_code(t_cmd *cmd, int exit_code)
+int	check_exit_code(t_cmd *cmd, unsigned long exit_code)
 {
 	(void)cmd;
-	while (exit_code > 255)
+	if (exit_code > 255)
 		exit_code = exit_code % 256;
-	while (exit_code < 0)
+	//probleme :
+	if (exit_code < 0)
 		exit_code = exit_code % 256;
 	return (exit_code);
 }
@@ -37,11 +38,24 @@ void	free_exec_and_parsing(t_lst_cmd *argv, t_cmd *cmd)
 	free(cmd->pid);
 }
 
+void	error_numeric_arg(t_cmd *cmd)
+{
+	ft_putstr_fd("exit\n", 2);
+	ft_putstr_fd("minihsell: ", 2);
+	ft_putstr_fd(cmd->argv[0], 2);
+	ft_putstr_fd(": ", 2);
+	ft_putstr_fd(cmd->argv[1], 2);
+	ft_putstr_fd(": numeric argument required\n", 2);
+	g_exit = 2;
+}
+
 int	is_arg_numeric(t_cmd *cmd)
 {
 	int	i;
 
 	i = 0;
+	if ((*cmd->argv[1]) == '\0')
+		error_numeric_arg(cmd);
 	while (cmd->argv[1][i])
 	{
 		while (cmd->argv[1][i] && (cmd->argv[1][i] >= '0'
@@ -52,12 +66,7 @@ int	is_arg_numeric(t_cmd *cmd)
 		if (cmd->argv[1][i] && (cmd->argv[1][i] != '-'
 			|| cmd->argv[1][i] != '+'))
 		{
-			ft_putstr_fd("exit\n", 2);
-			ft_putstr_fd("minihsell: ", 2);
-			ft_putstr_fd(cmd->argv[0], 2);
-			ft_putstr_fd(": ", 2);
-			ft_putstr_fd(cmd->argv[1], 2);
-			ft_putstr_fd(": numeric argument required\n", 2);
+			error_numeric_arg(cmd);
 			return (0);
 		}
 		i++;
@@ -65,7 +74,7 @@ int	is_arg_numeric(t_cmd *cmd)
 	return (1);
 }
 
-int	check_arg(t_cmd *cmd, int *exit_code)
+int	check_arg(t_cmd *cmd, unsigned long *exit_code)
 {
 	int	nbr_arg;
 	
@@ -74,25 +83,31 @@ int	check_arg(t_cmd *cmd, int *exit_code)
 	{
 		if (is_arg_numeric(cmd) == 0)
 			free_and_exit(cmd, 2);
-		*exit_code = ft_atoi(cmd->argv[1]);
-		if  (nbr_arg > 2)
+		*exit_code = ft_atol(cmd->argv[1]);
+		if (*exit_code > ULLONG_MAX || *exit_code < ULLONG_MAX)
+		{
+			error_numeric_arg(cmd);
+			free_and_exit(cmd, 2);
+		}
+		if (nbr_arg > 2)
 		{
 			ft_putstr_fd("exit\n", 2);
+			g_exit = 127;
 			return (0);
 		}
 	}
+	
 	return (1);
 }
 
 int	builtin_exit(t_lst_cmd *argv, t_cmd *cmd)
 {
-	int	exit_code;
+	unsigned long	exit_code;
 	
 	exit_code = 0;
-	//long max = 9223372036854775807
 	if (check_arg(cmd, &exit_code) == 0)
 		return (0);
-	exit_code = check_exit_code(cmd, exit_code);
+	g_exit = check_exit_code(cmd, exit_code);
 	free_exec_and_parsing(argv, cmd);
 	if (cmd->nbr != 1)
 	{
@@ -104,5 +119,6 @@ int	builtin_exit(t_lst_cmd *argv, t_cmd *cmd)
 		check_close(cmd, cmd->fd.read);
 	else
 		check_close(cmd, cmd->fd.tmp);
-	exit(exit_code);
+	ft_putstr_fd("exit\n", 1);
+	exit(g_exit);
 }

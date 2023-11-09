@@ -6,13 +6,13 @@
 #    By: malancar <malancar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/03 19:06:48 by malancar          #+#    #+#              #
-#    Updated: 2023/11/08 17:01:42 by malancar         ###   ########.fr        #
+#    Updated: 2023/11/09 16:36:38 by malancar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC	= cc
 
-FLAGS	:= -Wextra -Werror -Wall -g 
+FLAGS	:= -Wextra -Werror -Wall -g
 
 NAME	= minishell
 

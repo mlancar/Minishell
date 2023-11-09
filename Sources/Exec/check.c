@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 13:28:37 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/08 17:01:16 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/09 15:31:15 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ int	check_access(t_lst_cmd *argv, t_cmd *cmd, char *path)
 	if (split_path)
 		free_tab(split_path);
 	cmd->path = ft_strdup(argv->arg->name);
+	//free argv->arg->name
 	if (access(cmd->path, X_OK) == 0)
 		return (1);
 	return (0);

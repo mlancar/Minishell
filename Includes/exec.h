@@ -24,6 +24,7 @@
 # include <sys/wait.h>
 # include <errno.h>
 # include <dirent.h>
+# include <limits.h>
 # include "../Sources/Exec/Get_next_line/get_next_line.h"
 # include "minishell.h"
 
@@ -93,7 +94,7 @@ void	ft_putnbr_fd(int n, int fd);
 void	ft_putchar_fd(char c, int fd);
 int		ft_strcmp_cmd(char *s1, char *s2);
 int		ft_strncmp(char *s1, char *s2, int n);
-int		ft_atoi(char *str);
+unsigned long	ft_atol(char *str);
 char	*ft_strcat(char *dest, char *src);
 
 void	error_access_cmd(t_lst_cmd *argv, t_cmd *cmd);

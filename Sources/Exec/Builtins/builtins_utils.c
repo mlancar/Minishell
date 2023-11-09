@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 16:41:56 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/08 17:21:05 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/09 17:21:19 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,32 @@ void	error_builtins(t_cmd *cmd)
 		ft_putstr_fd(strerror(errno), 2);
 		ft_putstr_fd("\n", 2);
 	}
+}
+
+unsigned long	ft_atol(char *str)
+{
+	int	i;
+	unsigned long	sign;
+	unsigned long	result;
+
+	i = 0;
+	sign = 1;
+	result = 0;
+	while (str[i] == 32)
+		i++;
+	if (str[i] == '-')
+	{
+		sign = -1;
+		i++;
+	}
+	else if (str[i] == '+')
+		i++;
+	while (str[i] && (str[i] >= '0' && str[i] <= '9'))
+	{
+		//printf("str[i] = %c\n", str[i]);
+		result = (result * 10) + (str[i] - 48);
+		i++;
+	}
+	//protect unsigned long
+	return (result * sign);
 }

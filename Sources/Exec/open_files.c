@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/29 12:13:28 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/08 16:58:34 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/09 14:50:02 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int	open_infile(t_lst_cmd *argv, t_cmd *cmd)
 	cmd->fd.read = open(argv->file->infile, O_RDONLY);
 	if (cmd->fd.read == -1)
 	{
+		g_exit = 1;
 		print_error(argv, cmd);
 		return (0);
 	}
