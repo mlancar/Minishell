@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 13:50:22 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/09 17:20:29 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/13 17:21:18 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ int	check_exit_code(t_cmd *cmd, unsigned long exit_code)
 	if (exit_code > 255)
 		exit_code = exit_code % 256;
 	//probleme :
-	if (exit_code < 0)
-		exit_code = exit_code % 256;
+	// if (exit_code < 0)
+	// 	exit_code = exit_code % 256;
 	return (exit_code);
 }
 

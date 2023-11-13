@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 13:28:37 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/09 15:31:15 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/13 17:52:12 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,11 @@ int	check_slash_and_access(t_lst_cmd *argv, t_cmd *cmd)
 
 int	check_command(t_lst_cmd *argv, t_cmd *cmd)
 {
-	int		i;
 	int		path_line;
 	char	*path;
 
-	i = 0;
 	if (cmd->argv[0] == NULL)
-		return (0);
+		return (-1);
 	if (check_builtins(cmd) == 1)
 		return (1);
 	path_line = get_env_line(cmd, "PATH=");

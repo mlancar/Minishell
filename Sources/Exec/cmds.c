@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 12:53:39 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/13 15:20:52 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/13 17:52:34 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,12 @@ int	setup_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s)
 		cmd->pid[cmd->index_pid] = -1;
 		return (0);
 	}
-	if (check_command(argv, cmd) == 0)
+	if (check_command(argv, cmd) == -1)
+	{
+		cmd->pid[cmd->index_pid] = -1;
+		return (0);
+	}
+	else if (check_command(argv, cmd) == 0)
 	{
 		cmd->pid[cmd->index_pid] = -1;
 		return (error_access_cmd(argv, cmd), 0);

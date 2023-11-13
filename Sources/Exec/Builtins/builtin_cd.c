@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 18:53:30 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/13 15:24:23 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/13 17:20:39 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,7 @@ int	builtin_cd(t_cmd *cmd)
 {
 	char	*path;
 	int		i;
-	int		len;
 
-	len = 0;
 	i = 0;
 	path = cmd->argv[1];
 	if (builtin_arg_nbr(cmd) == -1)
