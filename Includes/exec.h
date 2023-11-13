@@ -125,6 +125,7 @@ char	*lets_join_no_egal(char *s1, char *s2);
 
 int		builtin_env(t_cmd *cmd, t_lst_env *env_list);
 int		builtin_cd(t_cmd *cmd);
+int		builtin_unset(t_cmd *cmd, t_struct_env *s);
 int		builtin_exit(t_lst_cmd *argv, t_cmd *cmd);
 int		check_builtins(t_cmd *cmd);
 int		exec_builtins(t_cmd *cmd, t_struct_env *s, t_lst_cmd *argv);

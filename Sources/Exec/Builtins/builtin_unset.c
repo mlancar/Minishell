@@ -87,19 +87,19 @@ void	lets_unset_export(char *str, t_struct_env *s)
 	}
 }
 
-int	builtin_unset(char	**argv, t_struct_env *s)
+int	builtin_unset(t_cmd *cmd, t_struct_env *s)
 {
 	int	i;
 
-	if (its_option(argv))
+	if (its_option(cmd->argv))
 		return (1);
 	i = 1;
-	while (argv[i])
+	while (cmd->argv[i])
 	{
-		if (valid_unset(argv[i]))
+		if (valid_unset(cmd->argv[i]))
 		{
-			lets_unset_env(argv[i], s);
-			lets_unset_export(argv[i], s);
+			lets_unset_env(cmd->argv[i], s);
+			lets_unset_export(cmd->argv[i], s);
 		}
 		i++;
 	}
