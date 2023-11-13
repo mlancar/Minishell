@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 16:41:56 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/09 17:21:19 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/13 19:34:10 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,14 @@ void	error_builtins(t_cmd *cmd)
 {
 	if (cmd->argv[2])
 	{
-		ft_putstr_fd("minihsell: ", 2);
+		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(cmd->argv[0], 2);
 		ft_putstr_fd(": too many arguments", 2);
 		ft_putstr_fd("\n", 2);
 	}
 	else
 	{
-		ft_putstr_fd("minihsell: ", 2);
+		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(cmd->argv[0], 2);
 		ft_putstr_fd(": ", 2);
 		ft_putstr_fd(cmd->argv[1], 2);
@@ -57,10 +57,10 @@ void	error_builtins(t_cmd *cmd)
 	}
 }
 
-unsigned long	ft_atol(char *str)
+int	ft_atol(char *str, long *n)
 {
 	int	i;
-	unsigned long	sign;
+	int	sign;
 	unsigned long	result;
 
 	i = 0;
@@ -75,12 +75,15 @@ unsigned long	ft_atol(char *str)
 	}
 	else if (str[i] == '+')
 		i++;
-	while (str[i] && (str[i] >= '0' && str[i] <= '9'))
+	while (str[i] && (str[i] >= '0' && str[i] <= '9') && result <= LONG_MAX)
 	{
 		//printf("str[i] = %c\n", str[i]);
 		result = (result * 10) + (str[i] - 48);
 		i++;
 	}
-	//protect unsigned long
-	return (result * sign);
+	if ((sign == -1 && result >= ((unsigned long)LONG_MAX + 1))
+		|| (sign == 1 && result > LONG_MAX))
+		return (0);
+	*n = result * sign;
+	return (1);
 }

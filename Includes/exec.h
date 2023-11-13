@@ -94,7 +94,7 @@ void	ft_putnbr_fd(int n, int fd);
 void	ft_putchar_fd(char c, int fd);
 int		ft_strcmp_cmd(char *s1, char *s2);
 int		ft_strncmp(char *s1, char *s2, int n);
-unsigned long	ft_atol(char *str);
+int		ft_atol(char *str, long *n);
 char	*ft_strcat(char *dest, char *src);
 
 void	error_access_cmd(t_lst_cmd *argv, t_cmd *cmd);
