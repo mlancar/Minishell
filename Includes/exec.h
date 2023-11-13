@@ -113,10 +113,17 @@ void	init_struct(t_cmd *cmd, t_lst_cmd *argv);
 void	init_fd(t_cmd *cmd);
 int		set_redirections(t_lst_cmd *argv, t_cmd *cmd);
 
-int		builtins_echo(t_cmd *cmd);
-int		builtins_pwd(t_cmd *cmd);
-int		builtins_export(t_cmd *cmd, t_struct_env *s);
-int		builtins_env(t_cmd *cmd, t_lst_env *env_list);
+int		builtin_echo(t_cmd *cmd);
+int		builtin_pwd(t_cmd *cmd);
+
+int		builtin_export(t_cmd *cmd, t_struct_env *s);
+int		search_replace_export(char *str, t_struct_env *s);
+int		search_content_export(char *str, t_struct_env *s);
+int		new_line_export(char *str, t_struct_env *s, int nb);
+int		new_line_env(char *str, t_struct_env *s);
+char	*lets_join_no_egal(char *s1, char *s2);
+
+int		builtin_env(t_cmd *cmd, t_lst_env *env_list);
 int		builtin_cd(t_cmd *cmd);
 int		builtin_exit(t_lst_cmd *argv, t_cmd *cmd);
 int		check_builtins(t_cmd *cmd);

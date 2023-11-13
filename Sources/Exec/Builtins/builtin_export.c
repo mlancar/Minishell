@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   builtin_export.c                                   :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/30 12:01:32 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/07 18:29:06 by malancar         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "exec.h"
 #include "minishell.h"
 
@@ -33,7 +21,7 @@ int	doublon_var_content(char *str, t_lst_env *lst_env)
 	return (0);
 }
 
-char	*replace_line(char *str)
+char	*replace_line_env(char *str)
 {
 	int		i;
 	char	*line;
@@ -69,7 +57,7 @@ int	doublon_var(char *str, t_lst_env **lst_env)
 		if (tmp->line[i] && tmp->line[i] == '=')
 		{
 			free(tmp->line);
-			tmp->line = replace_line(str);
+			tmp->line = replace_line_env(str);
 			if (!tmp->line)
 				return (0);
 			return (1);
@@ -79,21 +67,33 @@ int	doublon_var(char *str, t_lst_env **lst_env)
 	return (-1);
 }
 
-int	push_env(char *str, t_lst_env **lst_env)
+int	push_env(char *str, t_struct_env *s)
 {
 	int	nb;
 
-	if (doublon_var_content(str, *lst_env))
+	if (doublon_var_content(str, s->lst_env))
 		return (1);
-	nb = doublon_var(str, lst_env);
+	nb = doublon_var(str, &s->lst_env);
 	if (nb == 0)
 		return (0);
-	if (nb == 1)
+	if (nb == 1 || nb == -1)
+	{
+		if (nb == 1)
+		{
+			if (!search_replace_export(str, s))
+				return (0);
+		}
+		else if (nb == -1)
+		{
+			if (!new_line_env(str, s) || !new_line_export(str, s, 1))
+			return (0);
+		}
 		return (1);
+	}
 	return (1);
 }
 
-int	builtins_export(t_cmd *cmd, t_struct_env *s)
+int	builtin_export(t_cmd *cmd, t_struct_env *s)
 {
 	int	i;
 
@@ -111,11 +111,11 @@ int	builtins_export(t_cmd *cmd, t_struct_env *s)
 		{
 			if (check_egal(cmd->argv[i]))
 			{
-				if (!push_env(cmd->argv[i], &s->lst_env))
+				if (!push_env(cmd->argv[i], s))
 					return (0);
 			}
-			//else
-			//	push_export(argv[i], &s->lst_export);
+			else if (!new_line_export(cmd->argv[i], s, 0))
+				return (0);
 		}
 		i++;
 	}

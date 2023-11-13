@@ -44,6 +44,8 @@ void	join_declare_x(t_lst_env **lst_export)
 	while (lst_tmp)
 	{
 		line_tmp = lets_join("declare -x ", lst_tmp->line);
+		if (!line_tmp)
+			return ;
 		free(lst_tmp->line);
 		lst_tmp->line = line_tmp;
 		lst_tmp = lst_tmp->next;

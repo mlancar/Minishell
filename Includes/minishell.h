@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
+/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 17:15:11 by auferran          #+#    #+#             */
-/*   Updated: 2023/10/11 15:10:54 by auferran         ###   ########.fr       */
+/*   Updated: 2023/11/13 15:13:40 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,12 @@
 # include <readline/history.h>
 # include <signal.h>
 # include <string.h>
+# include <errno.h>
 
 # define SINGLE_QUOTE 39
 # define DOUBLE_QUOTE 34
 # define FILE 1
+# define HEREDOC 2
 # define INFILE 1
 # define OUTFILE 2
 
@@ -78,11 +80,16 @@ typedef struct s_struct_strdup
 	int			j;
 	int			len;
 	int			len_env;
+	int			dollar_type;
+	int			file_type;
 	int			index_dollar;
-	int			env_type;
+	int			index_file;
+	int			query_prep;
+	int			after_space;
 	int			s_q;
 	int			d_q;
 	int			count;
+	int			nb_fill;
 	char		c;
 	char		*str;
 	t_lst_env	*lst_env;
@@ -103,17 +110,20 @@ void		error(char *str);
 
 void		free_all(t_lst_cmd **cmd);
 
-void		manage(char *prompt, char **env, t_struct_env *s);
+void		manage(char *prompt, t_struct_env *s);
 
 int			manage_sig(void);
 
+char		*ft_itoa(int n);
+
 int			ft_strlen(char *str);
+void		ft_putstr(char *str);
 int			ft_isalpha(int character);
 void		*ft_memset(void *pointer, int value, size_t count);
 int			ft_strcmp(const char *first, const char *second);
 
 int			strlen_env(char *str);
-int			cmp_env(char *first, int *i, char *second, t_struct_strdup *s);
+int			cmp_env(char *str, int *i, char *line);
 
 void		init_lst_env(char **env, t_struct_env *s);
 
@@ -149,7 +159,14 @@ void		ft_lst_clear_env(t_lst_env **lst_env);
 int			in_quote(char *str, int c, int *in_s_quote, int *in_d_quote);
 int			update_quote(char *prompt, int i, t_struct_strdup *s);
 
-int			check_dollar(char *prompt, int *i, t_struct_strdup *s);
+int			check_dollar_count(char *prompt, int *i, int file, t_struct_strdup *s);
+int			check_dollar_expand(char *prompt, int *i, int file, t_struct_strdup *s);
+
+void		dollar_query_prep(int *i, t_struct_strdup *s);
+int			dollar_query_fill(int *i, t_struct_strdup *s);
+
+void		count_env(char *line, t_struct_strdup *s);
+void		expand(t_struct_strdup *s, char *line);
 
 int			token(char *prompt, int i);
 
@@ -157,5 +174,8 @@ int			its_white_space(char c);
 int			its_file(char c);
 
 int			its_valid_expand(char c);
+
+char		*lets_join(char *s1, char *s2);
+void		sort_export(t_lst_env **lst_export);
 
 #endif

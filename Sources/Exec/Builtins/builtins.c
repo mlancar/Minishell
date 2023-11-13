@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 12:01:21 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/08 16:42:29 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/13 15:37:29 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,13 @@ int	check_builtins(t_cmd *cmd)
 int	exec_builtins(t_cmd *cmd, t_struct_env *s, t_lst_cmd *argv)
 {
 	if (cmd->argv[0] && !ft_strcmp(cmd->argv[0], "echo"))
-		g_exit = builtins_echo(cmd);
+		g_exit = builtin_echo(cmd);
 	else if (cmd->argv[0] && !ft_strcmp(cmd->argv[0], "pwd"))
-		g_exit = builtins_pwd(cmd);
+		g_exit = builtin_pwd(cmd);
 	else if (cmd->argv[0] && !ft_strcmp(cmd->argv[0], "export"))
-		g_exit = builtins_export(cmd, s);
+		g_exit = builtin_export(cmd, s);
 	else if (cmd->argv[0] && !ft_strcmp(cmd->argv[0], "env"))
-		g_exit = builtins_env(cmd, s->lst_env);
+		g_exit = builtin_env(cmd, s->lst_env);
 	else if (cmd->argv[0] && !ft_strcmp(cmd->argv[0], "cd"))
 		g_exit = builtin_cd(cmd);
 	else if (cmd->argv[0] && !ft_strcmp(cmd->argv[0], "exit"))

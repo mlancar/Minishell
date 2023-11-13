@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 18:53:30 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/08 17:14:15 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/13 15:24:23 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,10 @@ void	set_pwd_var(t_cmd *cmd)
 	//free(cmd->env[oldpwd]);
 	cmd->env[pwd] = malloc(sizeof(char) * ft_strlen(pwd_var) + i + 1);
 	if (!cmd->env[pwd])
+	{
+		free(pwd_var);
 		return ;
+	}
 	cmd->env[pwd] = strcpy(cmd->env[pwd], "PWD=");
 	while (pwd_var[j])
 	{
@@ -67,6 +70,7 @@ void	set_pwd_var(t_cmd *cmd)
 		j++;
 	}
 	cmd->env[pwd][i] = '\0';
+	free(pwd_var);
 	//printf("apres pwd = %s\n", cmd->env[pwd]);
 }
 

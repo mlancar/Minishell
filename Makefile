@@ -6,7 +6,7 @@
 #    By: malancar <malancar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/03 19:06:48 by malancar          #+#    #+#              #
-#    Updated: 2023/11/09 16:36:38 by malancar         ###   ########.fr        #
+#    Updated: 2023/11/13 16:01:26 by malancar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,8 +38,11 @@ SOURCES_PARSING =	main.c                  \
                     lst_env_utils.c	        \
                     manage_dollar.c		    \
                     manage_dollar_utils.c	\
+                    manage_dollar_query.c   \
                     token.c				    \
                     quote_2.c               \
+                    itoa.c                  \
+                    
 					
 					
 SOURCES_EXEC =		check.c							\
@@ -60,6 +63,8 @@ SOURCES_EXEC =		check.c							\
 					Builtins/builtin_export.c		\
 					Builtins/builtin_pwd.c			\
 					Builtins/builtin_export_2.c		\
+                    Builtins/builtin_export_3.c     \
+                    Builtins/builtin_unset.c        \
                     Builtins/builtin_cd.c			\
                     Builtins/builtin_exit.c			\
 					Builtins/builtins.c				\

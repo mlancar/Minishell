@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 12:53:39 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/09 15:45:20 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/13 15:20:52 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	one_cmd_and_builtin(t_cmd *cmd, t_struct_env *s, t_lst_cmd *argv)
 	if (exec_builtins(cmd, s, argv) == 0)
 		error_cmd(argv, cmd, 126);
 	close_fd_parent(cmd);
-	free_in_builtin(cmd);
+	//free_in_builtin(cmd);
 	g_exit = 0;
 	return ;
 }

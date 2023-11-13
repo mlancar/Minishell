@@ -22,6 +22,19 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
+void	ft_putstr(char *str)
+{
+	int	i;
+	int	nb;
+
+	i = 0;
+	while (str[i])
+		i++;
+	nb = write(1, str, i);
+	if (nb == -1)
+		strerror(errno);
+}
+
 int	ft_isalpha(int character)
 {
 	if ((character >= 'A' && character <= 'Z')

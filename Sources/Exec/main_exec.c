@@ -16,7 +16,8 @@
 int	main_exec(t_lst_cmd *argv, t_struct_env *s)
 {
 	t_cmd	cmd;
-	int		status;
+	int		status; 
+
 
 	convert_list_env(&cmd, s);
 	init_struct(&cmd, argv);
@@ -40,8 +41,8 @@ int	main_exec(t_lst_cmd *argv, t_struct_env *s)
 		waitpid(cmd.pid[cmd.index_pid], &status, 0);
 		cmd.index_pid--;
 	}
+	printf("status = %d\n", status);
 	free(cmd.pid);
 	free(cmd.env); 
-	printf("globale = %d\n", g_exit);
 	return (0);
 }

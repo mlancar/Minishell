@@ -15,7 +15,10 @@
 void	sig_handler(int signal)
 {
 	if (signal == SIGINT)
-		printf("\n(auferran&malancar)-[~/minishell]$ ");
+	{
+		g_exit = 130;
+		ft_putstr("\n(auferran&malancar)-[~/minishell]$ ");
+	}
 }
 
 int	manage_sig()

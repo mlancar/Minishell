@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
+/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 17:16:09 by auferran          #+#    #+#             */
-/*   Updated: 2023/09/16 20:04:49 by auferran         ###   ########.fr       */
+/*   Updated: 2023/11/13 15:14:03 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "exec.h"
 
 int	g_exit;
 
@@ -28,14 +29,17 @@ int	main(int argc, char **argv, char **env)
 		manage_sig();
 		while (1)
 		{
-			prompt = readline("(auferran&malancar)-[~/minishell]$ ");
+			if (!isatty(0))
+				prompt = get_next_line(0, 0);
+			else
+				prompt = readline("(auferran&malancar)-[~/minishell]$ ");
 			add_history(prompt);
 			if (!prompt)
 			{
-				printf("exit\n");
+				ft_putstr("exit\n");
 				break;
 			}
-			manage(prompt, env, &s);
+			manage(prompt, &s);
 			free(prompt);
 		}
 		if (prompt)

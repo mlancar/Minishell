@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 21:28:45 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/09 15:39:32 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/13 16:07:56 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ void	free_and_exit(t_cmd *cmd, int exit_code)
 	free(cmd->path);
 	free(cmd->pid);
 	g_exit = exit_code;
-	printf("g_exit = %d\n", g_exit);
 	exit(g_exit);
 }
 
@@ -45,7 +44,6 @@ void	error_access_cmd(t_lst_cmd *argv, t_cmd *cmd)
 	ft_putstr_fd(cmd->argv[0], 2);
 	ft_putstr_fd(": command not found\n", 2);
 	g_exit = 127;
-	printf("g_exit = %d\n", g_exit);
 }
 
 void	print_error( t_lst_cmd *argv, t_cmd *cmd)

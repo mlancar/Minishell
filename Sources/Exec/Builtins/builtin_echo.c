@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   builtin_echo.c                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/30 12:01:53 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/07 14:02:01 by malancar         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "exec.h"
 
 int	its_option_echo(char *str)
@@ -28,7 +16,7 @@ int	its_option_echo(char *str)
 	return (1);
 }
 
-int	builtins_echo(t_cmd *cmd)
+int	builtin_echo(t_cmd *cmd)
 {
 	int	i;
 	int	option;
