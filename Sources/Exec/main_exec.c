@@ -24,6 +24,7 @@ int	main_exec(t_lst_cmd *argv, t_struct_env *s)
 	cmd.pid = malloc(sizeof(pid_t) * cmd.nbr);
 	if (!cmd.pid)
 		return (write(1, "pid error\n", 10), 0);
+	//ft_memset(cmd.pid, 0, cmd.nbr);
 	pipe_cmd(argv, &cmd, s);
 
 	if (check_builtins(&cmd) == 1 && cmd.nbr == 1)
@@ -34,17 +35,20 @@ int	main_exec(t_lst_cmd *argv, t_struct_env *s)
 		free(cmd.argv);
 		return (0);
 	}
-	
-	cmd.index_pid--;
-	while (cmd.index_pid >= 0)
+	if (cmd.pid[cmd.index_pid] == -1)
 	{
-		waitpid(cmd.pid[cmd.index_pid], &status, 0);
 		cmd.index_pid--;
+		while (cmd.index_pid >= 0)
+		{
+			waitpid(cmd.pid[cmd.index_pid], &status, 0);
+			cmd.index_pid--;
+		}
+		if (WIFEXITED(status))
+			g_exit = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			g_exit = 128 + WTERMSIG(status);
+
 	}
-	if (WIFEXITED(status))
-		g_exit = WEXITSTATUS(status);
-	else if (WIFSIGNALED(status))
-		g_exit = 128 + WTERMSIG(status);
 	free(cmd.pid);
 	free(cmd.env); 
 	return (0);

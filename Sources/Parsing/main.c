@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 17:16:09 by auferran          #+#    #+#             */
-/*   Updated: 2023/11/13 15:14:03 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/14 19:13:54 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ int	main(int argc, char **argv, char **env)
 	init_lst_env(env, &s);
 	if (argc == 1)
 	{
-		manage_sig();
 		while (1)
 		{
+			manage_sig();
 			if (!isatty(0))
 				prompt = get_next_line(0, 0);
 			else
