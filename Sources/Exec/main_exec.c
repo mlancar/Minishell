@@ -38,7 +38,6 @@ int	main_exec(t_lst_cmd *argv, t_struct_env *s)
 	cmd.index_pid--;
 	while (cmd.index_pid >= 0)
 	{
-		//proteger ?
 		waitpid(cmd.pid[cmd.index_pid], &status, 0);
 		cmd.index_pid--;
 	}

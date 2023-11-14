@@ -26,6 +26,8 @@ int	count_c(char *prompt, char c, int *i, t_struct_strdup *s)
 		count++;
 		(*i)++;
 	}
+	while (prompt[*i] && prompt[*i] == ' ')
+		(*i)++;
 	s->file_type = 1;
 	s->index_file = *i;
 	if (count > 2)

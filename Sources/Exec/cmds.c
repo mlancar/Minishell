@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 12:53:39 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/13 17:52:34 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/14 18:18:30 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,15 +102,13 @@ int	setup_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s)
 		exec_cmd(cmd, s, argv);
 	}
 	else
-	{
-		g_exit = 0;
 		close_fd_parent(cmd);
-	}
 	return (1);
 }
 
 void	pipe_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s)
 {
+	if (signal(SIGINT, signal_exec()))
 	if (cmd->index_pid != cmd->nbr - 1 && pipe(cmd->fd.pipe) == -1)
 		error_cmd(argv, cmd, 1);
 	while (cmd->index_pid < cmd->nbr)
