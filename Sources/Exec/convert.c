@@ -44,7 +44,7 @@ void	convert_list(t_cmd *cmd, t_lst_cmd *argv)
 	argv->arg = start;
 }
 
-void	convert_list_env(t_cmd *cmd, t_struct_env *s)
+void	convert_list_env(t_cmd *cmd, t_struct_data *s)
 {
 	int			i;
 	int			size_list;

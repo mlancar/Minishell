@@ -3,11 +3,11 @@
 void	update_value(int *i, t_struct_strdup *s)
 {
 	if (s->file_type == 1)
-			*i = s->index_file;
+		*i = s->index_file;
 	else if (s->dollar_type == 1)
 	{
-			*i = s->after_space;
-			s->len += s->len_env;
+		*i = s->after_space;
+		s->len += s->len_env;
 	}
 	if (s->dollar_type == 0 && s->file_type == 0)
 	{
@@ -93,11 +93,11 @@ char	*dup_str(char *prompt, int *i, int nb, t_lst_env *lst_env)
 	while (prompt[*i] && its_white_space(prompt[*i]))
 		(*i)++;
 	if (!prep_malloc(prompt, &s, i, nb))
-		return (0);
+		return (NULL);
+	update_value(i, &s);
 	s.str = malloc(sizeof(char) * s.len + 1);
 	if (!s.str)
 		return (error("MALLOC FAILURE\n"), NULL);
-	update_value(i, &s);
 	if (!fill_str(prompt, &s, i, nb))
 		return (free(s.str), NULL);
 	return (s.str);

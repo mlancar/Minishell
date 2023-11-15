@@ -13,10 +13,10 @@
 #include "exec.h"
 #include "minishell.h"
 
-int	main_exec(t_lst_cmd *argv, t_struct_env *s)
+int	main_exec(t_lst_cmd *argv, t_struct_data *s)
 {
 	t_cmd	cmd;
-	int		status; 
+	int		status;
 
 
 	convert_list_env(&cmd, s);
@@ -24,7 +24,6 @@ int	main_exec(t_lst_cmd *argv, t_struct_env *s)
 	cmd.pid = malloc(sizeof(pid_t) * cmd.nbr);
 	if (!cmd.pid)
 		return (write(1, "pid error\n", 10), 0);
-	//ft_memset(cmd.pid, 0, cmd.nbr);
 	pipe_cmd(argv, &cmd, s);
 
 	if (check_builtins(&cmd) == 1 && cmd.nbr == 1)
@@ -35,7 +34,7 @@ int	main_exec(t_lst_cmd *argv, t_struct_env *s)
 		free(cmd.argv);
 		return (0);
 	}
-	if (cmd.pid[cmd.index_pid] == -1)
+	if (cmd.pid[cmd.index_pid] != -1)
 	{
 		cmd.index_pid--;
 		while (cmd.index_pid >= 0)
@@ -50,6 +49,6 @@ int	main_exec(t_lst_cmd *argv, t_struct_env *s)
 
 	}
 	free(cmd.pid);
-	free(cmd.env); 
+	free(cmd.env);
 	return (0);
 }

@@ -60,11 +60,13 @@ typedef struct s_lst_env
 	struct s_lst_env	*next;
 }						t_lst_env;
 
-typedef struct s_struct_env
+typedef struct s_struct_data
 {
+	char		*prompt;
+	t_lst_cmd	*cmd;
 	t_lst_env	*lst_env;
 	t_lst_env	*lst_export;
-}				t_struct_env;
+}				t_struct_data;
 
 typedef struct s_struct_quote
 {
@@ -110,7 +112,7 @@ void		error(char *str);
 
 void		free_all(t_lst_cmd **cmd);
 
-void		manage(char *prompt, t_struct_env *s);
+void		manage(char *prompt, t_struct_data *s);
 
 int			manage_sig(void);
 
@@ -125,11 +127,11 @@ int			ft_strcmp(const char *first, const char *second);
 int			strlen_env(char *str);
 int			cmp_env(char *str, int *i, char *line);
 
-void		init_lst_env(char **env, t_struct_env *s);
+void		init_lst_env(char **env, t_struct_data *s);
 
 void		swap_export(char **str1, char **str2);
 void		sort_export(t_lst_env **lst_export);
-void		join_declare_x(t_lst_env **lst_export);
+int		join_declare_x(t_lst_env **lst_export);
 
 int			check_prompt(char *prompt, t_lst_cmd *cmd);
 

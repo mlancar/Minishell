@@ -15,6 +15,8 @@
 
 int	check_builtins(t_cmd *cmd)
 {
+	if (!cmd->argv)
+		return (0);
 	if (cmd->argv[0] && !ft_strcmp(cmd->argv[0], "echo"))
 		return (1);
 	else if (cmd->argv[0] && !ft_strcmp(cmd->argv[0], "pwd"))
@@ -33,7 +35,7 @@ int	check_builtins(t_cmd *cmd)
 		return (0);
 }
 
-int	exec_builtins(t_cmd *cmd, t_struct_env *s, t_lst_cmd *argv)
+int	exec_builtins(t_cmd *cmd, t_struct_data *s, t_lst_cmd *argv)
 {
 	if (cmd->argv[0] && !ft_strcmp(cmd->argv[0], "echo"))
 		g_exit = builtin_echo(cmd);

@@ -35,7 +35,7 @@ char	*lets_join(char *s1, char *s2)
 	return (s3);
 }
 
-void	join_declare_x(t_lst_env **lst_export)
+int	join_declare_x(t_lst_env **lst_export)
 {
 	char		*line_tmp;
 	t_lst_env	*lst_tmp;
@@ -45,9 +45,10 @@ void	join_declare_x(t_lst_env **lst_export)
 	{
 		line_tmp = lets_join("declare -x ", lst_tmp->line);
 		if (!line_tmp)
-			return ;
+			return (0);
 		free(lst_tmp->line);
 		lst_tmp->line = line_tmp;
 		lst_tmp = lst_tmp->next;
 	}
+	return (1);
 }

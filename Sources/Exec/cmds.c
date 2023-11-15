@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 12:53:39 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/14 19:10:28 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/15 18:57:41 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,18 @@
 
 int	redirections(t_lst_cmd *argv, t_cmd *cmd)
 {
+	//boucle remplir heredoc ici ou parsing 
+	//lancer buitins avec sans option pas \n ou erreur
 	while (argv->file)
 	{
 		if (set_redirections(argv, cmd) == 0)
 			return (0);
 		if (cmd->if_here_doc == 1)
 		{
+			//get_rand_name(cmd);
 			here_doc(argv->file->limiter, cmd, argv);
+			if (g_exit == 130)
+				return (-1);
 			check_close(cmd, cmd->fd.read);
 			cmd->fd.read = cmd->fd.tmp;
 			unlink(cmd->files.rand_name);
@@ -38,7 +43,7 @@ void	free_in_builtin(t_cmd *cmd)
 	free(cmd->env);
 }
 
-void	one_cmd_and_builtin(t_cmd *cmd, t_struct_env *s, t_lst_cmd *argv)
+void	one_cmd_and_builtin(t_cmd *cmd, t_struct_data *s, t_lst_cmd *argv)
 {
 	(void)s;
 	if (exec_builtins(cmd, s, argv) == 0)
@@ -49,7 +54,7 @@ void	one_cmd_and_builtin(t_cmd *cmd, t_struct_env *s, t_lst_cmd *argv)
 	return ;
 }
 
-void	exec_cmd(t_cmd *cmd, t_struct_env *s, t_lst_cmd *argv)
+void	exec_cmd(t_cmd *cmd, t_struct_data *s, t_lst_cmd *argv)
 {
 	if (check_builtins(cmd) == 1)
 	{
@@ -68,14 +73,19 @@ void	exec_cmd(t_cmd *cmd, t_struct_env *s, t_lst_cmd *argv)
 	}
 }
 
-int	setup_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s)
+int	setup_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_data *s)
 {
+	int	redir;
+	
 	init_fd(cmd);
-	if (redirections(argv, cmd) == 0)
+	redir = redirections(argv, cmd);
+	if (redir == 0)
 	{
 		cmd->pid[cmd->index_pid] = -1;
 		return (0);
 	}
+	else if (redir == -1)
+		return (-1);
 	if (check_command(argv, cmd) == -1)
 	{
 		cmd->pid[cmd->index_pid] = -1;
@@ -108,12 +118,12 @@ int	setup_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s)
 	return (1);
 }
 
-void	pipe_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s)
+void	pipe_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_data *s)
 {
 	//proteger ?
 	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
-		
+
 	if (cmd->index_pid != cmd->nbr - 1 && pipe(cmd->fd.pipe) == -1)
 		error_cmd(argv, cmd, 1);
 	while (cmd->index_pid < cmd->nbr)
@@ -126,7 +136,8 @@ void	pipe_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s)
 			if (pipe(cmd->fd.pipe) == -1)
 				error_cmd(argv, cmd, 1);
 		}
-		setup_cmd(argv, cmd, s);
+		if (setup_cmd(argv, cmd, s) == -1)
+			return ;
 		cmd->index++;
 		cmd->index_pid++;
 		if (argv != NULL)

@@ -67,7 +67,7 @@ int	doublon_var(char *str, t_lst_env **lst_env)
 	return (-1);
 }
 
-int	push_env(char *str, t_struct_env *s)
+int	push_env(char *str, t_struct_data *s)
 {
 	int	nb;
 
@@ -93,7 +93,7 @@ int	push_env(char *str, t_struct_env *s)
 	return (1);
 }
 
-int	builtin_export(t_cmd *cmd, t_struct_env *s)
+int	builtin_export(t_cmd *cmd, t_struct_data *s)
 {
 	int	i;
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   manage_sig.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 17:16:24 by auferran          #+#    #+#             */
-/*   Updated: 2023/11/14 20:11:23 by malancar         ###   ########.fr       */
+/*   Updated: 2023/09/16 17:16:24 by auferran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ void	sig_handler(int signal)
 	if (signal == SIGINT)
 	{
 		g_exit = 130;
-		ft_putstr("\n(auferran&malancar)-[~/minishell]$ ");
-		//rl_on_new_line();
-		//rl_replace_line("", 0);
-		//rl_redisplay();
+		ft_putstr("\n");
+		rl_replace_line("", 1);
+		rl_on_new_line();
+		rl_redisplay();
 	}
 }
 

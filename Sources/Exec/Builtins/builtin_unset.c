@@ -40,7 +40,7 @@ void	free_link(t_lst_env **lst_env, t_lst_env **link)
 	}
 }
 
-void	lets_unset_env(char *str, t_struct_env *s)
+void	lets_unset_env(char *str, t_struct_data *s)
 {
 	int			i;
 	t_lst_env	*tmp;
@@ -61,7 +61,7 @@ void	lets_unset_env(char *str, t_struct_env *s)
 	}
 }
 
-void	lets_unset_export(char *str, t_struct_env *s)
+void	lets_unset_export(char *str, t_struct_data *s)
 {
 	int			i;
 	int			j;
@@ -87,7 +87,7 @@ void	lets_unset_export(char *str, t_struct_env *s)
 	}
 }
 
-int	builtin_unset(t_cmd *cmd, t_struct_env *s)
+int	builtin_unset(t_cmd *cmd, t_struct_data *s)
 {
 	int	i;
 

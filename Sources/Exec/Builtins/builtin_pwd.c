@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 12:01:07 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/13 15:37:59 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/15 18:47:46 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ int	builtin_pwd(t_cmd *cmd)
 {
 	char	*pwd;
 
-	if (its_option(cmd->argv))
-		return (0);
+	// if (its_option(cmd->argv))
+	// 	return (0);
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
 	{

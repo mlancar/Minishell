@@ -21,7 +21,7 @@ char	*dup_str_env(char *env)
 	return (str);
 }
 
-void	fill_lst_env(char **env, t_lst_env	**lst_env)
+int	fill_lst_env(char **env, t_lst_env	**lst_env)
 {
 	int			i;
 	t_lst_env	*new;
@@ -32,12 +32,13 @@ void	fill_lst_env(char **env, t_lst_env	**lst_env)
 	{
 		new = ft_lst_new_env();
 		if (!new)
-			return ;
+			return (0);
 		if ((new->line = dup_str_env(env[i])) == NULL)
-			return ;
+			return (free(new), 0);
 		ft_lst_add_back_env(new, lst_env);
 		i++;
 	}
+	return (1);
 }
 
 int	is_sort(t_lst_env *export)
@@ -90,12 +91,15 @@ void	sort_export(t_lst_env **lst_export)
 	}
 }
 
-void	init_lst_env(char **env, t_struct_env *s)
+void	init_lst_env(char **env, t_struct_data *s)
 {
 	if (!env)
 		return ;
-	fill_lst_env(env, &s->lst_env);
-	fill_lst_env(env, &s->lst_export);
+	if (!fill_lst_env(env, &s->lst_env))
+		return (ft_lst_clear_env(&s->lst_env));
+	if (!fill_lst_env(env, &s->lst_export))
+		return (ft_lst_clear_env(&s->lst_export));
 	sort_export(&s->lst_export);
-	join_declare_x(&s->lst_export);
+	if (!join_declare_x(&s->lst_export))
+		return (ft_lst_clear_env(&s->lst_export));
 }

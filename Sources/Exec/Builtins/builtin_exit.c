@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 13:50:22 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/14 17:57:54 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/15 12:48:19 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	is_arg_numeric(t_cmd *cmd)
 			i++;
 		}
 		if (cmd->argv[1][i] && (cmd->argv[1][i] != '-'
-			|| cmd->argv[1][i] != '+'))
+			&& cmd->argv[1][i] != '+'))
 		{
 			error_numeric_arg(cmd);
 			return (0);

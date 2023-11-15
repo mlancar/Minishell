@@ -1,7 +1,7 @@
 #include "exec.h"
 #include "minishell.h"
 
-int	search_content_export(char *str, t_struct_env *s)
+int	search_content_export(char *str, t_struct_data *s)
 {
 	int			i;
 	int			j;
@@ -25,7 +25,7 @@ int	search_content_export(char *str, t_struct_env *s)
 	return (1);
 }
 
-int	search_replace_export(char *str, t_struct_env *s)
+int	search_replace_export(char *str, t_struct_data *s)
 {
 	int			i;
 	int			j;
@@ -82,7 +82,7 @@ char	*lets_join_no_egal(char *s1, char *s2)
 	return (s3);
 }
 
-int	new_line_export(char *str, t_struct_env *s, int nb)
+int	new_line_export(char *str, t_struct_data *s, int nb)
 {
 	t_lst_env	*new;
 
@@ -108,7 +108,7 @@ int	new_line_export(char *str, t_struct_env *s, int nb)
 	return (1);
 }
 
-int	new_line_env(char *str, t_struct_env *s)
+int	new_line_env(char *str, t_struct_data *s)
 {
 	int			i;
 	t_lst_env	*new;

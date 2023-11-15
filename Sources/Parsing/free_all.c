@@ -24,6 +24,8 @@ void	ft_lst_clear_file(t_lst_file **file)
 	size = ft_lst_size_file(*file);
 	while (i < size)
 	{
+		if (!(*file))
+			return ;
 		if ((*file)->infile)
 			free((*file)->infile);
 		if ((*file)->outfile)
@@ -50,6 +52,8 @@ void	ft_lst_clear_arg(t_lst_arg **arg)
 	size = ft_lst_size_arg(*arg);
 	while (i < size)
 	{
+		if (!(*arg))
+			return ;
 		if ((*arg)->name)
 			free((*arg)->name);
 		if ((*arg)->arg)
@@ -74,6 +78,8 @@ void	ft_lst_clear_cmd(t_lst_cmd **cmd)
 	size = ft_lst_size_cmd(*cmd);
 	while (i < size)
 	{
+		if (!(*cmd))
+			return ;
 		ft_lst_clear_arg(&(*cmd)->arg);
 		ft_lst_clear_file(&(*cmd)->file);
 		tmp = (*cmd)->next;

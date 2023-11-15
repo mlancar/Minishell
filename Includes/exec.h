@@ -48,15 +48,15 @@ typedef struct s_cmd {
 	char	**natme;
 	char	**env;
 	char	**argv;
-	
+
 	pid_t	*pid;
 	int		index_pid;
-	
+
 	int		index;
 	int		nbr;
 	int		first;
 	int		last;
-	
+
 	int		if_here_doc;
 	t_fd	fd;
 	t_files	files;
@@ -65,16 +65,17 @@ typedef struct s_cmd {
 int		open_infile(t_lst_cmd *argv, t_cmd *cmd);
 void	open_outfile(t_lst_cmd *argv, t_cmd *cmd);
 
-int		main_exec(t_lst_cmd *argv, t_struct_env *s);
-void	pipe_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s);
-int		setup_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_env *s);
-void	exec_cmd(t_cmd *cmd, t_struct_env *s, t_lst_cmd *argv);
-void	one_cmd_and_builtin(t_cmd *cmd, t_struct_env *s, t_lst_cmd *argv);
+int		main_exec(t_lst_cmd *argv, t_struct_data *s);
+void	pipe_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_data *s);
+int		setup_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_data *s);
+void	exec_cmd(t_cmd *cmd, t_struct_data *s, t_lst_cmd *argv);
+void	one_cmd_and_builtin(t_cmd *cmd, t_struct_data *s, t_lst_cmd *argv);
 
 void	open_and_fill_here_doc(t_cmd *cmd, char *limiter);
 void	here_doc(char *limiter, t_cmd *cmd, t_lst_cmd *argv);
 void	fill_here_doc(char **read_line, char *limiter, t_cmd *cmd, t_lst_cmd *argv);
 int		is_limiter(char *str, char *limiter);
+void	get_rand_name(t_cmd *cmd);
 
 int		check_command(t_lst_cmd *argv, t_cmd *cmd);
 int		check_access(t_lst_cmd *argv, t_cmd *cmd, char *path);
@@ -105,7 +106,7 @@ void	free_and_exit(t_cmd *cmd, int exit_code);
 void	print_error(t_lst_cmd *argv, t_cmd *cmd);
 
 void	convert_list(t_cmd *cmd, t_lst_cmd *list);
-void	convert_list_env(t_cmd *cmd, t_struct_env *s);
+void	convert_list_env(t_cmd *cmd, t_struct_data *s);
 int		list_size(t_lst_cmd *list);
 int		ft_lst_size_env(t_lst_env *lst_env);
 
@@ -116,19 +117,19 @@ int		set_redirections(t_lst_cmd *argv, t_cmd *cmd);
 int		builtin_echo(t_cmd *cmd);
 int		builtin_pwd(t_cmd *cmd);
 
-int		builtin_export(t_cmd *cmd, t_struct_env *s);
-int		search_replace_export(char *str, t_struct_env *s);
-int		search_content_export(char *str, t_struct_env *s);
-int		new_line_export(char *str, t_struct_env *s, int nb);
-int		new_line_env(char *str, t_struct_env *s);
+int		builtin_export(t_cmd *cmd, t_struct_data *s);
+int		search_replace_export(char *str, t_struct_data *s);
+int		search_content_export(char *str, t_struct_data *s);
+int		new_line_export(char *str, t_struct_data *s, int nb);
+int		new_line_env(char *str, t_struct_data *s);
 char	*lets_join_no_egal(char *s1, char *s2);
 
 int		builtin_env(t_cmd *cmd, t_lst_env *env_list);
 int		builtin_cd(t_cmd *cmd);
-int		builtin_unset(t_cmd *cmd, t_struct_env *s);
+int		builtin_unset(t_cmd *cmd, t_struct_data *s);
 int		builtin_exit(t_lst_cmd *argv, t_cmd *cmd);
 int		check_builtins(t_cmd *cmd);
-int		exec_builtins(t_cmd *cmd, t_struct_env *s, t_lst_cmd *argv);
+int		exec_builtins(t_cmd *cmd, t_struct_data *s, t_lst_cmd *argv);
 void	error_builtins(t_cmd *cmd);
 int		builtin_arg_nbr(t_cmd *cmd);
 int		get_env_line(t_cmd *cmd, char *str);

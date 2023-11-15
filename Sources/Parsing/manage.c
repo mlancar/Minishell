@@ -52,19 +52,16 @@ void	test_pipex(t_lst_cmd *cmd, t_lst_env *lst_env)
 	}
 }
 
-void	manage(char *prompt, t_struct_env *s)
+void	manage(char *prompt, t_struct_data *s)
 {
-	t_lst_cmd	*cmd;
-
-	cmd = NULL;
-	if (!check_prompt(prompt, cmd))
+	if (!check_prompt(prompt, s->cmd))
 		return ;
-	if (!init_lst(&cmd))
+	if (!init_lst(&s->cmd))
 		return ;
-	if (!fill_lst(prompt, cmd, s->lst_env))
-		return (free_all(&cmd));
-	//test_pipex(cmd, s->lst_env);
-	main_exec(cmd, s);
-	free_all(&cmd);
+	if (!fill_lst(prompt, s->cmd, s->lst_env))
+		return (free_all(&s->cmd));
+	//test_pipex(s->cmd, s->lst_env);
+	main_exec(s->cmd, s);
+	free_all(&s->cmd);
 	return ;
 }
