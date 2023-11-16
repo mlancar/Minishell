@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 14:53:52 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/15 18:38:26 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/16 16:07:56 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,14 +106,13 @@ void	here_doc(char *limiter, t_cmd *cmd, t_lst_cmd *argv)
 			free(read_line);
 			fill_here_doc(&read_line, limiter, cmd, argv);
 		}
+		printf("cc\n");
 		get_next_line(0, 1);
 		free(read_line);
-		check_close(cmd, cmd->fd.tmp);
-		cmd->fd.tmp = open(cmd->files.rand_name, O_RDONLY);
-		if (cmd->fd.tmp == -1)
-			free_and_exit(cmd, 1);
-		check_close(cmd, cmd->fd.read);
+		
+		
 		check_close(cmd, cmd->fd.write);
+		exit(0);
 	}
 	else
 	{

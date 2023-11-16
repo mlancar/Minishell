@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 12:53:39 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/15 18:57:41 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/16 16:12:40 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,15 @@ int	redirections(t_lst_cmd *argv, t_cmd *cmd)
 			return (0);
 		if (cmd->if_here_doc == 1)
 		{
-			//get_rand_name(cmd);
+			get_rand_name(cmd);
 			here_doc(argv->file->limiter, cmd, argv);
 			if (g_exit == 130)
 				return (-1);
+			check_close(cmd, cmd->fd.read);
+			check_close(cmd, cmd->fd.tmp);
+			cmd->fd.tmp = open(cmd->files.rand_name, O_RDONLY);
+			if (cmd->fd.tmp == -1)
+				free_and_exit(cmd, 1);
 			check_close(cmd, cmd->fd.read);
 			cmd->fd.read = cmd->fd.tmp;
 			unlink(cmd->files.rand_name);
@@ -107,8 +112,12 @@ int	setup_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_data *s)
 		signal(SIGQUIT, SIG_DFL);
 		if (check_builtins(cmd) == 0)
 		{
+			//printf("fdread = %d, fdwrite = %d\n", cmd->fd.read, cmd->fd.write);
 			if (dup2(cmd->fd.read, 0) == -1 || dup2(cmd->fd.write, 1) == -1)
+			{
+				//printf("2\n");
 				error_cmd(argv, cmd, 126);
+			}
 			close_fd_child(cmd);
 		}
 		exec_cmd(cmd, s, argv);
@@ -134,7 +143,10 @@ void	pipe_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_data *s)
 			&& (cmd->index_pid != cmd->last))
 		{
 			if (pipe(cmd->fd.pipe) == -1)
+			{
+				//printf("1\n");
 				error_cmd(argv, cmd, 1);
+			}
 		}
 		if (setup_cmd(argv, cmd, s) == -1)
 			return ;
