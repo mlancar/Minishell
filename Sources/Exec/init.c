@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 18:52:07 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/13 16:01:23 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/17 19:37:06 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,18 +45,22 @@ int	set_redirections(t_lst_cmd *argv, t_cmd *cmd)
 {
 	if (argv->file)
 	{
-		if (argv->file->limiter)
-			cmd->if_here_doc = 1;
-		else
-			cmd->if_here_doc = 0;
+		// if (argv->file->limiter)
+		// 	cmd->if_here_doc = 1;
+		// else
+		// 	cmd->if_here_doc = 0;
 		if (argv->file->infile)
 		{
 			if (open_infile(argv, cmd) == 0)
 				return (0);
 		}
 		if (argv->file->outfile)
+		{
 			open_outfile(argv, cmd);
+			//printf("ICI LA VRAIEMNT ICI set redir : fd.write = %d\n", cmd->fd.write);
+		}
 	}
+	//printf("avant return fdwrite = %d\n", cmd->fd.write);
 	return (1);
 }
 

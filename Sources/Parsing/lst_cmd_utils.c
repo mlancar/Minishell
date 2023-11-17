@@ -27,6 +27,30 @@ int	ft_lst_size_cmd(t_lst_cmd *cmd)
 	return (i);
 }
 
+void	ft_lst_clear_cmd(t_lst_cmd **cmd)
+{
+	int			i;
+	int			size;
+	t_lst_cmd	*tmp;
+
+	if (!(*cmd))
+		return ;
+	i = 0;
+	size = ft_lst_size_cmd(*cmd);
+	while (i < size)
+	{
+		if (!(*cmd))
+			return ;
+		ft_lst_clear_arg(&(*cmd)->arg);
+		ft_lst_clear_file(&(*cmd)->file);
+		tmp = (*cmd)->next;
+		free(*cmd);
+		*cmd = tmp;
+		i++;
+	}
+	*cmd = NULL;
+}
+
 t_lst_cmd	*ft_lst_last_cmd(t_lst_cmd *cmd)
 {
 	int	i;

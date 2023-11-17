@@ -48,7 +48,7 @@ int	exec_builtins(t_cmd *cmd, t_struct_data *s, t_lst_cmd *argv)
 	else if (cmd->argv[0] && !ft_strcmp(cmd->argv[0], "cd"))
 		g_exit = builtin_cd(cmd);
 	else if (cmd->argv[0] && !ft_strcmp(cmd->argv[0], "exit"))
-		g_exit = builtin_exit(argv, cmd);
+		g_exit = builtin_exit(argv, cmd, s);
 	else if (cmd->argv[0] && !ft_strcmp(cmd->argv[0], "unset"))
 		g_exit = builtin_unset(cmd, s);
 	else

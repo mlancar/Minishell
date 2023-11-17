@@ -104,7 +104,7 @@ int	builtin_export(t_cmd *cmd, t_struct_data *s)
 		return (1);
 	}
 	if (its_option(cmd->argv))
-		return (1);
+		return (error("minishell: export: invalid option\n"), 1);
 	while (cmd->argv[i])
 	{
 		if (its_valid(cmd->argv[i]))

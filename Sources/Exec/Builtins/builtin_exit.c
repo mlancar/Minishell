@@ -28,9 +28,10 @@ int	check_exit_code(t_cmd *cmd, long exit_code)
 	return (exit_code);
 }
 
-void	free_exec_and_parsing(t_lst_cmd *argv, t_cmd *cmd)
+void	free_exec_and_parsing(t_lst_cmd *argv, t_cmd *cmd, t_struct_data *s)
 {
 	(void)argv;
+	free_all(s);
 	free(cmd->argv);
 	free(cmd->env);
 	free(cmd->path);
@@ -76,7 +77,7 @@ int	is_arg_numeric(t_cmd *cmd)
 int	check_arg(t_cmd *cmd, long *exit_code)
 {
 	int	nbr_arg;
-	
+
 	nbr_arg = builtin_arg_nbr(cmd);
 	if (nbr_arg > 1)
 	{
@@ -94,19 +95,19 @@ int	check_arg(t_cmd *cmd, long *exit_code)
 			return (0);
 		}
 	}
-	
+
 	return (1);
 }
 
-int	builtin_exit(t_lst_cmd *argv, t_cmd *cmd)
+int	builtin_exit(t_lst_cmd *argv, t_cmd *cmd, t_struct_data *s)
 {
 	long	exit_code;
-	
+
 	exit_code = 0;
 	if (check_arg(cmd, &exit_code) == 0)
 		return (0);
 	g_exit = check_exit_code(cmd, exit_code);
-	free_exec_and_parsing(argv, cmd);
+	free_exec_and_parsing(argv, cmd, s);
 	if (cmd->nbr != 1)
 	{
 		check_close(cmd, cmd->fd.pipe[0]);

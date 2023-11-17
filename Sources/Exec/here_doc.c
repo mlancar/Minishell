@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 14:53:52 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/16 16:07:56 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/17 19:57:06 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int	is_limiter(char *str, char *limiter)
 		return (0);
 	while ((str[i] && limiter[i]))
 	{
+		//printf("cc limiter %c\n", str[i]);
 		if (str[i] != limiter[i])
 			return (-1);
 		i++;
@@ -50,7 +51,9 @@ void	get_rand_name(t_cmd *cmd)
 		cmd->files.rand_name[i] = cmd->files.rand_name[i] + 97;
 		i++;
 	}
+	//printf("getrandname : fd tmp = %d\n", cmd->fd.tmp);
 	check_close(cmd, cmd->fd.tmp);
+	//printf("fdtmp = %d\n", cmd->fd.tmp);
 	cmd->fd.tmp = open(cmd->files.rand_name, O_WRONLY | O_TRUNC
 			| O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP);
 	if (cmd->fd.tmp == -1)
@@ -89,15 +92,17 @@ void	here_doc(char *limiter, t_cmd *cmd, t_lst_cmd *argv)
 {
 	char	*read_line;
 	int		status;
-	int		pid;
+	//int		pid;
 
-	cmd->fd.tmp = 0;
+	//cmd->fd.tmp = 0;
 	cmd->files.line = 0;
-	pid = fork();
-	if (pid < 0)
+	cmd->pid[cmd->index_pid] = fork();
+	//printf("pid heredoc= %d\n", cmd->pid[cmd->index_pid]);
+	if (cmd->pid[cmd->index_pid] < 0)
 		error_cmd(argv, cmd, 1);
-	if (pid == 0)
+	if (cmd->pid[cmd->index_pid] == 0)
 	{
+		//get_rand_name(cmd);
 		signal(SIGINT, signal_here_doc);
 		//get_rand_name(cmd);
 		fill_here_doc(&read_line, limiter, cmd, argv);
@@ -106,17 +111,24 @@ void	here_doc(char *limiter, t_cmd *cmd, t_lst_cmd *argv)
 			free(read_line);
 			fill_here_doc(&read_line, limiter, cmd, argv);
 		}
-		printf("cc\n");
 		get_next_line(0, 1);
 		free(read_line);
-		
-		
+		// printf("fd.read = %d\n", cmd->fd.read);
+		// printf("fd.write = %d\n", cmd->fd.write);
+		//printf("fd.tmp = %d\n", cmd->fd.tmp);
 		check_close(cmd, cmd->fd.write);
-		exit(0);
+		//check_close(cmd, cmd->fd.read);
+		check_close(cmd, cmd->fd.tmp);
+		//printf("cc ici\n");
+		
+		//unlink(cmd->files.rand_name);			
+		exit(EXIT_SUCCESS);
+		//printf("cc\n");
 	}
 	else
 	{
-		waitpid(pid, &status, 0);
+		//printf("pid heredoc= %d\n", cmd->pid[cmd->index_pid]);
+		waitpid(cmd->pid[cmd->index_pid], &status, 0);
 		if (!WIFEXITED(status) || WEXITSTATUS(status) == 130)
 			g_exit = 130;
 	}

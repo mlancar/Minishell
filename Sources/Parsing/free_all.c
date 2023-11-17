@@ -12,85 +12,43 @@
 
 #include "minishell.h"
 
-void	ft_lst_clear_file(t_lst_file **file)
+void	free_dest_env(char ***dest)
 {
-	int			i;
-	int			size;
-	t_lst_file	*tmp;
+	int	i;
 
-	if (!(*file))
-		return ;
 	i = 0;
-	size = ft_lst_size_file(*file);
-	while (i < size)
+	while (*dest[i])
 	{
-		if (!(*file))
-			return ;
-		if ((*file)->infile)
-			free((*file)->infile);
-		if ((*file)->outfile)
-			free((*file)->outfile);
-		if ((*file)->limiter)
-			free((*file)->limiter);
-		tmp = (*file)->next;
-		free(*file);
-		*file = tmp;
+		free(*dest[i]);
+		dest[i] = NULL;
 		i++;
 	}
-	*file = NULL;
+	free(*dest);
+	*dest = NULL;
 }
 
-void	ft_lst_clear_arg(t_lst_arg **arg)
+void	free_my_env(char **my_env)
 {
-	int			i;
-	int			size;
-	t_lst_arg	*tmp;
+	int	i;
 
-	if (!(*arg))
-		return ;
 	i = 0;
-	size = ft_lst_size_arg(*arg);
-	while (i < size)
+	while (my_env[i])
 	{
-		if (!(*arg))
-			return ;
-		if ((*arg)->name)
-			free((*arg)->name);
-		if ((*arg)->arg)
-			free((*arg)->arg);
-		tmp = (*arg)->next;
-		free(*arg);
-		*arg = tmp;
+		free(my_env[i]);
+		my_env[i] = NULL;
 		i++;
 	}
-	*arg = NULL;
+	free(my_env);
+	my_env = NULL;
 }
 
-void	ft_lst_clear_cmd(t_lst_cmd **cmd)
-{
-	int			i;
-	int			size;
-	t_lst_cmd	*tmp;
-
-	if (!(*cmd))
-		return ;
-	i = 0;
-	size = ft_lst_size_cmd(*cmd);
-	while (i < size)
-	{
-		if (!(*cmd))
-			return ;
-		ft_lst_clear_arg(&(*cmd)->arg);
-		ft_lst_clear_file(&(*cmd)->file);
-		tmp = (*cmd)->next;
-		free(*cmd);
-		*cmd = tmp;
-		i++;
-	}
-	*cmd = NULL;
-}
-
-void	free_all(t_lst_cmd **cmd)
-{
-	ft_lst_clear_cmd(cmd);
+void	free_all(t_struct_data *s)
+{	if (s->prompt)
+		free(s->prompt);
+	if (s->my_env)
+		free_my_env(s->my_env);
+	rl_clear_history();
+	ft_lst_clear_cmd(&s->cmd);
+	ft_lst_clear_env(&s->lst_env);
+	ft_lst_clear_env(&s->lst_export);
 }

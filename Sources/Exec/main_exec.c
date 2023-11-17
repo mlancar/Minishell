@@ -34,12 +34,17 @@ int	main_exec(t_lst_cmd *argv, t_struct_data *s)
 		free(cmd.argv);
 		return (0);
 	}
+	//printf("indexpid = %d, cmdnbr = %d\n", cmd.index_pid, cmd.nbr);
+
+	cmd.index_pid--;
 	if (cmd.pid[cmd.index_pid] != -1)
 	{
-		cmd.index_pid--;
 		while (cmd.index_pid >= 0)
 		{
+			// printf("cc wait\n");
+			// printf("pid = %d\n", cmd.pid[cmd.index_pid]);
 			waitpid(cmd.pid[cmd.index_pid], &status, 0);
+			//printf("cc wait 2\n");
 			cmd.index_pid--;
 		}
 		if (WIFEXITED(status))

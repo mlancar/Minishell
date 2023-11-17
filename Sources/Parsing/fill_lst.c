@@ -107,11 +107,11 @@ int	fill_lst(char *prompt, t_lst_cmd *cmd, t_lst_env *lst_env)
 		if (prompt[s.i] && prompt[s.i] != '|' && !its_file(prompt[s.i]))
 		{
 			if (!fill_arg(prompt, &s.arg, &s.i, lst_env))
-				return (ft_lst_clear_arg(&s.arg), 0);
+				return (0);
 		}
 		else if (prompt[s.i] && prompt[s.i] != '|')
 			if (!fill_file(prompt, &s.file, &s.i, lst_env))
-				return (ft_lst_clear_file(&s.file), 0);
+				return (0);
 		s.tmp = ft_lst_last_cmd(cmd);
 		s.tmp->arg = s.arg;
 		s.tmp->file = s.file;

@@ -46,15 +46,14 @@ int	main(int argc, char **argv, char **env)
 			manage_sig();
 			s.prompt = init_prompt();
 			if (!s.prompt)
-				break ;
+			{
+				free_all(&s);
+				exit(g_exit);
+			}
 			manage(s.prompt, &s);
 			free(s.prompt);
 		}
-		if (s.prompt)
-			free(s.prompt);
-		rl_clear_history();
-		ft_lst_clear_env(&s.lst_env);
-		ft_lst_clear_env(&s.lst_export);
+		free_all(&s);
 	}
 	return (0);
 }

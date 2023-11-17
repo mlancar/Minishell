@@ -27,6 +27,32 @@ int	ft_lst_size_file(t_lst_file *file)
 	return (i);
 }
 
+void	ft_lst_clear_file(t_lst_file **file)
+{
+	int			i;
+	int			size;
+	t_lst_file	*tmp;
+
+	if (!(*file))
+		return ;
+	i = 0;
+	size = ft_lst_size_file(*file);
+	while (i < size)
+	{
+		if ((*file)->infile)
+			free((*file)->infile);
+		if ((*file)->outfile)
+			free((*file)->outfile);
+		if ((*file)->limiter)
+			free((*file)->limiter);
+		tmp = (*file)->next;
+		free(*file);
+		*file = tmp;
+		i++;
+	}
+	*file = NULL;
+}
+
 t_lst_file	*ft_lst_last_file(t_lst_file *file)
 {
 	int	i;

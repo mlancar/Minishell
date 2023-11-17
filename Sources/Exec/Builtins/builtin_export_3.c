@@ -17,11 +17,11 @@ int	its_valid(char *str)
 
 	i = 0;
 	if (str[i] && str[i] == '=')
-		return (0);
+		return (error("minishell: export: invalid argument\n"), 0);
 	while (str[i] && str[i] != '=')
 	{
 		if (!ft_isalpha(str[i]) && str[i] != '_' && str[i] != '=')
-			return (0);
+			return (error("minishell: export: invalid argument\n"), 0);
 		i++;
 	}
 	return (1);

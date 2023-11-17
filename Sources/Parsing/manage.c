@@ -59,9 +59,9 @@ void	manage(char *prompt, t_struct_data *s)
 	if (!init_lst(&s->cmd))
 		return ;
 	if (!fill_lst(prompt, s->cmd, s->lst_env))
-		return (free_all(&s->cmd));
+		return (ft_lst_clear_cmd(&s->cmd));
 	//test_pipex(s->cmd, s->lst_env);
 	main_exec(s->cmd, s);
-	free_all(&s->cmd);
+	ft_lst_clear_cmd(&s->cmd);
 	return ;
 }

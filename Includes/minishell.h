@@ -63,6 +63,7 @@ typedef struct s_lst_env
 typedef struct s_struct_data
 {
 	char		*prompt;
+	char		**my_env;
 	t_lst_cmd	*cmd;
 	t_lst_env	*lst_env;
 	t_lst_env	*lst_export;
@@ -110,7 +111,9 @@ typedef struct s_struct_fill
 
 void		error(char *str);
 
-void		free_all(t_lst_cmd **cmd);
+void		free_all(t_struct_data *s);
+void		free_my_env(char **my_env);
+void		free_dest_env(char ***dest);
 
 void		manage(char *prompt, t_struct_data *s);
 
@@ -123,15 +126,22 @@ void		ft_putstr(char *str);
 int			ft_isalpha(int character);
 void		*ft_memset(void *pointer, int value, size_t count);
 int			ft_strcmp(const char *first, const char *second);
+char		*ft_strjoin_libft(char const *s1, char const *s2);
+int			ft_atoi(const char *theString);
 
 int			strlen_env(char *str);
 int			cmp_env(char *str, int *i, char *line);
 
 void		init_lst_env(char **env, t_struct_data *s);
 
-void		swap_export(char **str1, char **str2);
 void		sort_export(t_lst_env **lst_export);
-int		join_declare_x(t_lst_env **lst_export);
+int			join_declare_x(t_lst_env **lst_export);
+int			init_my_env(char **env, t_struct_data *s);
+char		**create_env(void);
+char		**old_env(char **env);
+void		swap_export(char **str1, char **str2);
+
+int			update_shlvl(t_struct_data *s);
 
 int			check_prompt(char *prompt, t_lst_cmd *cmd);
 
@@ -143,6 +153,7 @@ t_lst_cmd	*ft_lst_new_cmd(void);
 t_lst_cmd	*ft_lst_last_cmd(t_lst_cmd *cmd);
 void		ft_lst_add_back_cmd(t_lst_cmd *lst_new, t_lst_cmd **lst);
 int			ft_lst_size_cmd(t_lst_cmd *cmd);
+void		ft_lst_clear_cmd(t_lst_cmd **cmd);
 
 t_lst_arg	*ft_lst_new_arg(void);
 void		ft_lst_add_back_arg(t_lst_arg *arg_new, t_lst_arg **arg);

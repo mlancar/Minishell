@@ -31,8 +31,6 @@ int	builtin_pwd(t_cmd *cmd)
 {
 	char	*pwd;
 
-	// if (its_option(cmd->argv))
-	// 	return (0);
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
 	{

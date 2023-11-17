@@ -27,6 +27,30 @@ int	ft_lst_size_arg(t_lst_arg *arg)
 	return (i);
 }
 
+void	ft_lst_clear_arg(t_lst_arg **arg)
+{
+	int			i;
+	int			size;
+	t_lst_arg	*tmp;
+
+	if (!(*arg))
+		return ;
+	i = 0;
+	size = ft_lst_size_arg(*arg);
+	while (i < size)
+	{
+		if ((*arg)->name)
+			free((*arg)->name);
+		if ((*arg)->arg)
+			free((*arg)->arg);
+		tmp = (*arg)->next;
+		free(*arg);
+		*arg = tmp;
+		i++;
+	}
+	*arg = NULL;
+}
+
 t_lst_arg	*ft_lst_last_arg(t_lst_arg *arg)
 {
 	int	i;
