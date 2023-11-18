@@ -37,7 +37,7 @@ int	update_value_shlvl(char **line)
 		return (0);
 	nb = ft_atoi((const char *)number);
 	nb++;
-	if (nb < 0 || nb == 1000)
+	if (nb < 0 || nb >= 1000)
 		nb = 1;
 	free(number);
 	number = ft_itoa(nb);

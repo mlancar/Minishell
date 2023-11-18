@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/29 12:13:28 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/17 20:10:24 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/18 19:51:03 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int	open_infile(t_lst_cmd *argv, t_cmd *cmd)
 {
+	cmd->heredoc = 0;
 	check_close(cmd, cmd->fd.read);
 	cmd->fd.read = open(argv->file->infile, O_RDONLY);
 	if (cmd->fd.read == -1)

@@ -143,7 +143,7 @@ void		swap_export(char **str1, char **str2);
 
 int			update_shlvl(t_struct_data *s);
 
-int			check_prompt(char *prompt, t_lst_cmd *cmd);
+int			check_prompt(char *prompt);
 
 int			fill_lst(char *prompt, t_lst_cmd *cmd, t_lst_env *lst_env);
 

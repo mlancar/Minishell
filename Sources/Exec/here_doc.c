@@ -6,11 +6,25 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 14:53:52 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/17 19:57:06 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/18 23:24:04 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
+
+int	check_here_doc(t_lst_cmd *argv, t_cmd *cmd)
+{
+	if (argv->file)
+	{
+		if (argv->file->limiter)
+		{
+			cmd->heredoc = 1;
+		}
+		else
+			cmd->heredoc = 0;
+	}
+	return (1);
+}
 
 int	is_limiter(char *str, char *limiter)
 {
@@ -21,7 +35,6 @@ int	is_limiter(char *str, char *limiter)
 		return (0);
 	while ((str[i] && limiter[i]))
 	{
-		//printf("cc limiter %c\n", str[i]);
 		if (str[i] != limiter[i])
 			return (-1);
 		i++;
@@ -51,21 +64,20 @@ void	get_rand_name(t_cmd *cmd)
 		cmd->files.rand_name[i] = cmd->files.rand_name[i] + 97;
 		i++;
 	}
-	//printf("getrandname : fd tmp = %d\n", cmd->fd.tmp);
 	check_close(cmd, cmd->fd.tmp);
-	//printf("fdtmp = %d\n", cmd->fd.tmp);
 	cmd->fd.tmp = open(cmd->files.rand_name, O_WRONLY | O_TRUNC
 			| O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP);
 	if (cmd->fd.tmp == -1)
 		free_and_exit(cmd, 1);
 }
 
-void	fill_here_doc(char **read_line, char *limiter, t_cmd *cmd,
+void	fill_heredoc(char **read_line, char *limiter, t_cmd *cmd,
 t_lst_cmd *argv)
 {
 	cmd->files.line++;
-	write(1, "> ", 2);
-	*read_line = get_next_line(0, 0);
+	dprintf(2, "fdtmp %d, fdwrite %d, fdread%d\n", cmd->fd.tmp, cmd->fd.write, cmd->fd.read);
+	*read_line = readline("> ");
+	dprintf(2, "fdtmp %d, fdwrite %d, fdread%d\n", cmd->fd.tmp, cmd->fd.write, cmd->fd.read);
 	if (*read_line == NULL)
 	{
 		ft_putstr_fd("\nminishell: warning: here-document at line ", 2);
@@ -78,58 +90,101 @@ t_lst_cmd *argv)
 		ft_putstr_fd(*read_line, cmd->fd.tmp);
 }
 
-void	signal_here_doc(int signal)
+void	ft_singleton(int mode, t_cmd *cmd, t_lst_cmd *argv, t_struct_data *s)
 {
-	if (signal == SIGINT)
+	static t_cmd			*static_cmd;
+	static t_lst_cmd		*static_argv;
+	static t_struct_data	*static_s;
+	
+	if (mode == 0)
 	{
-		g_exit = 130;
-		ft_putstr_fd("\n", 0);
-		exit(g_exit);
-	}
-}
-
-void	here_doc(char *limiter, t_cmd *cmd, t_lst_cmd *argv)
-{
-	char	*read_line;
-	int		status;
-	//int		pid;
-
-	//cmd->fd.tmp = 0;
-	cmd->files.line = 0;
-	cmd->pid[cmd->index_pid] = fork();
-	//printf("pid heredoc= %d\n", cmd->pid[cmd->index_pid]);
-	if (cmd->pid[cmd->index_pid] < 0)
-		error_cmd(argv, cmd, 1);
-	if (cmd->pid[cmd->index_pid] == 0)
-	{
-		//get_rand_name(cmd);
-		signal(SIGINT, signal_here_doc);
-		//get_rand_name(cmd);
-		fill_here_doc(&read_line, limiter, cmd, argv);
-		while (is_limiter(read_line, limiter) != 0)
-		{
-			free(read_line);
-			fill_here_doc(&read_line, limiter, cmd, argv);
-		}
-		get_next_line(0, 1);
-		free(read_line);
-		// printf("fd.read = %d\n", cmd->fd.read);
-		// printf("fd.write = %d\n", cmd->fd.write);
-		//printf("fd.tmp = %d\n", cmd->fd.tmp);
-		check_close(cmd, cmd->fd.write);
-		//check_close(cmd, cmd->fd.read);
-		check_close(cmd, cmd->fd.tmp);
-		//printf("cc ici\n");
-		
-		//unlink(cmd->files.rand_name);			
-		exit(EXIT_SUCCESS);
-		//printf("cc\n");
+		static_cmd = cmd;
+		static_argv = argv;
+		static_s = s;
 	}
 	else
 	{
-		//printf("pid heredoc= %d\n", cmd->pid[cmd->index_pid]);
-		waitpid(cmd->pid[cmd->index_pid], &status, 0);
-		if (!WIFEXITED(status) || WEXITSTATUS(status) == 130)
-			g_exit = 130;
+		free(static_cmd->argv);
+		free(static_cmd->pid);
+		free(static_cmd->fd_hd);
+		free(static_cmd->env);
+		free_all(static_s);
+		unlink(cmd->files.rand_name);
+		check_close(static_cmd, static_cmd->fd.tmp);
+		check_close(static_cmd, static_cmd->fd.write);
+		check_close(static_cmd, static_cmd->fd.read);
 	}
+}
+
+void	signal_heredoc(int signal)
+{
+	if (signal == SIGINT)
+	{
+		ft_putstr_fd("\n", 0);
+		ft_singleton(1, NULL, NULL, NULL);
+		get_next_line(0, 1);
+		exit(130);
+	}
+}
+
+int	fork_heredoc(char *limiter, t_cmd *cmd, t_lst_cmd *argv, t_struct_data *s)
+{
+	char	*read_line;
+	int		status;
+	int		pid;
+
+	cmd->files.line = 0;
+	read_line = NULL;
+	pid = fork();
+	if (pid < 0)
+		error_cmd(argv, cmd, 1);
+	ft_singleton(0, cmd, argv, s);
+	if (pid == 0)
+	{
+		signal(SIGINT, signal_heredoc);
+		fill_heredoc(&read_line, limiter, cmd, argv);
+		dprintf(2, "fdtmp %d, fdwrite %d, fdread%d\n", cmd->fd.tmp, cmd->fd.write, cmd->fd.read);
+		while (is_limiter(read_line, limiter) != 0)
+		{
+			free(read_line);
+			fill_heredoc(&read_line, limiter, cmd, argv);
+		}
+		free(read_line);
+		free(cmd->fd_hd);
+		free(cmd->pid);
+		free(cmd->env);
+		free(cmd->path);
+		free(cmd->argv);
+		free_all(s);
+		check_close(cmd, cmd->fd.write);
+		check_close(cmd, cmd->fd.tmp);
+		exit(EXIT_SUCCESS);
+	}
+	else
+	{
+		check_close(cmd, cmd->fd.tmp);
+		waitpid(pid, &status, 0);
+		if (!WIFEXITED(status) || WEXITSTATUS(status) == 130)
+		{
+			
+			g_exit = 130;
+			return (-1);
+		}
+		
+		return (0);
+	}
+}
+
+int	open_heredoc(t_cmd *cmd, t_lst_cmd *argv, int *fd, t_struct_data *s)
+{
+	cmd->heredoc = 1;
+	get_rand_name(cmd);
+	cmd->pid[cmd->index_pid] = -1;
+	if (fork_heredoc(argv->file->limiter, cmd, argv, s) == -1)
+		return (-1);
+	*fd = open(cmd->files.rand_name, O_RDONLY);
+	if (*fd == -1)
+		free_and_exit(cmd, 1);//pas exit process principal?
+	unlink(cmd->files.rand_name);
+	return (1);
 }

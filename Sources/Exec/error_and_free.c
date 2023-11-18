@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 21:28:45 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/13 16:07:56 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/18 19:51:03 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	error_cmd(t_lst_cmd *argv, t_cmd *cmd, int exit_code)
 		check_close(cmd, cmd->fd.pipe[1]);
 	}
 	check_close(cmd, cmd->fd.write);
-	if (cmd->if_here_doc == 0)
+	if (cmd->heredoc == 0)
 		check_close(cmd, cmd->fd.read);
 	else
 		check_close(cmd, cmd->fd.tmp);

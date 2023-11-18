@@ -6,7 +6,7 @@
 #    By: malancar <malancar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/03 19:06:48 by malancar          #+#    #+#              #
-#    Updated: 2023/11/13 16:01:26 by malancar         ###   ########.fr        #
+#    Updated: 2023/11/18 16:40:36 by malancar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,6 +61,7 @@ SOURCES_EXEC =		check.c							\
                     here_doc.c						\
                     close.c							\
 					print_fd.c						\
+                    redirections.c                  \
 					Builtins/builtin_echo.c			\
 					Builtins/builtin_env.c			\
 					Builtins/builtin_export.c		\

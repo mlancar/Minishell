@@ -53,3 +53,29 @@ int	list_size(t_lst_cmd *list)
 	return (size);
 }
 
+void	ft_bzero(void *s, size_t n)
+{
+	size_t	i;
+	char	*s1;
+
+	i = 0;
+	s1 = (char *)s;
+	while (i < n)
+	{
+		s1[i] = '\0';
+		i++;
+	}
+}
+
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	void	*tab;
+
+	if (size != 0 && nmemb > SIZE_MAX / size)
+		return (NULL);
+	tab = malloc(size * nmemb);
+	if (!tab)
+		return (NULL);
+	ft_bzero(tab, size * nmemb);
+	return (tab);
+}

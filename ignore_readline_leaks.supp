@@ -5,6 +5,12 @@
     fun:readline
 }
 {
+    leak add_history
+   Memcheck:Leak
+    ...
+    fun:add_history
+}
+{
     leak usrbin
     Memcheck:Leak
     ...

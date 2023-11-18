@@ -14,6 +14,8 @@
 # define EXEC_H
 
 # include <stdlib.h>
+# include <stddef.h>
+# include <stdint.h>
 # include <stdio.h>
 # include <unistd.h>
 # include <string.h>
@@ -45,10 +47,11 @@ typedef	struct s_fd {
 
 typedef struct s_cmd {
 	char	*path;
-	char	**natme;
+	char	**name;
 	char	**env;
 	char	**argv;
-
+	int		*fd_hd;
+	int		hd_index;
 	pid_t	*pid;
 	int		index_pid;
 
@@ -57,25 +60,34 @@ typedef struct s_cmd {
 	int		first;
 	int		last;
 
-	int		if_here_doc;
+	int		heredoc;
 	t_fd	fd;
 	t_files	files;
 }	t_cmd;
 
 int		open_infile(t_lst_cmd *argv, t_cmd *cmd);
 void	open_outfile(t_lst_cmd *argv, t_cmd *cmd);
+int		redirections(t_lst_cmd *argv, t_cmd *cmd);
+int		set_redirections(t_lst_cmd *argv, t_cmd *cmd);
 
-int		main_exec(t_lst_cmd *argv, t_struct_data *s);
-void	pipe_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_data *s);
+int		start_exec(t_lst_cmd *argv, t_struct_data *s);
+void	loop_exec(t_lst_cmd *argv, t_cmd *cmd, t_struct_data *s);
 int		setup_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_data *s);
-void	exec_cmd(t_cmd *cmd, t_struct_data *s, t_lst_cmd *argv);
+void	exec_child(t_cmd *cmd, t_struct_data *s, t_lst_cmd *argv);
 void	one_cmd_and_builtin(t_cmd *cmd, t_struct_data *s, t_lst_cmd *argv);
 
-void	open_and_fill_here_doc(t_cmd *cmd, char *limiter);
-void	here_doc(char *limiter, t_cmd *cmd, t_lst_cmd *argv);
+int		redirection_one_cmd(t_lst_cmd *argv, t_cmd *cmd);
+int		open_heredoc(t_cmd *cmd, t_lst_cmd *argv, int *fd, t_struct_data *s);
+int		heredoc_redirections(t_lst_cmd *argv, t_cmd *cmd, t_struct_data *s);
+int		redirections(t_lst_cmd *argv, t_cmd *cmd);
+int		make_here_doc(t_lst_cmd *argv, t_cmd *cmd);
+void	open_and_fill_heredoc(t_cmd *cmd, char *limiter);
+int		setup_heredoc(t_cmd *cmd, t_lst_cmd *argv);
+int		fork_heredoc(char *limiter, t_cmd *cmd, t_lst_cmd *argv, t_struct_data *s);
 void	fill_here_doc(char **read_line, char *limiter, t_cmd *cmd, t_lst_cmd *argv);
 int		is_limiter(char *str, char *limiter);
 void	get_rand_name(t_cmd *cmd);
+int		check_here_doc(t_lst_cmd *argv, t_cmd *cmd);
 
 int		check_command(t_lst_cmd *argv, t_cmd *cmd);
 int		check_access(t_lst_cmd *argv, t_cmd *cmd, char *path);
@@ -97,6 +109,7 @@ int		ft_strcmp_cmd(char *s1, char *s2);
 int		ft_strncmp(char *s1, char *s2, int n);
 int		ft_atol(char *str, long *n);
 char	*ft_strcat(char *dest, char *src);
+void	*ft_calloc(size_t nmemb, size_t size);
 
 void	error_access_cmd(t_lst_cmd *argv, t_cmd *cmd);
 void	error_empty_string(t_cmd *cmd);
