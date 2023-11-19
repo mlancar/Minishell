@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 12:53:39 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/19 20:22:30 by marvin           ###   ########.fr       */
+/*   Updated: 2023/11/19 23:59:37 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	free_in_builtin(t_cmd *cmd, t_struct_data *s)
 {
-	free(cmd->path);
 	free(cmd->pid);
 	free(cmd->argv);
 	free(cmd->env);
@@ -24,12 +23,13 @@ void	free_in_builtin(t_cmd *cmd, t_struct_data *s)
 
 void	one_cmd_and_builtin(t_cmd *cmd, t_struct_data *s, t_lst_cmd *argv)
 {
-	printf("cc one builtin\n");
+	//printf("cc one builtin\n");
 	if (exec_builtins(cmd, s, argv) == 0)
 		error_cmd(argv, cmd, 126);
 	close_fd_parent(cmd);
-	free_in_builtin(cmd, s);
-	exit(g_exit);
+	//cmd->pid[cmd->index_pid] = -1;
+	//free_in_builtin(cmd, s);
+	//exit(g_exit);
 }
 
 void	exec_child(t_cmd *cmd, t_struct_data *s, t_lst_cmd *argv)
@@ -97,6 +97,7 @@ int	setup_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_data *s)
 	}
 	if (check_builtins(cmd) == 1 && cmd->nbr == 1)
 		return (one_cmd_and_builtin(cmd, s, argv), 0);
+	exec_cmd(argv, cmd, s);
 	return (1);
 }
 
@@ -124,10 +125,12 @@ void	loop_exec(t_lst_cmd *argv, t_cmd *cmd, t_struct_data *s)
 		}
 		if (setup_cmd(argv, cmd, s) == -1)
 			return ;
-		exec_cmd(argv, cmd, s);
+		//if (check_builtins(cmd) != 1 && cmd->nbr != 1)
+			//exec_cmd(argv, cmd, s);
 		cmd->index++;
 		cmd->index_pid++;
-		free(cmd->path);
+		if (check_builtins(cmd) == 0)
+			free(cmd->path);
 		if (argv != NULL)
 			argv = argv->next;
 	}

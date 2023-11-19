@@ -41,8 +41,8 @@ int	start_exec(t_lst_cmd *argv, t_struct_data *s)
 		free(cmd.fd_hd);
 		return (0);
 	}
-	//printf("indexpid = %d, cmdnbr = %d\n", cmd.index_pid, cmd.nbr);
 	cmd.index_pid--;
+	//printf("pid = %d, cmdnbr = %d\n", cmd.pid[cmd.index_pid], cmd.nbr);
 	if (cmd.pid[cmd.index_pid] != -1)
 	{
 		while (cmd.index_pid >= 0)
