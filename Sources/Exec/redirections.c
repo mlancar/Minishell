@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 16:38:01 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/19 12:38:51 by marvin           ###   ########.fr       */
+/*   Updated: 2023/11/19 19:28:16 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void print_redir(struct s_lst_file *file) {
 int	redirection_one_cmd(t_lst_cmd *argv, t_cmd *cmd)
 {
 	//print_redir(argv->file);
+	cmd->heredoc = 0;
 	while (argv->file)
 	{
 		if (argv->file->infile)
@@ -44,8 +45,10 @@ int	redirection_one_cmd(t_lst_cmd *argv, t_cmd *cmd)
 	}
 	if (cmd->heredoc == 1)
 	{
+		//printf("%s fd_hd[0] = %d, fd_hd[1] = %d\n", cmd->argv[0], cmd->fd_hd[0], cmd->fd_hd[1]);
+		//printf("%s fdread = %d, fdhd = %d\n", cmd->argv[0], cmd->fd.read, cmd->fd_hd[cmd->index]);
 		cmd->fd.read = cmd->fd_hd[cmd->index];
-		//printf("fdread = %d\n", cmd->fd.read);
+		//printf("%s fdread = %d\n", cmd->argv[0], cmd->fd.read);
 	}
 	else
 		check_close(cmd, cmd->fd_hd[cmd->index]);
@@ -70,8 +73,11 @@ int	heredoc_redirections(t_lst_cmd *argv, t_cmd *cmd, t_struct_data *s)
 		{
 			if (argv->file->limiter)
 			{
+				//printf("fd_hd = %d\n", cmd->fd_hd[i]);
+				check_close(cmd, cmd->fd_hd[i]);
 				if (open_heredoc(cmd, argv, cmd->fd_hd + i, s) == -1)
 					return (-1);
+				//printf("ICI %s fdhd = %d\n", argv->arg->name, cmd->fd_hd[i]);
 			}
 			argv->file = argv->file->next;
 		}

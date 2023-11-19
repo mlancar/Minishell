@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 14:53:52 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/19 12:39:42 by marvin           ###   ########.fr       */
+/*   Updated: 2023/11/19 19:37:25 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,10 @@ t_lst_cmd *argv)
 		ft_putstr_fd("')\n", 2);
 	}
 	if (is_limiter(*read_line, limiter) != 0)
+	{
 		ft_putstr_fd(*read_line, cmd->fd.tmp);
+		ft_putstr_fd("\n", cmd->fd.tmp);
+	}
 }
 
 void	ft_singleton(int mode, t_cmd *cmd, t_lst_cmd *argv, t_struct_data *s)
@@ -147,6 +150,12 @@ int	fork_heredoc(char *limiter, t_cmd *cmd, t_lst_cmd *argv, t_struct_data *s)
 			free(read_line);
 			fill_heredoc(&read_line, limiter, cmd, argv);
 		}
+		int i = 0;
+		while (i < cmd->nbr)
+		{
+			check_close(cmd, cmd->fd_hd[i]);
+			i++;
+		}
 		free(read_line);
 		free(cmd->fd_hd);
 		free(cmd->pid);
@@ -164,7 +173,6 @@ int	fork_heredoc(char *limiter, t_cmd *cmd, t_lst_cmd *argv, t_struct_data *s)
 		waitpid(pid, &status, 0);
 		if (!WIFEXITED(status) || WEXITSTATUS(status) == 130)
 		{
-			
 			g_exit = 130;
 			return (-1);
 		}
@@ -181,6 +189,7 @@ int	open_heredoc(t_cmd *cmd, t_lst_cmd *argv, int *fd, t_struct_data *s)
 	if (fork_heredoc(argv->file->limiter, cmd, argv, s) == -1)
 		return (-1);
 	*fd = open(cmd->files.rand_name, O_RDONLY);
+	//printf("fd = %d\n", *fd);
 	if (*fd == -1)
 		free_and_exit(cmd, 1);//pas exit process principal?
 	unlink(cmd->files.rand_name);

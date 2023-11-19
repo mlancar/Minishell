@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   close.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 16:23:15 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/18 17:46:39 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/19 18:15:36 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void	check_close(t_cmd *cmd, int fd)
 {
 	(void)cmd;
+	//printf("close fd = %d\n", fd);
 	if (fd > 2)
 		close(fd);
 }
