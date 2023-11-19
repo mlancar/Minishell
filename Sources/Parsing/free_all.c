@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_all.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 17:16:04 by auferran          #+#    #+#             */
-/*   Updated: 2023/11/18 16:21:35 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/18 23:34:18 by auferran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ void	free_my_env(char **my_env)
 }
 
 void	free_all(t_struct_data *s)
-{	if (s->prompt)
+{
+	if (s->prompt)
 		free(s->prompt);
 	if (s->my_env)
 		free_my_env(s->my_env);

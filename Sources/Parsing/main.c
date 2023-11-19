@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 17:16:09 by auferran          #+#    #+#             */
-/*   Updated: 2023/11/18 23:07:53 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/18 23:37:09 by auferran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 int	g_exit;
 
-char	*init_prompt()
+char	*init_prompt(void)
 {
 	char	*prompt;
 
@@ -23,12 +23,11 @@ char	*init_prompt()
 		prompt = get_next_line(0, 0);
 	else
 		prompt = readline("(auferran&malancar)-[~/minishell]$ ");
-	if (prompt)
-		add_history(prompt);
+	add_history(prompt);
 	if (!prompt)
 	{
 		ft_putstr("exit\n");
-			return (NULL);
+		return (NULL);
 	}
 	return (prompt);
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lst_env_utils.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/18 17:23:38 by auferran          #+#    #+#             */
+/*   Updated: 2023/11/18 23:33:00 by auferran         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	ft_lst_size_env(t_lst_env *lst_env)
@@ -64,6 +76,7 @@ void	ft_lst_add_back_env(t_lst_env *env_new, t_lst_env **lst_env)
 	tmp = ft_lst_last_env(*lst_env);
 	tmp->next = env_new;
 }
+
 t_lst_env	*ft_lst_new_env(void)
 {
 	t_lst_env	*lst_new;

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin_unset.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/18 17:20:47 by auferran          #+#    #+#             */
+/*   Updated: 2023/11/19 00:30:42 by auferran         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "exec.h"
 #include "minishell.h"
 
@@ -49,7 +61,7 @@ void	lets_unset_env(char *str, t_struct_data *s)
 	while (tmp)
 	{
 		i = 0;
-		while (str[i] && tmp->line[i] && tmp->line[i] != '='
+		while (str[i] && tmp->line[i] && tmp->line[i] != '=' \
 		&& str[i] == tmp->line[i])
 			i++;
 		if (!str[i] && tmp->line[i] == '=')
@@ -72,13 +84,13 @@ void	lets_unset_export(char *str, t_struct_data *s)
 	{
 		i = 0;
 		j = 11;
-		while (str[i] && tmp->line[j] && tmp->line[j] != '='
+		while (str[i] && tmp->line[j] && tmp->line[j] != '=' \
 		&& str[i] == tmp->line[j])
 		{
 			i++;
 			j++;
 		}
-		if (!str[i] && tmp->line[j] == '=')
+		if (!str[i] && (tmp->line[j] == '=' || !tmp->line[j]))
 		{
 			free_link(&s->lst_export, &tmp);
 			return ;

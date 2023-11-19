@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 16:38:01 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/18 22:41:03 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/19 12:38:51 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void print_redir(struct s_lst_file *file) {
 	if (!file)
 		return;
-	printf("infile =%s, outfile = %s,  type = %d, limiter = %s\n", file->infile, file->outfile, file->outfile_type, file->limiter);
+	//printf("infile =%s, outfile = %s,  type = %d, limiter = %s\n", file->infile, file->outfile, file->outfile_type, file->limiter);
 	print_redir(file->next);
 }
 
@@ -49,7 +49,7 @@ int	redirection_one_cmd(t_lst_cmd *argv, t_cmd *cmd)
 	}
 	else
 		check_close(cmd, cmd->fd_hd[cmd->index]);
-	printf("ici cmd = %s fdread = %d, fdwrite = %d\n", cmd->argv[0], cmd->fd.read, cmd->fd.write);
+	//printf("ici cmd = %s fdread = %d, fdwrite = %d\n", cmd->argv[0], cmd->fd.read, cmd->fd.write);
 	return (1);
 }
 

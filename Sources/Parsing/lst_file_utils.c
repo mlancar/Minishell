@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lst_utils_file.c                                   :+:      :+:    :+:   */
+/*   lst_file_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 15:01:53 by auferran          #+#    #+#             */
-/*   Updated: 2023/09/25 15:02:11 by auferran         ###   ########.fr       */
+/*   Updated: 2023/11/18 23:37:22 by auferran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ void	ft_lst_add_back_file(t_lst_file *file_new, t_lst_file **file)
 	tmp = ft_lst_last_file(*file);
 	tmp->next = file_new;
 }
+
 t_lst_file	*ft_lst_new_file(void)
 {
 	t_lst_file	*lst_new;

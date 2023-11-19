@@ -6,7 +6,7 @@
 /*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 17:16:24 by auferran          #+#    #+#             */
-/*   Updated: 2023/09/16 17:16:24 by auferran         ###   ########.fr       */
+/*   Updated: 2023/11/18 22:04:34 by auferran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	sig_handler(int signal)
 	}
 }
 
-int	manage_sig()
+int	manage_sig(void)
 {
 	signal(SIGINT, sig_handler);
 	signal(SIGQUIT, SIG_IGN);

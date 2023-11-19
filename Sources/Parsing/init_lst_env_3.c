@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init_lst_env_3.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/18 17:23:19 by auferran          #+#    #+#             */
+/*   Updated: 2023/11/18 23:31:30 by auferran         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	swap_export(char **str1, char **str2)
@@ -26,7 +38,7 @@ char	*lets_join(char *s1, char *s2)
 	while (s2[i] && s2[i] != '=')
 		s3[j++] = s2[i++];
 	s3[j++] = '=';
-	s3[j++] ='"';
+	s3[j++] = '"';
 	i++;
 	while (s2[i])
 		s3[j++] = s2[i++];
@@ -65,7 +77,8 @@ int	init_my_env(char **env, t_struct_data *s)
 	}
 	else if (!s->my_env)
 	{
-		if ((s->my_env = old_env(env)) == 0)
+		s->my_env = old_env(env);
+		if (s->my_env == 0)
 			return (0);
 		if (!update_shlvl(s))
 			return (0);

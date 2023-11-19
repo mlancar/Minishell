@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 17:15:11 by auferran          #+#    #+#             */
-/*   Updated: 2023/11/13 15:13:40 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/18 21:15:34 by auferran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,11 @@
 # define SINGLE_QUOTE 39
 # define DOUBLE_QUOTE 34
 # define FILE 1
-# define HEREDOC 2
-# define INFILE 1
-# define OUTFILE 2
+# define HD 2
+# define IN 1
+# define OUT 2
 
-extern	int g_exit;
+extern int	g_exit;
 
 typedef struct s_lst_arg
 {
@@ -93,6 +93,7 @@ typedef struct s_struct_strdup
 	int			d_q;
 	int			count;
 	int			nb_fill;
+	int			void_dollar;
 	char		c;
 	char		*str;
 	t_lst_env	*lst_env;
@@ -107,7 +108,6 @@ typedef struct s_struct_fill
 	t_lst_arg	*arg;
 	t_lst_file	*file;
 }				t_struct_fill;
-
 
 void		error(char *str);
 
@@ -147,7 +147,11 @@ int			check_prompt(char *prompt);
 
 int			fill_lst(char *prompt, t_lst_cmd *cmd, t_lst_env *lst_env);
 
-char		*dup_str(char *prompt, int *i, int nb, t_lst_env *lst_env);
+int			fill_arg(char *prompt, t_lst_arg **arg, int *i, t_lst_env *lst_env);
+
+int			fill_file(char *prompt, t_lst_file **file, int *i, t_lst_env *lst_env);
+
+char		*dup_str(char *prompt, int *i, int *nb, t_lst_env *lst_env);
 
 t_lst_cmd	*ft_lst_new_cmd(void);
 t_lst_cmd	*ft_lst_last_cmd(t_lst_cmd *cmd);

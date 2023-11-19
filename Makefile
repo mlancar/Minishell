@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: malancar <malancar@student.42.fr>          +#+  +:+       +#+         #
+#    By: marvin <marvin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/03 19:06:48 by malancar          #+#    #+#              #
-#    Updated: 2023/11/18 16:40:36 by malancar         ###   ########.fr        #
+#    Updated: 2023/11/19 12:37:56 by marvin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,8 @@ SOURCES_PARSING =	main.c                  \
                     utils.c				    \
 					utils_2.c				\
                     fill_lst.c			    \
+                    fill_lst_arg.c          \
+                    fill_lst_file.c         \
                     dup_str.c               \
                     check_prompt.c          \
                     error.c		            \

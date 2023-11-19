@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin_export_2.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/18 17:20:31 by auferran          #+#    #+#             */
+/*   Updated: 2023/11/19 01:12:45 by auferran         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "exec.h"
 #include "minishell.h"
 
@@ -12,13 +24,13 @@ int	search_content_export(char *str, t_struct_data *s)
 	{
 		i = 0;
 		j = 11;
-		while (str[i] && tmp->line[j] &&
+		while (str[i] && tmp->line[j] && \
 		tmp->line[j] != '=' && str[i] == tmp->line[j])
 		{
 			i++;
 			j++;
 		}
-		if (!str[i] && tmp->line[j] && tmp->line[j] == '=')
+		if (!str[i] && (!tmp->line[j] || tmp->line[j] == '='))
 			return (0);
 		tmp = tmp->next;
 	}
@@ -36,18 +48,16 @@ int	search_replace_export(char *str, t_struct_data *s)
 	{
 		i = 0;
 		j = 11;
-		while (str[i] && tmp->line[j] && str[i] != '=' &&
-		tmp->line[j] != '=' && str[i] == tmp->line[j])
-		{
-			i++;
+		while (str[i] && tmp->line[j] && str[i] != '=' && \
+		tmp->line[j] != '=' && str[i] == tmp->line[j] && (i++, 1))
 			j++;
-		}
-		if (str[i] && tmp->line[j] && str[i] == '=' && tmp->line[j] == '=')
+		if (str[i] && str[i] == '=' && (tmp->line[j] == '=' || !tmp->line[j]))
 		{
 			free(tmp->line);
 			tmp->line = lets_join("declare -x ", str);
 			if (!tmp->line)
 				return (0);
+			return (-1);
 		}
 		tmp = tmp->next;
 	}
@@ -87,7 +97,7 @@ int	new_line_export(char *str, t_struct_data *s, int nb)
 	t_lst_env	*new;
 
 	if (!search_content_export(str, s))
-		return (0);
+		return (1);
 	new = ft_lst_new_env();
 	if (!new)
 		return (0);

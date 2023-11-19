@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin_export.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/18 17:20:42 by auferran          #+#    #+#             */
+/*   Updated: 2023/11/19 00:22:09 by auferran         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "exec.h"
 #include "minishell.h"
 
@@ -54,7 +66,7 @@ int	doublon_var(char *str, t_lst_env **lst_env)
 				break ;
 			i++;
 		}
-		if (tmp->line[i] && tmp->line[i] == '=')
+		if (str[i] && str[i] == '=' && tmp->line[i] && tmp->line[i] == '=')
 		{
 			free(tmp->line);
 			tmp->line = replace_line_env(str);
@@ -70,25 +82,25 @@ int	doublon_var(char *str, t_lst_env **lst_env)
 int	push_env(char *str, t_struct_data *s)
 {
 	int	nb;
+	int	nb2;
 
 	if (doublon_var_content(str, s->lst_env))
 		return (1);
 	nb = doublon_var(str, &s->lst_env);
 	if (nb == 0)
 		return (0);
-	if (nb == 1 || nb == -1)
+	nb2 = search_replace_export(str, s);
+	if (nb2 == 0)
+		return (0);
+	if (nb == -1)
 	{
-		if (nb == 1)
-		{
-			if (!search_replace_export(str, s))
-				return (0);
-		}
-		else if (nb == -1)
-		{
-			if (!new_line_env(str, s) || !new_line_export(str, s, 1))
+		if (!new_line_env(str, s))
 			return (0);
-		}
-		return (1);
+	}
+	if (nb == -1 && nb2 > -1)
+	{
+		if (!new_line_export(str, s, 1))
+			return (0);
 	}
 	return (1);
 }

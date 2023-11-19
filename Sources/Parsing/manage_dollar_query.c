@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   manage_dollar_query.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/18 17:23:47 by auferran          #+#    #+#             */
+/*   Updated: 2023/11/18 23:37:31 by auferran         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	dollar_query_prep(int *i, t_struct_strdup *s)
@@ -15,6 +27,7 @@ void	dollar_query_prep(int *i, t_struct_strdup *s)
 	s->dollar_type = 1;
 	*i += 1;
 }
+
 int	dollar_query_fill(int *i, t_struct_strdup *s)
 {
 	int		x;
@@ -35,4 +48,3 @@ int	dollar_query_fill(int *i, t_struct_strdup *s)
 	*i += 1;
 	return (1);
 }
-

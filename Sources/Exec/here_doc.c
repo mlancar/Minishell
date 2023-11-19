@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 14:53:52 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/18 23:24:04 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/19 12:39:42 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,7 @@ void	fill_heredoc(char **read_line, char *limiter, t_cmd *cmd,
 t_lst_cmd *argv)
 {
 	cmd->files.line++;
-	dprintf(2, "fdtmp %d, fdwrite %d, fdread%d\n", cmd->fd.tmp, cmd->fd.write, cmd->fd.read);
 	*read_line = readline("> ");
-	dprintf(2, "fdtmp %d, fdwrite %d, fdread%d\n", cmd->fd.tmp, cmd->fd.write, cmd->fd.read);
 	if (*read_line == NULL)
 	{
 		ft_putstr_fd("\nminishell: warning: here-document at line ", 2);
@@ -96,6 +94,7 @@ void	ft_singleton(int mode, t_cmd *cmd, t_lst_cmd *argv, t_struct_data *s)
 	static t_lst_cmd		*static_argv;
 	static t_struct_data	*static_s;
 	
+	(void)static_argv;
 	if (mode == 0)
 	{
 		static_cmd = cmd;
@@ -143,7 +142,6 @@ int	fork_heredoc(char *limiter, t_cmd *cmd, t_lst_cmd *argv, t_struct_data *s)
 	{
 		signal(SIGINT, signal_heredoc);
 		fill_heredoc(&read_line, limiter, cmd, argv);
-		dprintf(2, "fdtmp %d, fdwrite %d, fdread%d\n", cmd->fd.tmp, cmd->fd.write, cmd->fd.read);
 		while (is_limiter(read_line, limiter) != 0)
 		{
 			free(read_line);

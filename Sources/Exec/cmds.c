@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 12:53:39 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/18 22:40:45 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/19 12:38:34 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	exec_cmd(t_lst_cmd *argv, t_cmd *cmd, t_struct_data *s)
 		signal(SIGQUIT, SIG_DFL);
 		if (check_builtins(cmd) == 0)
 		{
-			printf("cmd = %s fdread = %d, fdwrite = %d\n", cmd->argv[0], cmd->fd.read, cmd->fd.write);
+			//printf("cmd = %s fdread = %d, fdwrite = %d\n", cmd->argv[0], cmd->fd.read, cmd->fd.write);
 			if (dup2(cmd->fd.read, 0) == -1 || dup2(cmd->fd.write, 1) == -1)
 			{
 				error_cmd(argv, cmd, 126);

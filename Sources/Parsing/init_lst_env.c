@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init_lst_env.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/18 17:23:28 by auferran          #+#    #+#             */
+/*   Updated: 2023/11/18 23:39:04 by auferran         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 char	*dup_str_env(char *env)
@@ -11,7 +23,7 @@ char	*dup_str_env(char *env)
 		return (error("MALLOC FAILURE\n"), NULL);
 	i = 0;
 	j = 0;
-	while(env[i])
+	while (env[i])
 	{
 		str[j] = env[i];
 		j++;
@@ -35,7 +47,8 @@ int	fill_lst_env(char **env, t_lst_env **lst_env, t_struct_data *s)
 		new = ft_lst_new_env();
 		if (!new)
 			return (0);
-		if ((new->line = dup_str_env(s->my_env[i])) == NULL)
+		new->line = dup_str_env(s->my_env[i]);
+		if (!new->line)
 			return (ft_lst_clear_env(&new), 0);
 		ft_lst_add_back_env(new, lst_env);
 		i++;
@@ -50,8 +63,8 @@ int	is_sort(t_lst_env *export)
 	while (export)
 	{
 		i = 0;
-		while (export->line && export->line[i] &&
-		 export->next && export->next->line[i])
+		while (export->line && export->line[i] && \
+			export->next && export->next->line[i])
 		{
 			if (export->line[i] < export->next->line[i])
 				break ;
@@ -75,15 +88,15 @@ void	sort_export(t_lst_env **lst_export)
 		while (tmp)
 		{
 			i = 0;
-			while (tmp->line && tmp->line[i] && tmp->next
-			&& tmp->next->line[i])
+			while (tmp->line && tmp->line[i] && tmp->next \
+				&& tmp->next->line[i])
 			{
 				if (tmp->line[i] < tmp->next->line[i])
 					break ;
 				else if (tmp->line[i] > tmp->next->line[i])
 				{
 					swap_export(&tmp->line, &tmp->next->line);
-					break;
+					break ;
 				}
 				i++;
 			}
