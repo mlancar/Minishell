@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
+/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 17:20:42 by auferran          #+#    #+#             */
-/*   Updated: 2023/11/19 00:22:09 by auferran         ###   ########.fr       */
+/*   Updated: 2023/11/20 15:12:29 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,23 +110,23 @@ int	builtin_export(t_cmd *cmd, t_struct_data *s)
 	int	i;
 
 	i = 1;
-	if (!cmd->argv[i])
+	if (!cmd->name[i])
 	{
 		print_export(cmd, s->lst_export);
 		return (1);
 	}
-	if (its_option(cmd->argv))
+	if (its_option(cmd->name))
 		return (error("minishell: export: invalid option\n"), 1);
-	while (cmd->argv[i])
+	while (cmd->name[i])
 	{
-		if (its_valid(cmd->argv[i]))
+		if (its_valid(cmd->name[i]))
 		{
-			if (check_egal(cmd->argv[i]))
+			if (check_egal(cmd->name[i]))
 			{
-				if (!push_env(cmd->argv[i], s))
+				if (!push_env(cmd->name[i], s))
 					return (0);
 			}
-			else if (!new_line_export(cmd->argv[i], s, 0))
+			else if (!new_line_export(cmd->name[i], s, 0))
 				return (0);
 		}
 		i++;

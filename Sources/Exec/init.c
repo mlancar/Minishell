@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 18:52:07 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/18 20:38:05 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/20 15:15:52 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@ void	init_fd(t_cmd *cmd)
 	}
 }
 
-void	init_struct(t_cmd *cmd, t_lst_cmd *argv)
+void	init_struct(t_cmd *cmd, t_lst_cmd *cmd_list)
 {
-	cmd->nbr = list_size(argv);
+	cmd->nbr = list_size(cmd_list);
 	cmd->fd_hd = ft_calloc(cmd->nbr, sizeof(int));
 	cmd->index = 0;
 	cmd->index_pid = 0;
@@ -54,5 +54,11 @@ void	init_struct(t_cmd *cmd, t_lst_cmd *argv)
 	cmd->fd.tmp = -1;
 	cmd->fd.read = -1;
 	cmd->fd.write = -1;
-	cmd->argv = NULL;
+	cmd->name = NULL;
+	cmd->pid = malloc(sizeof(pid_t) * cmd->nbr);
+	if (!cmd->pid)//pas sur
+	{
+		write(1, "pid error\n", 10);
+		return ;
+	}
 }

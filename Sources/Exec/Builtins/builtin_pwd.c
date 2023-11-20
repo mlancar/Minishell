@@ -6,21 +6,21 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 12:01:07 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/15 18:47:46 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/20 15:12:59 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 #include "minishell.h"
 
-int	its_option(char **argv)
+int	its_option(char **cmd_list)
 {
 	int	i;
 
 	i = 1;
-	while (argv[i])
+	while (cmd_list[i])
 	{
-		if (argv[i][0] == '-' && argv[i][1] != '-' && argv[i][1] != 0)
+		if (cmd_list[i][0] == '-' && cmd_list[i][1] != '-' && cmd_list[i][1] != 0)
 			return (1);
 		i++;
 	}

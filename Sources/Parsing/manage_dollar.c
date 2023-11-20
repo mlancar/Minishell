@@ -27,12 +27,11 @@ int	search_and_count_env(char *prompt, int *i, t_struct_strdup *s)
 		}
 		tmp = tmp->next;
 	}
-	(*i)++;
-	while (prompt[*i] && its_valid_expand(prompt[*i]))
-		(*i)++;
-	(*i)--;
+	if (!update_i_dollar(prompt, i, s))
+		return (0);
+	s->void_dollar = 1;
 	s->dollar_type = 1;
-	return (0);
+	return (1);
 }
 
 int	check_dollar_count(char *prompt, int *i, int file, t_struct_strdup *s)
@@ -47,14 +46,13 @@ int	check_dollar_count(char *prompt, int *i, int file, t_struct_strdup *s)
 		return (-1);
 	}
 	else if (prompt[*i] == '$' && (!prompt[*i + 1] || \
-	!its_valid_expand(prompt[*i + 1])))
-	{
-		s->void_dollar = 1;
+		(!its_valid_expand(prompt[*i + 1]) && \
+			prompt[*i + 1] != '"' && prompt[*i + 1] != '\'')))
 		return (1);
-	}
 	else
 	{
-		search_and_count_env(prompt, i, s);
+		if (!search_and_count_env(prompt, i, s))
+			return (0);
 		return (-1);
 	}
 	return (1);
@@ -75,12 +73,10 @@ int	search_and_expand_env(char *prompt, int *i, t_struct_strdup *s)
 		}
 		tmp = tmp->next;
 	}
-	(*i)++;
-	while (prompt[*i] && its_valid_expand(prompt[*i]))
-		(*i)++;
-	(*i)--;
+	if (!update_i_dollar(prompt, i, s))
+		return (0);
 	s->void_dollar = 1;
-	return (0);
+	return (1);
 }
 
 int	check_dollar_expand(char *prompt, int *i, int file, t_struct_strdup *s)
@@ -100,11 +96,13 @@ int	check_dollar_expand(char *prompt, int *i, int file, t_struct_strdup *s)
 			return (-1);
 	}
 	else if (prompt[*i] == '$' && (!prompt[*i + 1] || \
-	!its_valid_expand(prompt[*i + 1])))
+		(!its_valid_expand(prompt[*i + 1]) && \
+			prompt[*i + 1] != '"' && prompt[*i + 1] != '\'')))
 		return (1);
 	else
 	{
-		search_and_expand_env(prompt, i, s);
+		if (!search_and_expand_env(prompt, i, s))
+			return (0);
 		return (-1);
 	}
 	return (1);

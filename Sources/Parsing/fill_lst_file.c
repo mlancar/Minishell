@@ -24,7 +24,7 @@ int	fill_hd(char *prompt, t_lst_file **file, int *i, t_lst_env *lst_env)
 	new->limiter = dup_str(prompt, i, &nb, lst_env);
 	if (!new->limiter)
 		return (ft_lst_clear_file(&new), 0);
-	if (nb == -1)
+	if (nb == -1 && !ft_strlen(new->limiter))
 	{
 		free(new->limiter);
 		new->limiter = NULL;
@@ -46,7 +46,7 @@ int	fill_outfile_2(char *prompt, t_lst_file **file, int *i, t_lst_env *lst_env)
 	new->outfile = dup_str(prompt, i, &nb, lst_env);
 	if (!new->outfile)
 		return (ft_lst_clear_file(&new), 0);
-	if (nb == -1)
+	if (nb == -1 && !ft_strlen(new->outfile))
 	{
 		free(new->outfile);
 		new->outfile = NULL;
@@ -67,7 +67,7 @@ int	fill_outfile(char *prompt, t_lst_file **file, int *i, t_lst_env *lst_env)
 	new->outfile = dup_str(prompt, i, &nb, lst_env);
 	if (!new->outfile)
 		return (ft_lst_clear_file(&new), 0);
-	if (nb == -1)
+	if (nb == -1 && !ft_strlen(new->outfile))
 	{
 		free(new->outfile);
 		new->outfile = NULL;
@@ -88,7 +88,7 @@ int	fill_infile(char *prompt, t_lst_file **file, int *i, t_lst_env *lst_env)
 	new->infile = dup_str(prompt, i, &nb, lst_env);
 	if (!new->infile)
 		return (ft_lst_clear_file(&new), 0);
-	if (nb == -1)
+	if (nb == -1 && !ft_strlen(new->infile))
 	{
 		free(new->infile);
 		new->infile = NULL;
@@ -99,6 +99,10 @@ int	fill_infile(char *prompt, t_lst_file **file, int *i, t_lst_env *lst_env)
 
 int	fill_file(char *prompt, t_lst_file **file, int *i, t_lst_env *lst_env)
 {
+	if (prompt[*i + 1] && (prompt[*i + 1] == '<' || prompt[*i + 1] == '>') \
+		&& prompt[*i] != prompt[*i + 1])
+		return (error\
+			("minishell: syntax error near unexpected token `newline'\n"), 0);
 	if (its_file(prompt[*i]) == IN && !its_file(prompt[*i + 1]))
 	{
 		if (!fill_infile(prompt, file, i, lst_env))

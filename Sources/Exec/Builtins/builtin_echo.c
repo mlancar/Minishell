@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_echo.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
+/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 17:20:02 by auferran          #+#    #+#             */
-/*   Updated: 2023/11/18 18:52:38 by auferran         ###   ########.fr       */
+/*   Updated: 2023/11/20 15:12:29 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,15 @@ int	builtin_echo(t_cmd *cmd)
 	i = 1;
 	option = 0;
 	arg = 0;
-	while (cmd->argv[i])
+	while (cmd->name[i])
 	{
-		if (its_option_echo(cmd->argv[i]) && arg == 0)
+		if (its_option_echo(cmd->name[i]) && arg == 0)
 			option = 1;
-		else if (cmd->argv[i])
+		else if (cmd->name[i])
 		{
 			arg = 1;
-			ft_putstr_fd(cmd->argv[i], cmd->fd.write);
-			if (cmd->argv[i + 1])
+			ft_putstr_fd(cmd->name[i], cmd->fd.write);
+			if (cmd->name[i + 1])
 				ft_putstr_fd(" ", cmd->fd.write);
 		}
 		i++;

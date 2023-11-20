@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_unset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
+/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 17:20:47 by auferran          #+#    #+#             */
-/*   Updated: 2023/11/19 00:30:42 by auferran         ###   ########.fr       */
+/*   Updated: 2023/11/20 15:12:29 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,15 +103,15 @@ int	builtin_unset(t_cmd *cmd, t_struct_data *s)
 {
 	int	i;
 
-	if (its_option(cmd->argv))
+	if (its_option(cmd->name))
 		return (1);
 	i = 1;
-	while (cmd->argv[i])
+	while (cmd->name[i])
 	{
-		if (valid_unset(cmd->argv[i]))
+		if (valid_unset(cmd->name[i]))
 		{
-			lets_unset_env(cmd->argv[i], s);
-			lets_unset_export(cmd->argv[i], s);
+			lets_unset_env(cmd->name[i], s);
+			lets_unset_export(cmd->name[i], s);
 		}
 		i++;
 	}

@@ -12,36 +12,6 @@
 
 #include "minishell.h"
 
-void	count_env(char *line, t_struct_strdup *s)
-{
-	int	i;
-
-	i = 0;
-	while (line[i] && line[i] != '=')
-		i++;
-	i++;
-	while (line[i])
-	{
-		s->len_env++;
-		i++;
-	}
-	s->dollar_type = 1;
-}
-
-void	expand(t_struct_strdup *s, char *line)
-{
-	int	i;
-
-	i = strlen_env(line) + 1;
-	while (line[i])
-	{
-		s->str[s->j] = line[i];
-		s->j++;
-		i++;
-	}
-	s->dollar_type = 0;
-}
-
 int	strlen_env(char *str)
 {
 	int	i;
@@ -60,25 +30,8 @@ int	its_valid_expand(char c)
 		return (1);
 	else if (c == '_')
 		return (1);
-	return (0);
-}
-
-int	cmp_env(char *str, int *i, char *line)
-{
-	int	x;
-	int	j;
-
-	x = *i + 1;
-	j = 0;
-	while (str[x] && its_valid_expand(str[x]) && line[j] && str[x] == line[j])
-	{
-		x++;
-		j++;
-	}
-	if ((!str[x] || !its_valid_expand(str[x])) && line[j] == '=')
-	{
-		*i = x;
+	else if (c >= '0' && c <= '9')
 		return (1);
-	}
 	return (0);
 }
+

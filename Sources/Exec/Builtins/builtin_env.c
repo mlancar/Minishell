@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
+/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 17:20:18 by auferran          #+#    #+#             */
-/*   Updated: 2023/11/18 17:20:19 by auferran         ###   ########.fr       */
+/*   Updated: 2023/11/20 15:12:29 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 int	builtin_env(t_cmd *cmd, t_lst_env *env_list)
 {
-	if (cmd->argv[1])
+	if (cmd->name[1])
 	{
-		if (its_option(cmd->argv))
+		if (its_option(cmd->name))
 			return (error("minishell: env: invalid option\n"), 1);
 		return (error("minishell: env: invalid argument\n"), 1);
 	}

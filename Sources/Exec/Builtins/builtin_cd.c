@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 18:53:30 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/13 17:20:39 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/20 15:12:29 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	builtin_cd(t_cmd *cmd)
 	int		i;
 
 	i = 0;
-	path = cmd->argv[1];
+	path = cmd->name[1];
 	if (builtin_arg_nbr(cmd) == -1)
 		return (error_builtins(cmd), 0);
 	if (path == NULL)
@@ -88,7 +88,7 @@ int	builtin_cd(t_cmd *cmd)
 		i = get_env_line(cmd, "HOME=");
 		if (i == 0)
 		{
-			ft_putstr_fd(cmd->argv[0], 2);
+			ft_putstr_fd(cmd->name[0], 2);
 			ft_putstr_fd(": HOME not set\n", 2);
 			return (0);
 		}

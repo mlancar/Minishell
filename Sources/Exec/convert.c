@@ -6,42 +6,42 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 19:05:44 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/17 18:56:56 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/20 15:12:59 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
-void	convert_list(t_cmd *cmd, t_lst_cmd *argv)
+void	convert_list(t_cmd *cmd, t_lst_cmd *cmd_list)
 {
 	int			i;
 	int			size_list;
 	t_lst_arg	*start;
 
-	start = argv->arg;
-	size_list = ft_lst_size_arg(argv->arg) + 1;
-	if (cmd->argv != NULL)
-		free(cmd->argv);//pas freetab parce que free dans liste chainee
+	start = cmd_list->arg;
+	size_list = ft_lst_size_arg(cmd_list->arg) + 1;
+	if (cmd->name != NULL)
+		free(cmd->name);//pas freetab parce que free dans liste chainee
 	i = 0;
-	cmd->argv = malloc(sizeof(char *) * size_list);
-	if (!cmd->argv)
+	cmd->name = malloc(sizeof(char *) * size_list);
+	if (!cmd->name)
 		return ;
-	while (argv->arg != NULL)
+	while (cmd_list->arg != NULL)
 	{
-		if (argv->arg->name != NULL)
+		if (cmd_list->arg->name != NULL)
 		{
-			cmd->argv[i] = argv->arg->name;
+			cmd->name[i] = cmd_list->arg->name;
 			i++;
 		}
-		else if (argv->arg->arg != NULL)
+		else if (cmd_list->arg->arg != NULL)
 		{
-			cmd->argv[i] = argv->arg->arg;
+			cmd->name[i] = cmd_list->arg->arg;
 			i++;
 		}
-		argv->arg = argv->arg->next;
+		cmd_list->arg = cmd_list->arg->next;
 	}
-	cmd->argv[i] = NULL;
-	argv->arg = start;
+	cmd->name[i] = NULL;
+	cmd_list->arg = start;
 }
 
 void	convert_list_env(t_cmd *cmd, t_struct_data *s)

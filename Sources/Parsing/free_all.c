@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_all.c                                         :+:      :+:    :+:   */
+/*   free_parsing.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
+/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 17:16:04 by auferran          #+#    #+#             */
-/*   Updated: 2023/11/18 23:34:18 by auferran         ###   ########.fr       */
+/*   Updated: 2023/11/20 14:55:04 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	free_my_env(char **my_env)
 	my_env = NULL;
 }
 
-void	free_all(t_struct_data *s)
+void	free_parsing(t_struct_data *s)
 {
 	if (s->prompt)
 		free(s->prompt);

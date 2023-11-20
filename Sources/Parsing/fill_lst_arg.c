@@ -24,7 +24,7 @@ int	fill_arg_name(char *prompt, t_lst_arg **arg, int *i, t_lst_env *lst_env)
 	new->name = dup_str(prompt, i, &nb, lst_env);
 	if (!new->name)
 		return (ft_lst_clear_arg(&new), 0);
-	if (nb == -1)
+	if (nb == -1 && !ft_strlen(new->name))
 	{
 		free(new->name);
 		new->name = NULL;
@@ -45,7 +45,7 @@ int	fill_arg_arg(char *prompt, t_lst_arg **arg, int *i, t_lst_env *lst_env)
 	new->arg = dup_str(prompt, i, &nb, lst_env);
 	if (!new->arg)
 		return (ft_lst_clear_arg(&new), 0);
-	if (nb == -1)
+	if (nb == -1 && !ft_strlen(new->arg))
 	{
 		free(new->arg);
 		new->arg = NULL;

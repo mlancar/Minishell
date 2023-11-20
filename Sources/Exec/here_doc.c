@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 14:53:52 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/19 19:37:25 by marvin           ###   ########.fr       */
+/*   Updated: 2023/11/20 17:09:48 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
-int	check_here_doc(t_lst_cmd *argv, t_cmd *cmd)
+int	check_here_doc(t_lst_cmd *cmd_list, t_cmd *cmd)
 {
-	if (argv->file)
+	if (cmd_list->file)
 	{
-		if (argv->file->limiter)
+		if (cmd_list->file->limiter)
 		{
 			cmd->heredoc = 1;
 		}
@@ -44,16 +44,16 @@ int	is_limiter(char *str, char *limiter)
 	return (str[i] - limiter[i]);
 }
 
-void	get_rand_name(t_cmd *cmd)
+void	get_rand_name(t_struct_data *s, t_cmd *cmd)
 {
 	int	i;
 
 	i = 0;
 	cmd->fd.tmp = open("/dev/random", O_RDONLY);
 	if (cmd->fd.tmp == -1)
-		free_and_exit(cmd, 1);
+		free_and_exit(s, cmd, 1);
 	if (read(cmd->fd.tmp, cmd->files.rand_name, 6) == -1)
-		free_and_exit(cmd, 1);
+		free_and_exit(s, cmd, 1);
 	cmd->files.rand_name[6] = '\0';
 	i = 0;
 	while (i < 6)
@@ -64,15 +64,15 @@ void	get_rand_name(t_cmd *cmd)
 		cmd->files.rand_name[i] = cmd->files.rand_name[i] + 97;
 		i++;
 	}
-	check_close(cmd, cmd->fd.tmp);
+	check_close(cmd, &cmd->fd.tmp);
 	cmd->fd.tmp = open(cmd->files.rand_name, O_WRONLY | O_TRUNC
 			| O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP);
 	if (cmd->fd.tmp == -1)
-		free_and_exit(cmd, 1);
+		free_and_exit(s, cmd, 1);
 }
 
 void	fill_heredoc(char **read_line, char *limiter, t_cmd *cmd,
-t_lst_cmd *argv)
+t_lst_cmd *cmd_list)
 {
 	cmd->files.line++;
 	*read_line = readline("> ");
@@ -81,7 +81,7 @@ t_lst_cmd *argv)
 		ft_putstr_fd("\nminishell: warning: here-document at line ", 2);
 		ft_putnbr_fd(cmd->files.line, 2);
 		ft_putstr_fd(" delimited by end-of-file (wanted `", 2);
-		ft_putstr_fd(argv->file->limiter, 2);
+		ft_putstr_fd(cmd_list->file->limiter, 2);
 		ft_putstr_fd("')\n", 2);
 	}
 	if (is_limiter(*read_line, limiter) != 0)
@@ -91,30 +91,30 @@ t_lst_cmd *argv)
 	}
 }
 
-void	ft_singleton(int mode, t_cmd *cmd, t_lst_cmd *argv, t_struct_data *s)
+void	ft_singleton(int mode, t_cmd *cmd, t_lst_cmd *cmd_list, t_struct_data *s)
 {
 	static t_cmd			*static_cmd;
-	static t_lst_cmd		*static_argv;
+	static t_lst_cmd		*static_cmd_list;
 	static t_struct_data	*static_s;
 	
-	(void)static_argv;
+	(void)static_cmd_list;
 	if (mode == 0)
 	{
 		static_cmd = cmd;
-		static_argv = argv;
+		static_cmd_list = cmd_list;
 		static_s = s;
 	}
 	else
 	{
-		free(static_cmd->argv);
+		free(static_cmd->name);
 		free(static_cmd->pid);
 		free(static_cmd->fd_hd);
 		free(static_cmd->env);
-		free_all(static_s);
+		free_parsing(static_s);
 		unlink(cmd->files.rand_name);
-		check_close(static_cmd, static_cmd->fd.tmp);
-		check_close(static_cmd, static_cmd->fd.write);
-		check_close(static_cmd, static_cmd->fd.read);
+		check_close(static_cmd, &static_cmd->fd.tmp);
+		check_close(static_cmd, &static_cmd->fd.write);
+		check_close(static_cmd, &static_cmd->fd.read);
 	}
 }
 
@@ -129,7 +129,7 @@ void	signal_heredoc(int signal)
 	}
 }
 
-int	fork_heredoc(char *limiter, t_cmd *cmd, t_lst_cmd *argv, t_struct_data *s)
+int	fork_heredoc(char *limiter, t_cmd *cmd, t_lst_cmd *cmd_list, t_struct_data *s)
 {
 	char	*read_line;
 	int		status;
@@ -139,21 +139,21 @@ int	fork_heredoc(char *limiter, t_cmd *cmd, t_lst_cmd *argv, t_struct_data *s)
 	read_line = NULL;
 	pid = fork();
 	if (pid < 0)
-		error_cmd(argv, cmd, 1);
-	ft_singleton(0, cmd, argv, s);
+		error_cmd(s, cmd_list, cmd, 1);
+	ft_singleton(0, cmd, cmd_list, s);
 	if (pid == 0)
 	{
 		signal(SIGINT, signal_heredoc);
-		fill_heredoc(&read_line, limiter, cmd, argv);
+		fill_heredoc(&read_line, limiter, cmd, cmd_list);
 		while (is_limiter(read_line, limiter) != 0)
 		{
 			free(read_line);
-			fill_heredoc(&read_line, limiter, cmd, argv);
+			fill_heredoc(&read_line, limiter, cmd, cmd_list);
 		}
 		int i = 0;
 		while (i < cmd->nbr)
 		{
-			check_close(cmd, cmd->fd_hd[i]);
+			check_close(cmd, &cmd->fd_hd[i]);
 			i++;
 		}
 		free(read_line);
@@ -161,15 +161,15 @@ int	fork_heredoc(char *limiter, t_cmd *cmd, t_lst_cmd *argv, t_struct_data *s)
 		free(cmd->pid);
 		free(cmd->env);
 		free(cmd->path);
-		free(cmd->argv);
-		free_all(s);
-		check_close(cmd, cmd->fd.write);
-		check_close(cmd, cmd->fd.tmp);
+		free(cmd->name);
+		free_parsing(s);
+		check_close(cmd, &cmd->fd.write);
+		check_close(cmd, &cmd->fd.tmp);
 		exit(EXIT_SUCCESS);
 	}
 	else
 	{
-		check_close(cmd, cmd->fd.tmp);
+		check_close(cmd, &cmd->fd.tmp);
 		waitpid(pid, &status, 0);
 		if (!WIFEXITED(status) || WEXITSTATUS(status) == 130)
 		{
@@ -181,17 +181,17 @@ int	fork_heredoc(char *limiter, t_cmd *cmd, t_lst_cmd *argv, t_struct_data *s)
 	}
 }
 
-int	open_heredoc(t_cmd *cmd, t_lst_cmd *argv, int *fd, t_struct_data *s)
+int	open_heredoc(t_cmd *cmd, t_lst_cmd *cmd_list, int *fd, t_struct_data *s)
 {
 	cmd->heredoc = 1;
-	get_rand_name(cmd);
+	get_rand_name(s, cmd);
 	cmd->pid[cmd->index_pid] = -1;
-	if (fork_heredoc(argv->file->limiter, cmd, argv, s) == -1)
+	if (fork_heredoc(cmd_list->file->limiter, cmd, cmd_list, s) == -1)
 		return (-1);
 	*fd = open(cmd->files.rand_name, O_RDONLY);
 	//printf("fd = %d\n", *fd);
 	if (*fd == -1)
-		free_and_exit(cmd, 1);//pas exit process principal?
+		free_and_exit(s, cmd, 1);//pas exit process principal?
 	unlink(cmd->files.rand_name);
 	return (1);
 }

@@ -12,6 +12,14 @@
 
 #include "minishell.h"
 
+int	ft_isdigit(int character)
+{
+	if (character >= '0' && character <= '9')
+		return (1);
+	else
+		return (0);
+}
+
 char	*ft_strjoin_libft(char const *s1, char const *s2)
 {
 	size_t	i;

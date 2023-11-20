@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 21:28:45 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/18 19:51:03 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/20 17:07:23 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,56 +27,55 @@ void	free_tab(char **tab)
 	free(tab);
 }
 
-void	free_and_exit(t_cmd *cmd, int exit_code)
+void	free_and_exit(t_struct_data *s, t_cmd *cmd, int exit_code)
 {
-	free(cmd->argv);
-	free(cmd->env);
-	free(cmd->path);
-	free(cmd->pid);
+	free_exec(cmd);
+	free_parsing(s);
 	g_exit = exit_code;
 	exit(g_exit);
 }
 
-void	error_access_cmd(t_lst_cmd *argv, t_cmd *cmd)
+void	error_access_cmd(t_struct_data *s, t_lst_cmd *cmd_list, t_cmd *cmd)
 {
-	if (cmd->argv[0] == NULL)
-		error_cmd(argv, cmd, 127);
-	ft_putstr_fd(cmd->argv[0], 2);
+	if (cmd->name[0] == NULL)
+		error_cmd(s, cmd_list, cmd, 127);
+	ft_putstr_fd(cmd->name[0], 2);
 	ft_putstr_fd(": command not found\n", 2);
+	close_fd_parent(cmd);
 	g_exit = 127;
 }
 
-void	print_error( t_lst_cmd *argv, t_cmd *cmd)
+void	print_error( t_lst_cmd *cmd_list, t_cmd *cmd)
 {
 	ft_putstr_fd("minishell: ", 2);
-	if (argv->file)
+	if (cmd_list->file)
 	{
-		if (argv->file->infile)
-			ft_putstr_fd(argv->file->infile, 2);
-		else if (argv->file->outfile)
-			ft_putstr_fd(argv->file->outfile, 2);
+		if (cmd_list->file->infile)
+			ft_putstr_fd(cmd_list->file->infile, 2);
+		else if (cmd_list->file->outfile)
+			ft_putstr_fd(cmd_list->file->outfile, 2);
 	}
 	else
-		ft_putstr_fd(cmd->argv[0], 2);
+		ft_putstr_fd(cmd->name[0], 2);
 	ft_putstr_fd(": ", 2);
 	ft_putstr_fd(strerror(errno), 2);
 	ft_putstr_fd("\n", 2);
 }
 
-void	error_cmd(t_lst_cmd *argv, t_cmd *cmd, int exit_code)
+void	error_cmd(t_struct_data *s, t_lst_cmd *cmd_list, t_cmd *cmd, int exit_code)
 {
-	print_error(argv, cmd);
+	print_error(cmd_list, cmd);
 	if (cmd->nbr > 0)
 	{
-		check_close(cmd, cmd->fd.pipe[0]);
-		check_close(cmd, cmd->fd.pipe[1]);
+		check_close(cmd, &cmd->fd.pipe[0]);
+		check_close(cmd, &cmd->fd.pipe[1]);
 	}
-	check_close(cmd, cmd->fd.write);
+	check_close(cmd, &cmd->fd.write);
 	if (cmd->heredoc == 0)
-		check_close(cmd, cmd->fd.read);
+		check_close(cmd, &cmd->fd.read);
 	else
-		check_close(cmd, cmd->fd.tmp);
+		check_close(cmd, &cmd->fd.tmp);
 	if ((cmd->index_pid != cmd->first) && (cmd->index_pid != cmd->last))
-		check_close(cmd, cmd->fd.other_pipe);
-	free_and_exit(cmd, exit_code);
+		check_close(cmd, &cmd->fd.other_pipe);
+	free_and_exit(s, cmd, exit_code);
 }

@@ -38,6 +38,8 @@ int	count_c(char *prompt, char c, int *i, t_struct_strdup *s)
 		count++;
 		(*i)++;
 	}
+	if (count > 2)
+		return (error("minishell: syntax error near unexpected token\n"), 0);
 	while (prompt[*i] && prompt[*i] == ' ')
 		(*i)++;
 	if (!prompt[*i] || token(prompt, *i))
@@ -45,8 +47,6 @@ int	count_c(char *prompt, char c, int *i, t_struct_strdup *s)
 		error("minishell: syntax error near unexpected token `newline'\n"), 0);
 	s->file_type = 1;
 	s->index_file = *i;
-	if (count > 2)
-		return (error("minishell: syntax error near unexpected token\n"), 0);
 	return (1);
 }
 
@@ -60,7 +60,10 @@ int	prep_malloc(char *prompt, t_struct_strdup *s, int *i, int nb)
 			return (0);
 		if (prompt[*i] == '$')
 		{
-			if (check_dollar_count(prompt, i, nb, s) == 1)
+			s->nb_fill = check_dollar_count(prompt, i, nb, s) ;
+			if (s->nb_fill == 0)
+				return (0);
+			if (s->nb_fill == 1)
 				s->len++;
 		}
 		else if (prompt[*i] && prompt[*i] == s->c)

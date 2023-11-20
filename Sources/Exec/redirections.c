@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 16:38:01 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/19 19:28:16 by marvin           ###   ########.fr       */
+/*   Updated: 2023/11/20 17:10:21 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,73 +19,63 @@ void print_redir(struct s_lst_file *file) {
 	print_redir(file->next);
 }
 
-int	redirection_one_cmd(t_lst_cmd *argv, t_cmd *cmd)
+int	redirection_one_cmd(t_struct_data *s, t_lst_cmd *cmd_list, t_cmd *cmd)
 {
-	//print_redir(argv->file);
 	cmd->heredoc = 0;
-	while (argv->file)
+	while (cmd_list->file)
 	{
-		if (argv->file->infile)
+		if (cmd_list->file->infile)
 		{
 			cmd->heredoc = 0;
-			if (open_infile(argv, cmd) == 0)
+			if (open_infile(cmd_list, cmd) == 0)
 				return (0);
-			//printf("infile fdread = %d\n",cmd->fd.read);
-			
 		}
-		else if (argv->file->outfile)
-			open_outfile(argv, cmd);
+		else if (cmd_list->file->outfile)
+			open_outfile(s, cmd_list, cmd);
 		else
 		{
-			check_close(cmd, cmd->fd.read);
+			check_close(cmd, &cmd->fd.read);
 			cmd->fd.read = -1;
 			cmd->heredoc = 1;
 		}
-		argv->file = argv->file->next;
+		cmd_list->file = cmd_list->file->next;
 	}
 	if (cmd->heredoc == 1)
-	{
-		//printf("%s fd_hd[0] = %d, fd_hd[1] = %d\n", cmd->argv[0], cmd->fd_hd[0], cmd->fd_hd[1]);
-		//printf("%s fdread = %d, fdhd = %d\n", cmd->argv[0], cmd->fd.read, cmd->fd_hd[cmd->index]);
 		cmd->fd.read = cmd->fd_hd[cmd->index];
-		//printf("%s fdread = %d\n", cmd->argv[0], cmd->fd.read);
-	}
 	else
-		check_close(cmd, cmd->fd_hd[cmd->index]);
-	//printf("ici cmd = %s fdread = %d, fdwrite = %d\n", cmd->argv[0], cmd->fd.read, cmd->fd.write);
+		check_close(cmd, &cmd->fd_hd[cmd->index]);
 	return (1);
 }
 
-	//boucle remplir heredoc ici ou parsing 
-	//lancer buitins avec sans option pas \n ou erreur
-int	heredoc_redirections(t_lst_cmd *argv, t_cmd *cmd, t_struct_data *s)
+int	heredoc_redirections(t_lst_cmd *cmd_list, t_cmd *cmd, t_struct_data *s)
 {
 	t_lst_cmd	*start;
 	t_lst_file	*start_file;
 	int			i;
 
 	i = 0;
-	start = argv;
-	while (argv)
+	start = cmd_list;
+	while (cmd_list)
 	{
-		start_file = argv->file;
-		while (argv->file)
+		start_file = cmd_list->file;
+		while (cmd_list->file)
 		{
-			if (argv->file->limiter)
+			if (cmd_list->file->limiter)
 			{
-				//printf("fd_hd = %d\n", cmd->fd_hd[i]);
-				check_close(cmd, cmd->fd_hd[i]);
-				if (open_heredoc(cmd, argv, cmd->fd_hd + i, s) == -1)
-					return (-1);
-				//printf("ICI %s fdhd = %d\n", argv->arg->name, cmd->fd_hd[i]);
+				check_close(cmd, &cmd->fd_hd[i]);
+				if (open_heredoc(cmd, cmd_list, cmd->fd_hd + i, s) == -1)
+				{
+					cmd->pid[cmd->index_pid] = -1;
+					return (0);
+				}
 			}
-			argv->file = argv->file->next;
+			cmd_list->file = cmd_list->file->next;
 		}
-		argv->file = start_file;
-		argv = argv->next;
+		cmd_list->file = start_file;
+		cmd_list = cmd_list->next;
 		i++;
 	}
-	argv = start;
+	cmd_list = start;
 	return (1);
 }
 

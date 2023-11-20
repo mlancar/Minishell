@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
+/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 17:16:09 by auferran          #+#    #+#             */
-/*   Updated: 2023/11/18 23:37:09 by auferran         ###   ########.fr       */
+/*   Updated: 2023/11/20 15:12:59 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,11 @@ char	*init_prompt(void)
 	return (prompt);
 }
 
-int	main(int argc, char **argv, char **env)
+int	main(int argc, char **cmd_list, char **env)
 {
 	t_struct_data	s;
 
-	(void) argv;
+	(void) cmd_list;
 	ft_memset(&s, 0, sizeof(t_struct_data));
 	init_lst_env(env, &s);
 	if (argc == 1)
@@ -47,13 +47,13 @@ int	main(int argc, char **argv, char **env)
 			s.prompt = init_prompt();
 			if (!s.prompt)
 			{
-				free_all(&s);
+				free_parsing(&s);
 				exit(g_exit);
 			}
 			manage(s.prompt, &s);
 			free(s.prompt);
 		}
-		free_all(&s);
+		free_parsing(&s);
 	}
 	return (0);
 }
