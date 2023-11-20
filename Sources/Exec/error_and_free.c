@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_and_free.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 21:28:45 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/20 17:07:23 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/21 00:00:10 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,8 @@ void	print_error( t_lst_cmd *cmd_list, t_cmd *cmd)
 
 void	error_cmd(t_struct_data *s, t_lst_cmd *cmd_list, t_cmd *cmd, int exit_code)
 {
-	print_error(cmd_list, cmd);
+	if(cmd->name[0])
+		print_error(cmd_list, cmd);
 	if (cmd->nbr > 0)
 	{
 		check_close(cmd, &cmd->fd.pipe[0]);

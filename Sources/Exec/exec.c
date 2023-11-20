@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 14:53:05 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/20 19:20:19 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/21 00:43:47 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ int	setup_exec(t_struct_data *s, t_lst_cmd *cmd_list, t_cmd *cmd)
 		return (-1);
 	if (check_command(cmd_list, cmd) == 0)
 	{
+		
 		cmd->pid[cmd->index_pid] = -1;
 		error_access_cmd(s, cmd_list, cmd);
 		return (0);

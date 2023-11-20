@@ -3,20 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 13:50:22 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/20 17:15:03 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/21 00:52:05 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 #include "minishell.h"
-
-// Note: It is also to taken into consideration that an exit code
-// with a value greater than 255 returns an exit code modulo 256.
-// For Example: If we execute a statement exit(9999)
-// then it will execute exit(15) as 9999%256 = 15.
 
 int	check_exit_code(t_cmd *cmd, long exit_code)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 13:28:37 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/20 15:34:36 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/21 00:46:16 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,9 @@ int	check_command(t_lst_cmd *cmd_list, t_cmd *cmd)
 
 	if (cmd->name[0] == NULL)
 		return (0);
-	if (check_builtins(cmd) == 1)
+	else if (cmd->name[0][0] == '\0')
+		return(0);
+	else if (check_builtins(cmd) == 1)
 		return (1);
 	path_line = get_env_line(cmd, "PATH=");
 	path = &cmd->env[path_line][5];

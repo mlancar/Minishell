@@ -34,11 +34,12 @@ void	wait_cmd(t_cmd *cmd)
 		if (cmd->pid[cmd->index_pid] != -1)
 		{
 			waitpid(cmd->pid[cmd->index_pid], &status, 0);
+			if (WIFEXITED(status))
+				g_exit = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
+				g_exit = 128 + WTERMSIG(status);
 		}
 		cmd->index_pid--;
-		if (WIFEXITED(status))
-			g_exit = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-			g_exit = 128 + WTERMSIG(status);
+		
 	}
 }

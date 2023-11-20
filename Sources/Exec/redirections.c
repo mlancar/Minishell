@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 16:38:01 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/20 17:10:21 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/21 00:44:05 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@ void print_redir(struct s_lst_file *file) {
 
 int	redirection_one_cmd(t_struct_data *s, t_lst_cmd *cmd_list, t_cmd *cmd)
 {
+	t_lst_file	*start;
+	
+	start = cmd_list->file;
 	cmd->heredoc = 0;
 	while (cmd_list->file)
 	{
@@ -44,6 +47,7 @@ int	redirection_one_cmd(t_struct_data *s, t_lst_cmd *cmd_list, t_cmd *cmd)
 		cmd->fd.read = cmd->fd_hd[cmd->index];
 	else
 		check_close(cmd, &cmd->fd_hd[cmd->index]);
+	cmd_list->file = start;
 	return (1);
 }
 
