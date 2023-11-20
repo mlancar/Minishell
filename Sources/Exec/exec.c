@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 14:53:05 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/20 17:11:25 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/20 19:20:19 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	exec_child(t_cmd *cmd, t_struct_data *s, t_lst_cmd *cmd_list)
 	{
 		if (exec_builtins(cmd, s, cmd_list) == 0)
 			error_cmd(s, cmd_list, cmd, 126);
-		close_fd_parent(cmd);
+		close_fd_child(cmd);
 		free_exec(cmd);
 		free_parsing(s);
 		g_exit = 0;
@@ -42,6 +42,8 @@ void	exec_cmd(t_lst_cmd *cmd_list, t_cmd *cmd, t_struct_data *s)
 		signal(SIGQUIT, SIG_DFL);
 		if (check_builtins(cmd) == 0)
 		{
+			//dprintf(2, "%s read = %d, write = %d pipe = %d\n", cmd->name[0], cmd->fd.read, cmd->fd.write, cmd->fd.other_pipe);
+			//leak quand dup2 fail
 			if (dup2(cmd->fd.read, 0) == -1 || dup2(cmd->fd.write, 1) == -1)
 				error_cmd(s, cmd_list, cmd, 126);
 			close_fd_child(cmd);
@@ -58,7 +60,7 @@ int	setup_exec(t_struct_data *s, t_lst_cmd *cmd_list, t_cmd *cmd)
 {
 	init_fd(cmd);
 	if (redirection_one_cmd(s, cmd_list, cmd) == 0)
-		return (0);
+		return (-1);
 	if (check_command(cmd_list, cmd) == 0)
 	{
 		cmd->pid[cmd->index_pid] = -1;
@@ -70,6 +72,8 @@ int	setup_exec(t_struct_data *s, t_lst_cmd *cmd_list, t_cmd *cmd)
 
 void	loop_exec(t_lst_cmd *cmd_list, t_cmd *cmd, t_struct_data *s)
 {
+	int	setup;
+	
 	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
 	if (heredoc_redirections(cmd_list, cmd, s) == 0)
@@ -80,13 +84,16 @@ void	loop_exec(t_lst_cmd *cmd_list, t_cmd *cmd, t_struct_data *s)
 	{
 		convert_list(cmd, cmd_list);
 		pipe_cmd(s, cmd, cmd_list);
-		if (setup_exec(s, cmd_list, cmd) == 1)
+		setup = setup_exec(s, cmd_list, cmd);
+		if (setup == 1)
 		{
 			if (check_builtins(cmd) == 1 && cmd->nbr == 1)
 				return (one_cmd_builtin(cmd, s, cmd_list));
 			else
 				exec_cmd(cmd_list, cmd, s);
 		}
+		else if (setup == -1)
+			return ;
 		cmd->index++;
 		cmd->index_pid++;
 		if (check_builtins(cmd) == 0)

@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 16:23:15 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/20 16:17:15 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/20 19:16:12 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	check_close(t_cmd *cmd, int *fd)
 {
 	(void)cmd;
-	//printf("close fd = %d\n", fd);
+	//printf("%s close fd = %d\n", cmd->name[0], *fd);
 	if (*fd > 2)
 		close(*fd);
 	*fd = -1;
@@ -35,6 +35,7 @@ void	close_fd_hd(t_cmd *cmd)
 
 void	close_fd_child(t_cmd *cmd)
 {
+	//printf("child\n");
 	check_close(cmd, &cmd->fd.read);
 	check_close(cmd, &cmd->fd.write);
 	check_close(cmd, &cmd->fd.other_pipe);
@@ -42,9 +43,9 @@ void	close_fd_child(t_cmd *cmd)
 
 void	close_fd_parent(t_cmd *cmd)
 {
-	if (cmd->nbr == 2)
-		check_close(cmd, &cmd->fd.other_pipe);
-	
+	//printf("parent\n");
+	//if (cmd->nbr == 2)
+	//check_close(cmd, &cmd->fd.other_pipe);
 	check_close(cmd, &cmd->fd.read);
 	check_close(cmd, &cmd->fd.write);
 }
