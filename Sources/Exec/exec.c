@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 14:53:05 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/21 18:04:09 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/21 21:55:46 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,16 @@ void	exec_child(t_cmd *cmd, t_struct_data *s, t_lst_cmd *cmd_list)
 	else
 	{
 		if (execve(cmd->path, cmd->name, cmd->env))
-			error_cmd(s, cmd_list, cmd, 126);
+			error_exec(s, cmd, 126);
+	}
+}
+
+void	signal_exec(int signal)
+{
+	if (signal == SIGINT)
+	{
+		ft_putstr_fd("\n", 0);
+		
 	}
 }
 
@@ -40,6 +49,7 @@ void	exec_cmd(t_lst_cmd *cmd_list, t_cmd *cmd, t_struct_data *s)
 	{
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
+		//signal(SIGINT, signal_exec);
 		if (check_builtins(cmd) == 0)
 		{
 			//dprintf(2, "%s read = %d, write = %d pipe = %d\n", cmd->name[0], cmd->fd.read, cmd->fd.write, cmd->fd.other_pipe);
@@ -48,7 +58,7 @@ void	exec_cmd(t_lst_cmd *cmd_list, t_cmd *cmd, t_struct_data *s)
 				error_cmd(s, cmd_list, cmd, 126);
 			close_fd_child(cmd);
 			check_close(cmd, &cmd->fd.tmp);
-			close(cmd->fd.tmp);
+			check_close(cmd, &cmd->fd.tmp);
 		}
 		exec_child(cmd, s, cmd_list);
 	}
@@ -61,18 +71,24 @@ int	setup_exec(t_struct_data *s, t_lst_cmd *cmd_list, t_cmd *cmd)
 	int	check_cmd;
 	
 	init_fd(cmd);
-	//check cmd avant redir
+	if (redirection_one_cmd(s, cmd_list, cmd) == 0)
+	{
+		close_fd_parent(cmd);
+		cmd->pid[cmd->index_pid] = -1;
+		return (0);
+	}
 	check_cmd = check_command(cmd_list, cmd);
 	if (check_cmd == -1)
+	{
+		close_fd_parent(cmd);
 		return (0);
+	}
 	else if (check_cmd == 0)
 	{
 		cmd->pid[cmd->index_pid] = -1;
 		error_access_cmd(s, cmd_list, cmd);
 		return (0);
 	}
-	if (redirection_one_cmd(s, cmd_list, cmd) == 0)
-		return (-1);
 	return (1);
 }
 

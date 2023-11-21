@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 13:50:22 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/21 18:34:21 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/21 21:02:12 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ int	builtin_exit(t_cmd *cmd, t_struct_data *s)
 	else
 		check_close(cmd, &cmd->fd.tmp);
 	//printf("write = %d\n", cmd->fd.write);
-	ft_putstr_fd("exit\n", 1);
+	if (cmd->nbr == 1)
+		ft_putstr_fd("exit\n", 1);
 	exit(g_exit);
 }

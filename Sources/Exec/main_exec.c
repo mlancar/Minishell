@@ -30,19 +30,22 @@ void	wait_cmd(t_cmd *cmd)
 	i = 0;
 	cmd->index_pid--;
 	//printf("pid = %d, indexpid = %d\n", cmd->pid[cmd->index_pid], cmd->index_pid);
-	
 	while (i <= cmd->index_pid)
 	{
 		if (cmd->pid[i] != -1)
 		{
 			waitpid(cmd->pid[i], &status, 0);
+			if (WIFEXITED(status))
+				g_exit = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
+			{
+				g_exit = 128 + WTERMSIG(status);
+				if (WTERMSIG(status) == SIGINT)
+					ft_putstr("\n");
+				else if (WTERMSIG(status) == SIGQUIT)
+					ft_putstr_fd("Quit (core dumped)\n", 2);
+			}
 		}
-		//printf("status = %d\n", status);
 		i++;
-		
 	}
-	if (WIFEXITED(status))
-		g_exit = WEXITSTATUS(status);
-	else if (WIFSIGNALED(status))
-		g_exit = 128 + WTERMSIG(status);
 }

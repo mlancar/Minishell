@@ -6,7 +6,7 @@
 /*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 17:24:11 by auferran          #+#    #+#             */
-/*   Updated: 2023/11/18 17:24:12 by auferran         ###   ########.fr       */
+/*   Updated: 2023/11/21 19:37:12 by auferran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	check_reverse_file(char *prompt, int i)
 		&& prompt[i] != prompt[i + 1])
 	{
 		g_exit = 2;
-		return (error\
+		return (error \
 			("minishell: syntax error near unexpected token `newline'\n"), 0);
 	}
 	return (1);

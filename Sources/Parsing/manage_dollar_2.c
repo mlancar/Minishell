@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   manage_dollar_2.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/21 19:39:03 by auferran          #+#    #+#             */
+/*   Updated: 2023/11/21 19:48:29 by auferran         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	update_i_dollar(char *prompt, int *i, t_struct_strdup *s)
@@ -35,6 +47,7 @@ int	cmp_env(char *str, int *i, char *line)
 	}
 	return (0);
 }
+
 void	count_env(char *line, t_struct_strdup *s)
 {
 	int	i;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_and_free.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 21:28:45 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/21 00:00:10 by marvin           ###   ########.fr       */
+/*   Updated: 2023/11/21 22:02:53 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,37 @@ void	print_error( t_lst_cmd *cmd_list, t_cmd *cmd)
 	ft_putstr_fd(": ", 2);
 	ft_putstr_fd(strerror(errno), 2);
 	ft_putstr_fd("\n", 2);
+}
+
+
+void	error_exec(t_struct_data *s, t_cmd *cmd, int exit_code)
+{
+	if (cmd->nbr > 0)
+	{
+		check_close(cmd, &cmd->fd.pipe[0]);
+		check_close(cmd, &cmd->fd.pipe[1]);
+	}
+	check_close(cmd, &cmd->fd.write);
+	if (cmd->heredoc == 0)
+		check_close(cmd, &cmd->fd.read);
+	else
+		check_close(cmd, &cmd->fd.tmp);
+	if ((cmd->index_pid != cmd->first) && (cmd->index_pid != cmd->last))
+		check_close(cmd, &cmd->fd.other_pipe);
+	if (cmd->path)
+		free(cmd->path);
+	free_and_exit(s, cmd, exit_code);
+}
+
+void	error_dir(t_cmd *cmd, int exit_code)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(cmd->name[0], 2);
+	ft_putstr_fd(": ", 2);
+	ft_putstr_fd("Is a directory", 2);
+	ft_putstr_fd("\n", 2);
+	cmd->pid[cmd->index_pid] = -1;
+	g_exit = exit_code;
 }
 
 void	error_cmd(t_struct_data *s, t_lst_cmd *cmd_list, t_cmd *cmd, int exit_code)

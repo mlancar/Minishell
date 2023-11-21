@@ -6,7 +6,7 @@
 /*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 17:23:50 by auferran          #+#    #+#             */
-/*   Updated: 2023/11/18 23:35:33 by auferran         ###   ########.fr       */
+/*   Updated: 2023/11/21 20:12:24 by auferran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,4 +34,3 @@ int	its_valid_expand(char c)
 		return (1);
 	return (0);
 }
-

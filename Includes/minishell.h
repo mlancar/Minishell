@@ -6,7 +6,7 @@
 /*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 17:15:11 by auferran          #+#    #+#             */
-/*   Updated: 2023/11/21 18:10:51 by auferran         ###   ########.fr       */
+/*   Updated: 2023/11/21 20:10:56 by auferran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ int			fill_lst(char *prompt, t_lst_cmd *cmd, t_lst_env *lst_env);
 
 int			fill_arg(char *prompt, t_lst_arg **arg, int *i, t_lst_env *lst_env);
 
-int			fill_file(char *prompt, t_lst_file **file, int *i, t_lst_env *lst_env);
+int			fill_file(char *p, t_lst_file **file, int *i, t_lst_env *lst_env);
 
 char		*dup_str(char *prompt, int *i, int *nb, t_lst_env *lst_env);
 
@@ -183,8 +183,8 @@ void		ft_lst_clear_env(t_lst_env **lst_env);
 int			in_quote(char *str, int c, int *in_s_quote, int *in_d_quote);
 int			update_quote(char *prompt, int i, t_struct_strdup *s);
 
-int			check_dollar_count(char *prompt, int *i, int file, t_struct_strdup *s);
-int			check_dollar_expand(char *prompt, int *i, int file, t_struct_strdup *s);
+int			check_dollar_count(char *p, int *i, int file, t_struct_strdup *s);
+int			check_dollar_expand(char *p, int *i, int file, t_struct_strdup *s);
 
 void		dollar_query_prep(int *i, t_struct_strdup *s);
 int			dollar_query_fill(int *i, t_struct_strdup *s);

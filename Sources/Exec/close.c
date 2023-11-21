@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 16:23:15 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/20 19:16:12 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/21 20:11:07 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void	check_close(t_cmd *cmd, int *fd)
 {
 	(void)cmd;
-	//printf("%s close fd = %d\n", cmd->name[0], *fd);
 	if (*fd > 2)
 		close(*fd);
 	*fd = -1;

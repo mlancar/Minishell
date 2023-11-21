@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 16:38:01 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/21 00:44:05 by marvin           ###   ########.fr       */
+/*   Updated: 2023/11/21 20:27:26 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,10 @@ int	redirection_one_cmd(t_struct_data *s, t_lst_cmd *cmd_list, t_cmd *cmd)
 		{
 			cmd->heredoc = 0;
 			if (open_infile(cmd_list, cmd) == 0)
+			{
+				cmd_list->file = start;
 				return (0);
+			}
 		}
 		else if (cmd_list->file->outfile)
 			open_outfile(s, cmd_list, cmd);
@@ -53,33 +56,28 @@ int	redirection_one_cmd(t_struct_data *s, t_lst_cmd *cmd_list, t_cmd *cmd)
 
 int	heredoc_redirections(t_lst_cmd *cmd_list, t_cmd *cmd, t_struct_data *s)
 {
-	t_lst_cmd	*start;
-	t_lst_file	*start_file;
+	t_lst_file	*tmp_file;
 	int			i;
 
 	i = 0;
-	start = cmd_list;
 	while (cmd_list)
 	{
-		start_file = cmd_list->file;
-		while (cmd_list->file)
+		tmp_file = cmd_list->file;
+		while (tmp_file)
 		{
-			if (cmd_list->file->limiter)
+			if (tmp_file->limiter)
 			{
-				check_close(cmd, &cmd->fd_hd[i]);
+				check_close(cmd, &cmd->fd_hd[i]);			
 				if (open_heredoc(cmd, cmd_list, cmd->fd_hd + i, s) == -1)
 				{
 					cmd->pid[cmd->index_pid] = -1;
 					return (0);
 				}
 			}
-			cmd_list->file = cmd_list->file->next;
+			tmp_file = tmp_file->next;
 		}
-		cmd_list->file = start_file;
 		cmd_list = cmd_list->next;
 		i++;
 	}
-	cmd_list = start;
 	return (1);
 }
-

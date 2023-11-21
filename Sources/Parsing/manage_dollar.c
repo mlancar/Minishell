@@ -6,7 +6,7 @@
 /*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 17:23:56 by auferran          #+#    #+#             */
-/*   Updated: 2023/11/18 23:34:39 by auferran         ###   ########.fr       */
+/*   Updated: 2023/11/21 20:09:11 by auferran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,24 +34,24 @@ int	search_and_count_env(char *prompt, int *i, t_struct_strdup *s)
 	return (1);
 }
 
-int	check_dollar_count(char *prompt, int *i, int file, t_struct_strdup *s)
+int	check_dollar_count(char *p, int *i, int file, t_struct_strdup *s)
 {
 	if (file == HD)
 		return (1);
-	if (in_quote(prompt, *i, &s->s_q, &s->d_q) && s->s_q == 1)
+	if (in_quote(p, *i, &s->s_q, &s->d_q) && s->s_q == 1)
 		return (1);
-	if (prompt[*i] == '$' && prompt[*i + 1] && prompt[*i + 1] == '?')
+	if (p[*i] == '$' && p[*i + 1] && p[*i + 1] == '?')
 	{
 		dollar_query_prep(i, s);
 		return (-1);
 	}
-	else if (prompt[*i] == '$' && (!prompt[*i + 1] || \
-		(!its_valid_expand(prompt[*i + 1]) && \
-			prompt[*i + 1] != '"' && prompt[*i + 1] != '\'')))
+	else if (p[*i] == '$' && (!p[*i + 1] || \
+		(!its_valid_expand(p[*i + 1]) && \
+			p[*i + 1] != '"' && p[*i + 1] != '\'')))
 		return (1);
 	else
 	{
-		if (!search_and_count_env(prompt, i, s))
+		if (!search_and_count_env(p, i, s))
 			return (0);
 		return (-1);
 	}
@@ -79,15 +79,15 @@ int	search_and_expand_env(char *prompt, int *i, t_struct_strdup *s)
 	return (1);
 }
 
-int	check_dollar_expand(char *prompt, int *i, int file, t_struct_strdup *s)
+int	check_dollar_expand(char *p, int *i, int file, t_struct_strdup *s)
 {
 	int	nb;
 
 	if (file == HD)
 		return (1);
-	if (in_quote(prompt, *i, &s->s_q, &s->d_q) && s->s_q == 1)
+	if (in_quote(p, *i, &s->s_q, &s->d_q) && s->s_q == 1)
 		return (1);
-	if (prompt[*i] == '$' && prompt[*i + 1] && prompt[*i + 1] == '?')
+	if (p[*i] == '$' && p[*i + 1] && p[*i + 1] == '?')
 	{
 		nb = dollar_query_fill(i, s);
 		if (nb == 0)
@@ -95,13 +95,13 @@ int	check_dollar_expand(char *prompt, int *i, int file, t_struct_strdup *s)
 		if (nb == 1)
 			return (-1);
 	}
-	else if (prompt[*i] == '$' && (!prompt[*i + 1] || \
-		(!its_valid_expand(prompt[*i + 1]) && \
-			prompt[*i + 1] != '"' && prompt[*i + 1] != '\'')))
+	else if (p[*i] == '$' && (!p[*i + 1] || \
+		(!its_valid_expand(p[*i + 1]) && \
+			p[*i + 1] != '"' && p[*i + 1] != '\'')))
 		return (1);
 	else
 	{
-		if (!search_and_expand_env(prompt, i, s))
+		if (!search_and_expand_env(p, i, s))
 			return (0);
 		return (-1);
 	}

@@ -113,6 +113,8 @@ int		ft_atol(char *str, long *n);
 char	*ft_strcat(char *dest, char *src);
 void	*ft_calloc(size_t nmemb, size_t size);
 
+void	error_dir(t_cmd *cmd, int exit_code);
+void	error_exec(t_struct_data *s, t_cmd *cmd, int exit_code);
 void	error_access_cmd(t_struct_data *s, t_lst_cmd *name, t_cmd *cmd);
 void	error_empty_string(t_cmd *cmd);
 void	error_cmd(t_struct_data *s, t_lst_cmd *name, t_cmd *cmd, int exit_code);

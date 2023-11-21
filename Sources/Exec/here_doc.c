@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 14:53:52 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/20 17:09:48 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/21 20:59:43 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,8 @@ void	get_rand_name(t_struct_data *s, t_cmd *cmd)
 	check_close(cmd, &cmd->fd.tmp);
 	cmd->fd.tmp = open(cmd->files.rand_name, O_WRONLY | O_TRUNC
 			| O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP);
+	//printf("hd name = %p\n", cmd->files.rand_name);
+
 	if (cmd->fd.tmp == -1)
 		free_and_exit(s, cmd, 1);
 }
@@ -75,6 +77,7 @@ void	fill_heredoc(char **read_line, char *limiter, t_cmd *cmd,
 t_lst_cmd *cmd_list)
 {
 	cmd->files.line++;
+	
 	*read_line = readline("> ");
 	if (*read_line == NULL)
 	{
@@ -106,12 +109,12 @@ void	ft_singleton(int mode, t_cmd *cmd, t_lst_cmd *cmd_list, t_struct_data *s)
 	}
 	else
 	{
+		unlink(static_cmd->files.rand_name);
 		free(static_cmd->name);
 		free(static_cmd->pid);
 		free(static_cmd->fd_hd);
 		free(static_cmd->env);
 		free_parsing(static_s);
-		unlink(cmd->files.rand_name);
 		check_close(static_cmd, &static_cmd->fd.tmp);
 		check_close(static_cmd, &static_cmd->fd.write);
 		check_close(static_cmd, &static_cmd->fd.read);
@@ -131,6 +134,7 @@ void	signal_heredoc(int signal)
 
 int	fork_heredoc(char *limiter, t_cmd *cmd, t_lst_cmd *cmd_list, t_struct_data *s)
 {
+
 	char	*read_line;
 	int		status;
 	int		pid;
@@ -141,6 +145,7 @@ int	fork_heredoc(char *limiter, t_cmd *cmd, t_lst_cmd *cmd_list, t_struct_data *
 	if (pid < 0)
 		error_cmd(s, cmd_list, cmd, 1);
 	ft_singleton(0, cmd, cmd_list, s);
+	//printf("hd name = %p\n", cmd->files.rand_name);
 	if (pid == 0)
 	{
 		signal(SIGINT, signal_heredoc);
@@ -187,11 +192,13 @@ int	open_heredoc(t_cmd *cmd, t_lst_cmd *cmd_list, int *fd, t_struct_data *s)
 	get_rand_name(s, cmd);
 	cmd->pid[cmd->index_pid] = -1;
 	if (fork_heredoc(cmd_list->file->limiter, cmd, cmd_list, s) == -1)
+	{
+		//unlink(cmd->files.rand_name);
 		return (-1);
+	}
 	*fd = open(cmd->files.rand_name, O_RDONLY);
-	//printf("fd = %d\n", *fd);
 	if (*fd == -1)
-		free_and_exit(s, cmd, 1);//pas exit process principal?
+		free_and_exit(s, cmd, 1);
 	unlink(cmd->files.rand_name);
 	return (1);
 }

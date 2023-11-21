@@ -6,7 +6,7 @@
 /*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 17:21:58 by auferran          #+#    #+#             */
-/*   Updated: 2023/11/18 20:05:23 by auferran         ###   ########.fr       */
+/*   Updated: 2023/11/21 20:11:34 by auferran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,11 @@
 void	update_value(int *i, t_struct_strdup *s)
 {
 	if (s->file_type == 1)
+	{
 		*i = s->index_file;
+		if (s->dollar_type == 1)
+			s->len += s->len_env;
+	}
 	else if (s->dollar_type == 1)
 	{
 		*i = s->after_space;
@@ -66,7 +70,7 @@ int	prep_malloc(char *prompt, t_struct_strdup *s, int *i, int nb)
 			return (0);
 		if (prompt[*i] == '$')
 		{
-			s->nb_fill = check_dollar_count(prompt, i, nb, s) ;
+			s->nb_fill = check_dollar_count(prompt, i, nb, s);
 			if (s->nb_fill == 0)
 				return (0);
 			if (s->nb_fill == 1)

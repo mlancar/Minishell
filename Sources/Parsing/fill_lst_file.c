@@ -6,7 +6,7 @@
 /*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 17:53:23 by auferran          #+#    #+#             */
-/*   Updated: 2023/11/18 21:01:42 by auferran         ###   ########.fr       */
+/*   Updated: 2023/11/21 20:10:32 by auferran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,28 +97,28 @@ int	fill_infile(char *prompt, t_lst_file **file, int *i, t_lst_env *lst_env)
 	return (1);
 }
 
-int	fill_file(char *prompt, t_lst_file **file, int *i, t_lst_env *lst_env)
+int	fill_file(char *p, t_lst_file **file, int *i, t_lst_env *lst_env)
 {
-	if (!check_reverse_file(prompt, *i))
+	if (!check_reverse_file(p, *i))
 		return (0);
-	if (its_file(prompt[*i]) == IN && !its_file(prompt[*i + 1]))
+	if (its_file(p[*i]) == IN && !its_file(p[*i + 1]))
 	{
-		if (!fill_infile(prompt, file, i, lst_env))
+		if (!fill_infile(p, file, i, lst_env))
 			return (0);
 	}
-	else if (its_file(prompt[*i]) == OUT && !its_file(prompt[*i + 1]))
+	else if (its_file(p[*i]) == OUT && !its_file(p[*i + 1]))
 	{
-		if (!fill_outfile(prompt, file, i, lst_env))
+		if (!fill_outfile(p, file, i, lst_env))
 			return (0);
 	}
-	else if ((its_file(prompt[*i]) == IN && its_file(prompt[*i + 1]) == IN))
+	else if ((its_file(p[*i]) == IN && its_file(p[*i + 1]) == IN))
 	{
-		if (!fill_hd(prompt, file, i, lst_env))
+		if (!fill_hd(p, file, i, lst_env))
 			return (0);
 	}
-	else if (its_file(prompt[*i]) == OUT && its_file(prompt[*i + 1]) == OUT)
+	else if (its_file(p[*i]) == OUT && its_file(p[*i + 1]) == OUT)
 	{
-		if (!fill_outfile_2(prompt, file, i, lst_env))
+		if (!fill_outfile_2(p, file, i, lst_env))
 			return (0);
 	}
 	return (1);

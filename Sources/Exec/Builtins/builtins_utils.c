@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 16:41:56 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/20 15:12:29 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/21 22:47:24 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ void	error_builtins(t_cmd *cmd)
 		ft_putstr_fd(strerror(errno), 2);
 		ft_putstr_fd("\n", 2);
 	}
+	g_exit = 1;
 }
 
 int	ft_atol(char *str, long *n)
