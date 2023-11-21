@@ -24,22 +24,25 @@ void	free_exec(t_cmd *cmd)
 void	wait_cmd(t_cmd *cmd)
 {
 	int		status;
+	int		i;
 
 	//printf("pid = %d, indexpid = %d\n", cmd->pid[cmd->index_pid], cmd->index_pid);
+	i = 0;
 	cmd->index_pid--;
 	//printf("pid = %d, indexpid = %d\n", cmd->pid[cmd->index_pid], cmd->index_pid);
 	
-	while (cmd->index_pid >= 0)
+	while (i <= cmd->index_pid)
 	{
-		if (cmd->pid[cmd->index_pid] != -1)
+		if (cmd->pid[i] != -1)
 		{
-			waitpid(cmd->pid[cmd->index_pid], &status, 0);
-			if (WIFEXITED(status))
-				g_exit = WEXITSTATUS(status);
-			else if (WIFSIGNALED(status))
-				g_exit = 128 + WTERMSIG(status);
+			waitpid(cmd->pid[i], &status, 0);
 		}
-		cmd->index_pid--;
+		//printf("status = %d\n", status);
+		i++;
 		
 	}
+	if (WIFEXITED(status))
+		g_exit = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		g_exit = 128 + WTERMSIG(status);
 }

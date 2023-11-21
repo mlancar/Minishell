@@ -17,7 +17,11 @@ int	builtin_env(t_cmd *cmd, t_lst_env *env_list)
 	if (cmd->name[1])
 	{
 		if (its_option(cmd->name))
+		{
+			g_exit = 2;
 			return (error("minishell: env: invalid option\n"), 1);
+		}
+		g_exit = 1;
 		return (error("minishell: env: invalid argument\n"), 1);
 	}
 	while (env_list)

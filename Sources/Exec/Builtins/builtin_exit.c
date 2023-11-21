@@ -3,15 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 13:50:22 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/21 00:52:05 by marvin           ###   ########.fr       */
+/*   Updated: 2023/11/21 18:34:21 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 #include "minishell.h"
+
+// Note: It is also to taken into consideration that an exit code
+// with a value greater than 255 returns an exit code modulo 256.
+// For Example: If we execute a statement exit(9999)
+// then it will execute exit(15) as 9999%256 = 15.
 
 int	check_exit_code(t_cmd *cmd, long exit_code)
 {
@@ -21,16 +26,6 @@ int	check_exit_code(t_cmd *cmd, long exit_code)
 	if (exit_code < 0)
 		exit_code = exit_code % 256;
 	return (exit_code);
-}
-
-void	free_exec_and_parsing(t_lst_cmd *cmd_list, t_cmd *cmd, t_struct_data *s)
-{
-	(void)cmd_list;
-	free_parsing(s);
-	free(cmd->name);
-	free(cmd->env);
-	free(cmd->path);
-	free(cmd->pid);
 }
 
 void	error_numeric_arg(t_cmd *cmd)
@@ -53,9 +48,10 @@ int	is_arg_numeric(t_cmd *cmd)
 		error_numeric_arg(cmd);
 	while (cmd->name[1][i])
 	{
-		while (cmd->name[1][i] && (cmd->name[1][i] >= '0'
+		while (cmd->name[1][i] || (cmd->name[1][i] >= '0'
 			&& cmd->name[1][i] <= '9'))
 		{
+			//printf("cmd arg = %c\n", cmd->name[1][i]);
 			i++;
 		}
 		if (cmd->name[1][i] && (cmd->name[1][i] != '-'
@@ -64,7 +60,8 @@ int	is_arg_numeric(t_cmd *cmd)
 			error_numeric_arg(cmd);
 			return (0);
 		}
-		i++;
+		if (cmd->name[1][i])
+			i++;
 	}
 	return (1);
 }
@@ -94,7 +91,7 @@ int	check_arg(t_struct_data *s, t_cmd *cmd, long *exit_code)
 	return (1);
 }
 
-int	builtin_exit(t_lst_cmd *cmd_list, t_cmd *cmd, t_struct_data *s)
+int	builtin_exit(t_cmd *cmd, t_struct_data *s)
 {
 	long	exit_code;
 
@@ -102,7 +99,8 @@ int	builtin_exit(t_lst_cmd *cmd_list, t_cmd *cmd, t_struct_data *s)
 	if (check_arg(s, cmd, &exit_code) == 0)
 		return (0);
 	g_exit = check_exit_code(cmd, exit_code);
-	free_exec_and_parsing(cmd_list, cmd, s);
+	free_exec(cmd);
+	free_parsing(s);
 	if (cmd->nbr != 1)
 	{
 		check_close(cmd, &cmd->fd.pipe[0]);
@@ -113,6 +111,7 @@ int	builtin_exit(t_lst_cmd *cmd_list, t_cmd *cmd, t_struct_data *s)
 		check_close(cmd, &cmd->fd.read);
 	else
 		check_close(cmd, &cmd->fd.tmp);
+	//printf("write = %d\n", cmd->fd.write);
 	ft_putstr_fd("exit\n", 1);
 	exit(g_exit);
 }

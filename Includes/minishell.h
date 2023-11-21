@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 17:15:11 by auferran          #+#    #+#             */
-/*   Updated: 2023/11/20 21:11:05 by marvin           ###   ########.fr       */
+/*   Updated: 2023/11/21 18:10:51 by auferran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,8 +140,15 @@ int			init_my_env(char **env, t_struct_data *s);
 char		**create_env(void);
 char		**old_env(char **env);
 void		swap_export(char **str1, char **str2);
-int	update_i_dollar(char *prompt, int *i, t_struct_strdup *s);
+int			update_i_dollar(char *prompt, int *i, t_struct_strdup *s);
 int			update_shlvl(t_struct_data *s);
+int			check_pwd_shlvl(t_lst_env **lst_env);
+int			check_fill_pwd(t_lst_env **lst_env);
+int			check_fill_shlvl(t_lst_env **lst_env);
+int			its_shlvl(char *line);
+int			its_pwd(char *str);
+char		*create_pwd(void);
+char		*create_shlvl(void);
 
 int			check_prompt(char *prompt);
 
@@ -184,8 +191,9 @@ int			dollar_query_fill(int *i, t_struct_strdup *s);
 
 void		count_env(char *line, t_struct_strdup *s);
 void		expand(t_struct_strdup *s, char *line);
-int	ft_isdigit(int character);
+int			ft_isdigit(int character);
 int			token(char *prompt, int i);
+int			check_reverse_file(char *prompt, int i);
 
 int			its_white_space(char c);
 int			its_file(char c);

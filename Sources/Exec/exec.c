@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 14:53:05 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/21 00:43:47 by marvin           ###   ########.fr       */
+/*   Updated: 2023/11/21 18:04:09 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	exec_child(t_cmd *cmd, t_struct_data *s, t_lst_cmd *cmd_list)
 {
 	if (check_builtins(cmd) == 1)
 	{
-		if (exec_builtins(cmd, s, cmd_list) == 0)
+		if (exec_builtins(cmd, s) == 0)
 			error_cmd(s, cmd_list, cmd, 126);
 		close_fd_child(cmd);
 		free_exec(cmd);
@@ -58,16 +58,21 @@ void	exec_cmd(t_lst_cmd *cmd_list, t_cmd *cmd, t_struct_data *s)
 
 int	setup_exec(t_struct_data *s, t_lst_cmd *cmd_list, t_cmd *cmd)
 {
+	int	check_cmd;
+	
 	init_fd(cmd);
-	if (redirection_one_cmd(s, cmd_list, cmd) == 0)
-		return (-1);
-	if (check_command(cmd_list, cmd) == 0)
+	//check cmd avant redir
+	check_cmd = check_command(cmd_list, cmd);
+	if (check_cmd == -1)
+		return (0);
+	else if (check_cmd == 0)
 	{
-		
 		cmd->pid[cmd->index_pid] = -1;
 		error_access_cmd(s, cmd_list, cmd);
 		return (0);
 	}
+	if (redirection_one_cmd(s, cmd_list, cmd) == 0)
+		return (-1);
 	return (1);
 }
 
@@ -98,7 +103,10 @@ void	loop_exec(t_lst_cmd *cmd_list, t_cmd *cmd, t_struct_data *s)
 		cmd->index++;
 		cmd->index_pid++;
 		if (check_builtins(cmd) == 0)
+		{
 			free(cmd->path);
+			cmd->path = NULL;
+		}
 		if (cmd_list != NULL)
 			cmd_list = cmd_list->next;
 	}

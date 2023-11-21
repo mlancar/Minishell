@@ -27,3 +27,15 @@ int	token(char *prompt, int i)
 		return (1);
 	return (0);
 }
+
+int	check_reverse_file(char *prompt, int i)
+{
+	if (prompt[i + 1] && (prompt[i + 1] == '<' || prompt[i + 1] == '>') \
+		&& prompt[i] != prompt[i + 1])
+	{
+		g_exit = 2;
+		return (error\
+			("minishell: syntax error near unexpected token `newline'\n"), 0);
+	}
+	return (1);
+}

@@ -111,12 +111,12 @@ int	builtin_export(t_cmd *cmd, t_struct_data *s)
 
 	i = 1;
 	if (!cmd->name[i])
-	{
-		print_export(cmd, s->lst_export);
-		return (1);
-	}
+		return (print_export(cmd, s->lst_export), 1);
 	if (its_option(cmd->name))
+	{
+		g_exit = 2;
 		return (error("minishell: export: invalid option\n"), 1);
+	}
 	while (cmd->name[i])
 	{
 		if (its_valid(cmd->name[i]))

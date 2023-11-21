@@ -99,10 +99,8 @@ int	fill_infile(char *prompt, t_lst_file **file, int *i, t_lst_env *lst_env)
 
 int	fill_file(char *prompt, t_lst_file **file, int *i, t_lst_env *lst_env)
 {
-	if (prompt[*i + 1] && (prompt[*i + 1] == '<' || prompt[*i + 1] == '>') \
-		&& prompt[*i] != prompt[*i + 1])
-		return (error\
-			("minishell: syntax error near unexpected token `newline'\n"), 0);
+	if (!check_reverse_file(prompt, *i))
+		return (0);
 	if (its_file(prompt[*i]) == IN && !its_file(prompt[*i + 1]))
 	{
 		if (!fill_infile(prompt, file, i, lst_env))

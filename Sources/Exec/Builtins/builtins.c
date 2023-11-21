@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 12:01:21 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/20 15:12:59 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/21 18:02:59 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	check_builtins(t_cmd *cmd)
 		return (0);
 }
 
-int	exec_builtins(t_cmd *cmd, t_struct_data *s, t_lst_cmd *cmd_list)
+int	exec_builtins(t_cmd *cmd, t_struct_data *s)
 {
 	if (cmd->name[0] && !ft_strcmp(cmd->name[0], "echo"))
 		g_exit = builtin_echo(cmd);
@@ -46,9 +46,9 @@ int	exec_builtins(t_cmd *cmd, t_struct_data *s, t_lst_cmd *cmd_list)
 	else if (cmd->name[0] && !ft_strcmp(cmd->name[0], "env"))
 		g_exit = builtin_env(cmd, s->lst_env);
 	else if (cmd->name[0] && !ft_strcmp(cmd->name[0], "cd"))
-		g_exit = builtin_cd(cmd);
+		g_exit = builtin_cd(cmd, s);
 	else if (cmd->name[0] && !ft_strcmp(cmd->name[0], "exit"))
-		g_exit = builtin_exit(cmd_list, cmd, s);
+		g_exit = builtin_exit(cmd, s);
 	else if (cmd->name[0] && !ft_strcmp(cmd->name[0], "unset"))
 		g_exit = builtin_unset(cmd, s);
 	else

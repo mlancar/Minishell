@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 17:16:09 by auferran          #+#    #+#             */
-/*   Updated: 2023/11/20 15:12:59 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/21 18:25:52 by auferran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*init_prompt(void)
 	if (!isatty(0))
 		prompt = get_next_line(0, 0);
 	else
-		prompt = readline("(auferran&malancar)-[~/minishell]$ ");
+		prompt = readline("(auferran&malancar)-$ ");
 	add_history(prompt);
 	if (!prompt)
 	{

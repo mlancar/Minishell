@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: marvin <marvin@student.42.fr>              +#+  +:+       +#+         #
+#    By: auferran <auferran@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/03 19:06:48 by malancar          #+#    #+#              #
-#    Updated: 2023/11/20 21:10:23 by marvin           ###   ########.fr        #
+#    Updated: 2023/11/21 18:09:18 by auferran         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,6 +39,7 @@ SOURCES_PARSING =	main.c                  \
                     init_lst_env.c	        \
                     init_lst_env_2.c		\
 					init_lst_env_3.c		\
+					init_lst_env_4.c		\
                     lst_env_utils.c	        \
 					update_shlvl.c			\
                     manage_dollar.c		    \
@@ -74,6 +75,7 @@ SOURCES_EXEC =		check.c							\
                     Builtins/builtin_export_3.c     \
                     Builtins/builtin_unset.c        \
                     Builtins/builtin_cd.c			\
+					Builtins/builtin_cd_2.c			\
                     Builtins/builtin_exit.c			\
 					Builtins/builtins.c				\
 					Builtins/builtins_utils.c		\

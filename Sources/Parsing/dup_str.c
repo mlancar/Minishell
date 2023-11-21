@@ -39,12 +39,18 @@ int	count_c(char *prompt, char c, int *i, t_struct_strdup *s)
 		(*i)++;
 	}
 	if (count > 2)
+	{
+		g_exit = 2;
 		return (error("minishell: syntax error near unexpected token\n"), 0);
+	}
 	while (prompt[*i] && prompt[*i] == ' ')
 		(*i)++;
 	if (!prompt[*i] || token(prompt, *i))
+	{
+		g_exit = 2;
 		return (\
 		error("minishell: syntax error near unexpected token `newline'\n"), 0);
+	}
 	s->file_type = 1;
 	s->index_file = *i;
 	return (1);

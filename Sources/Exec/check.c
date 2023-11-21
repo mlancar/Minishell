@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 13:28:37 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/21 00:46:16 by marvin           ###   ########.fr       */
+/*   Updated: 2023/11/21 17:57:08 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,12 @@ int	check_command(t_lst_cmd *cmd_list, t_cmd *cmd)
 	int		path_line;
 	char	*path;
 
+	//printf("cmd = %s\n", cmd->name[0]);
 	if (cmd->name[0] == NULL)
-		return (0);
+	{
+		cmd->pid[cmd->index_pid] = -1;
+		return (-1);
+	}
 	else if (cmd->name[0][0] == '\0')
 		return(0);
 	else if (check_builtins(cmd) == 1)

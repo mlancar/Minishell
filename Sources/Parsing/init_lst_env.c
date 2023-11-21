@@ -6,7 +6,7 @@
 /*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 17:23:28 by auferran          #+#    #+#             */
-/*   Updated: 2023/11/18 23:39:04 by auferran         ###   ########.fr       */
+/*   Updated: 2023/11/21 18:11:06 by auferran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ int	fill_lst_env(char **env, t_lst_env **lst_env, t_struct_data *s)
 		ft_lst_add_back_env(new, lst_env);
 		i++;
 	}
+	if (!check_pwd_shlvl(lst_env))
+		return (0);
 	return (1);
 }
 

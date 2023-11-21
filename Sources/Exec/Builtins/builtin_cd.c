@@ -3,78 +3,89 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 18:53:30 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/20 15:12:29 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/21 17:13:32 by auferran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 #include "minishell.h"
 
-void	set_oldpwd_var(t_cmd *cmd)
+char	*find_pwd(t_lst_env *env)
 {
-	int	pwd;
-	int	oldpwd;
-	int	i;
-	int	j;
+	char	*dest;
 
-	pwd = get_env_line(cmd, "PWD=");
-	oldpwd = get_env_line(cmd, "OLDPWD=");
-	i = 4;
-	j = 7;
-	//free(cmd->env[oldpwd]);
-	cmd->env[oldpwd] = malloc(sizeof(char) * ft_strlen(cmd->env[pwd]) + j + 1);
-	if (!cmd->env[oldpwd])
-		return ;
-	cmd->env[oldpwd] = strcpy(cmd->env[oldpwd], "OLDPWD=");
-	while (cmd->env[pwd][i])
+	dest = NULL;
+	while (env)
 	{
-		cmd->env[oldpwd][j] = cmd->env[pwd][i];
-		i++;
-		j++;
+		if (its_pwd(env->line))
+		{
+			dest = ft_strjoin_libft("OLD", env->line);
+			if (!dest)
+				return (NULL);
+			break ;
+		}
+		env = env->next;
 	}
-	cmd->env[oldpwd][j] = '\0';
-	//printf("oldpwd = %s\n", cmd->env[oldpwd]);
+	return (dest);
 }
 
-void	set_pwd_var(t_cmd *cmd)
+int	set_oldpwd(t_struct_data *s)
 {
-	int		pwd;
-	char	*pwd_var;
-	int		i;
-	int		j;
+	t_lst_env	*tmp;
 
-	i = 4;
-	j = 0;
-	pwd = get_env_line(cmd, "PWD=");
-	pwd_var = getcwd(NULL, 0);
-	if (!pwd_var)
+	tmp = s->lst_env;
+	while (tmp)
 	{
-		free(pwd_var);
-		return ;
+		if (its_oldpwd(tmp->line))
+		{
+			free(tmp->line);
+			tmp->line = find_pwd(s->lst_env);
+			if (!tmp->line)
+				return (0);
+			if (!search_replace_export(tmp->line, s))
+				return (0);
+			break ;
+		}
+		tmp = tmp->next;
 	}
-	//free(cmd->env[oldpwd]);
-	cmd->env[pwd] = malloc(sizeof(char) * ft_strlen(pwd_var) + i + 1);
-	if (!cmd->env[pwd])
-	{
-		free(pwd_var);
-		return ;
-	}
-	cmd->env[pwd] = strcpy(cmd->env[pwd], "PWD=");
-	while (pwd_var[j])
-	{
-		cmd->env[pwd][i] = pwd_var[j];
-		i++;
-		j++;
-	}
-	cmd->env[pwd][i] = '\0';
-	free(pwd_var);
-	//printf("apres pwd = %s\n", cmd->env[pwd]);
+	return (1);
 }
 
-int	builtin_cd(t_cmd *cmd)
+int	set_pwd(t_struct_data *s)
+{
+	char		*pwd;
+	t_lst_env	*tmp;
+
+	pwd = getcwd(NULL, 0);
+	tmp = s->lst_env;
+	if (!pwd)
+	{
+		free(pwd);
+		return (error("getcwd FAILURE\n"), 0);
+	}
+	while (tmp)
+	{
+		if (its_pwd(tmp->line))
+		{
+			free(tmp->line);
+			tmp->line = ft_strjoin_libft("PWD=", pwd);
+			if (!tmp->line || !search_replace_export(tmp->line, s))
+			{
+				free(pwd);
+				return (0);
+			}
+			break ;
+		}
+		tmp = tmp->next;
+	}
+	free(pwd);
+	return (1);
+}
+
+int	builtin_cd(t_cmd *cmd, t_struct_data *s)
 {
 	char	*path;
 	int		i;
@@ -96,7 +107,9 @@ int	builtin_cd(t_cmd *cmd)
 	}
 	if (chdir(path) == -1)
 		return (error_builtins(cmd), 0);
-	set_oldpwd_var(cmd);
-	set_pwd_var(cmd);
+	if (!set_oldpwd(s))
+		return (0);
+	if (!set_pwd(s))
+		return (0);
 	return (1);
 }

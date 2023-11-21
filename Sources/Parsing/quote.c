@@ -52,7 +52,10 @@ int	open_quote(char *str, int i, int s_quote, int d_quote)
 	if (d_quote == 1)
 		c = DOUBLE_QUOTE;
 	if (!str[i + 1])
+	{
+		g_exit = 2;
 		return (error("minishell: syntax error open quote\n"), 1);
+	}
 	if (str[i] != c)
 		return (0);
 	i++;
@@ -62,6 +65,7 @@ int	open_quote(char *str, int i, int s_quote, int d_quote)
 			return (0);
 		i++;
 	}
+	g_exit = 2;
 	return (error("minishell: syntax error open quote\n"), 1);
 }
 

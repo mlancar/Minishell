@@ -6,7 +6,7 @@
 /*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 17:23:19 by auferran          #+#    #+#             */
-/*   Updated: 2023/11/18 23:31:30 by auferran         ###   ########.fr       */
+/*   Updated: 2023/11/21 18:10:38 by auferran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,6 @@ int	init_my_env(char **env, t_struct_data *s)
 		s->my_env = create_env();
 		if (!s->my_env)
 			return (0);
-		if (!update_shlvl(s))
-			return (0);
 	}
 	else if (!s->my_env)
 	{
@@ -83,5 +81,14 @@ int	init_my_env(char **env, t_struct_data *s)
 		if (!update_shlvl(s))
 			return (0);
 	}
+	return (1);
+}
+
+int	check_pwd_shlvl(t_lst_env **lst_env)
+{
+	if (!check_fill_pwd(lst_env))
+		return (0);
+	if (!check_fill_shlvl(lst_env))
+		return (0);
 	return (1);
 }
