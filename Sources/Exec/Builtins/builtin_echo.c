@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 17:20:02 by auferran          #+#    #+#             */
-/*   Updated: 2023/11/20 15:12:29 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/22 17:26:26 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	its_option_echo(char *str)
 	return (1);
 }
 
-int	builtin_echo(t_cmd *cmd)
+void	builtin_echo(t_cmd *cmd)
 {
 	int	i;
 	int	option;
@@ -50,7 +50,7 @@ int	builtin_echo(t_cmd *cmd)
 		}
 		i++;
 	}
+	g_exit = 0;
 	if (option == 0)
 		ft_putstr_fd("\n", cmd->fd.write);
-	return (1);
 }

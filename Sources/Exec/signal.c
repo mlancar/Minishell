@@ -1,44 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_pwd.c                                      :+:      :+:    :+:   */
+/*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/30 12:01:07 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/22 15:45:54 by malancar         ###   ########.fr       */
+/*   Created: 2023/11/22 13:24:06 by malancar          #+#    #+#             */
+/*   Updated: 2023/11/22 21:07:39 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
-#include "minishell.h"
 
-int	its_option(char **cmd_list)
+void	ignore_signal(void)
 {
-	int	i;
-
-	i = 1;
-	while (cmd_list[i])
-	{
-		if (cmd_list[i][0] == '-' && cmd_list[i][1] != '-'
-			&& cmd_list[i][1] != 0)
-			return (1);
-		i++;
-	}
-	return (0);
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 }
 
-void	builtin_pwd(t_cmd *cmd)
+void	restore_signal(void)
 {
-	char	*pwd;
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+}
 
-	pwd = getcwd(NULL, 0);
-	if (!pwd)
+void	signal_heredoc(int signal)
+{
+	if (signal == SIGINT)
 	{
-		free(pwd);
-		return (error("getcwd FAILURE\n"));
+		ft_putstr_fd("\n", 0);
+		ft_singleton(1, NULL, NULL, NULL);
+		get_next_line(0, 1);
+		exit(130);
 	}
-	ft_putstr_fd(pwd, cmd->fd.write);
-	ft_putstr_fd("\n", cmd->fd.write);
-	free (pwd);
 }

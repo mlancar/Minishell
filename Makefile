@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: auferran <auferran@student.42.fr>          +#+  +:+       +#+         #
+#    By: malancar <malancar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/03 19:06:48 by malancar          #+#    #+#              #
-#    Updated: 2023/11/21 18:09:18 by auferran         ###   ########.fr        #
+#    Updated: 2023/11/22 22:08:37 by malancar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,35 +52,38 @@ SOURCES_PARSING =	main.c                  \
 
 
 
-SOURCES_EXEC =		check.c							\
-                    init.c							\
-                    convert.c						\
-                    cmds.c					        \
-                    exec_utils.c					\
-                    exec_utils_2.c					\
-                    ft_split.c						\
-                    open_files.c					\
-                    error_and_free.c				\
-                    main_exec.c						\
-                    exec.c                          \
-                    here_doc.c						\
-                    close.c							\
-					print_fd.c						\
-                    redirections.c                  \
-					Builtins/builtin_echo.c			\
-					Builtins/builtin_env.c			\
-					Builtins/builtin_export.c		\
-					Builtins/builtin_pwd.c			\
-					Builtins/builtin_export_2.c		\
-                    Builtins/builtin_export_3.c     \
-                    Builtins/builtin_unset.c        \
-                    Builtins/builtin_cd.c			\
-					Builtins/builtin_cd_2.c			\
-                    Builtins/builtin_exit.c			\
-					Builtins/builtins.c				\
-					Builtins/builtins_utils.c		\
-                    Get_next_line/get_next_line.c	\
-                    Get_next_line/get_next_line_utils.c
+SOURCES_EXEC =		Builtins/builtin_echo.c				\
+					Builtins/builtin_env.c				\
+					Builtins/builtin_export.c			\
+					Builtins/builtin_pwd.c				\
+					Builtins/builtin_export_2.c			\
+                    Builtins/builtin_export_3.c     	\
+                    Builtins/builtin_unset.c        	\
+                    Builtins/builtin_cd.c				\
+					Builtins/builtin_cd_2.c				\
+                    Builtins/builtin_exit.c				\
+					Builtins/builtins.c					\
+					Builtins/builtins_utils.c			\
+					check.c								\
+                    check_access.c						\
+                    close.c								\
+                    cmds.c					        	\
+                    convert.c							\
+                    here_doc.c							\
+                    init.c								\
+                    exec_cmd.c                          \
+					exec_setup.c						\
+                    utils_exec.c						\
+                    utils_exec_2.c						\
+                    error_and_free.c					\
+					free.c								\
+                    ft_split.c							\
+                    Get_next_line/get_next_line.c		\
+                    Get_next_line/get_next_line_utils.c	\
+                    open_files.c						\
+					print_fd.c							\
+                    redirections.c						\
+					signal.c
 
 SRCS_PARSING = $(addprefix ./Sources/Parsing/, $(SOURCES_PARSING))
 

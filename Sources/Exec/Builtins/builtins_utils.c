@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 16:41:56 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/21 22:47:24 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/22 18:43:53 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,14 @@ int	builtin_arg_nbr(t_cmd *cmd)
 	return (nbr_arg);
 }
 
-void	error_builtins(t_cmd *cmd)
+void	error_builtins(t_cmd *cmd, char *str, int exit_code)
 {
 	if (cmd->name[2])
 	{
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(cmd->name[0], 2);
-		ft_putstr_fd(": too many arguments", 2);
+		ft_putstr_fd(": ", 2);
+		ft_putstr_fd(str, 2);
 		ft_putstr_fd("\n", 2);
 	}
 	else
@@ -52,16 +53,34 @@ void	error_builtins(t_cmd *cmd)
 		ft_putstr_fd(": ", 2);
 		ft_putstr_fd(cmd->name[1], 2);
 		ft_putstr_fd(": ", 2);
-		ft_putstr_fd(strerror(errno), 2);
+		if (str)
+			ft_putstr_fd(str, 2);
+		else
+			ft_putstr_fd(strerror(errno), 2);
 		ft_putstr_fd("\n", 2);
 	}
-	g_exit = 1;
+	g_exit = exit_code;
+}
+
+int	sign_atol(char *str, int *sign)
+{
+	int	i;
+
+	i = 0;
+	if (str[i] == '-')
+	{
+		*sign = -1;
+		i++;
+	}
+	else if (str[i] == '+')
+		i++;
+	return (i);
 }
 
 int	ft_atol(char *str, long *n)
 {
-	int	i;
-	int	sign;
+	int				i;
+	int				sign;
 	unsigned long	result;
 
 	i = 0;
@@ -69,16 +88,9 @@ int	ft_atol(char *str, long *n)
 	result = 0;
 	while (str[i] == 32)
 		i++;
-	if (str[i] == '-')
-	{
-		sign = -1;
-		i++;
-	}
-	else if (str[i] == '+')
-		i++;
+	i = i + sign_atol(str, &sign);
 	while (str[i] && (str[i] >= '0' && str[i] <= '9') && result <= LONG_MAX)
 	{
-		//printf("str[i] = %c\n", str[i]);
 		result = (result * 10) + (str[i] - 48);
 		i++;
 	}

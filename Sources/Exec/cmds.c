@@ -6,27 +6,35 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 12:53:39 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/21 18:03:29 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/22 15:15:14 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
-void	one_cmd_builtin(t_cmd *cmd, t_struct_data *s, t_lst_cmd *cmd_list)
+void	wait_cmd(t_cmd *cmd)
 {
-	if (exec_builtins(cmd, s) == 0)
-		error_cmd(s, cmd_list, cmd, 126);
-	close_fd_parent(cmd);
-}
+	int		status;
+	int		i;
 
-void	pipe_cmd(t_struct_data *s, t_cmd *cmd, t_lst_cmd *cmd_list)
-{
-	if (cmd->nbr != 1)
-		cmd->fd.previous = cmd->fd.pipe[0];
-	if ((cmd->index_pid != cmd->first)
-		&& (cmd->index_pid != cmd->last))
+	i = 0;
+	cmd->index_pid--;
+	while (i <= cmd->index_pid)
 	{
-		if (pipe(cmd->fd.pipe) == -1)
-			error_cmd(s, cmd_list, cmd, 1);
+		if (cmd->pid[i] != -1)
+		{
+			waitpid(cmd->pid[i], &status, 0);
+			if (WIFEXITED(status))
+				g_exit = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
+			{
+				g_exit = 128 + WTERMSIG(status);
+				if (WTERMSIG(status) == SIGINT)
+					ft_putstr("\n");
+				else if (WTERMSIG(status) == SIGQUIT)
+					ft_putstr_fd("Quit (core dumped)\n", 2);
+			}
+		}
+		i++;
 	}
 }

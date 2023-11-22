@@ -6,51 +6,41 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 16:38:01 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/21 20:27:26 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/22 21:36:03 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
-void print_redir(struct s_lst_file *file) {
-	if (!file)
-		return;
-	//printf("infile =%s, outfile = %s,  type = %d, limiter = %s\n", file->infile, file->outfile, file->outfile_type, file->limiter);
-	print_redir(file->next);
-}
-
-int	redirection_one_cmd(t_struct_data *s, t_lst_cmd *cmd_list, t_cmd *cmd)
+int	redirection_one_cmd(t_lst_cmd *cmd_list, t_cmd *cmd)
 {
-	t_lst_file	*start;
-	
-	start = cmd_list->file;
+	t_lst_file	*file;
+
+	file = cmd_list->file;
 	cmd->heredoc = 0;
-	while (cmd_list->file)
+	while (file)
 	{
-		if (cmd_list->file->infile)
+		if (file->infile)
 		{
-			cmd->heredoc = 0;
-			if (open_infile(cmd_list, cmd) == 0)
-			{
-				cmd_list->file = start;
+			if (open_infile(cmd, file->infile) == 0)
 				return (0);
-			}
 		}
-		else if (cmd_list->file->outfile)
-			open_outfile(s, cmd_list, cmd);
+		else if (file->outfile)
+		{
+			if (open_outfile(cmd_list, cmd, file->outfile) == 0)
+				return (0);
+		}
 		else
 		{
 			check_close(cmd, &cmd->fd.read);
-			cmd->fd.read = -1;
 			cmd->heredoc = 1;
 		}
-		cmd_list->file = cmd_list->file->next;
+		file = file->next;
 	}
 	if (cmd->heredoc == 1)
 		cmd->fd.read = cmd->fd_hd[cmd->index];
 	else
 		check_close(cmd, &cmd->fd_hd[cmd->index]);
-	cmd_list->file = start;
 	return (1);
 }
 
@@ -67,8 +57,8 @@ int	heredoc_redirections(t_lst_cmd *cmd_list, t_cmd *cmd, t_struct_data *s)
 		{
 			if (tmp_file->limiter)
 			{
-				check_close(cmd, &cmd->fd_hd[i]);			
-				if (open_heredoc(cmd, cmd_list, cmd->fd_hd + i, s) == -1)
+				check_close(cmd, &cmd->fd_hd[i]);
+				if (open_heredoc(cmd, cmd->fd_hd + i, s, tmp_file->limiter) == -1)
 				{
 					cmd->pid[cmd->index_pid] = -1;
 					return (0);

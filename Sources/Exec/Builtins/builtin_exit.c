@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 13:50:22 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/21 21:02:12 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/22 19:05:21 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,23 @@ int	check_exit_code(t_cmd *cmd, long exit_code)
 	return (exit_code);
 }
 
-void	error_numeric_arg(t_cmd *cmd)
+int	count_sign(char *str)
 {
-	ft_putstr_fd("exit\n", 2);
-	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd(cmd->name[0], 2);
-	ft_putstr_fd(": ", 2);
-	ft_putstr_fd(cmd->name[1], 2);
-	ft_putstr_fd(": numeric argument required\n", 2);
-	g_exit = 2;
+	int	i;
+
+	i = 1;
+	if ((str[0] && (str[0] == '+' || str[0] == '-'))
+		&& (str[1] && (str[1] == '+' || str[1] == '-')))
+	{
+		return (0);
+	}
+	while (str[i])
+	{
+		if (str[i] == '+' || str[i] == '-')
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
 int	is_arg_numeric(t_cmd *cmd)
@@ -45,19 +53,20 @@ int	is_arg_numeric(t_cmd *cmd)
 
 	i = 0;
 	if ((*cmd->name[1]) == '\0')
-		error_numeric_arg(cmd);
+		error_builtins(cmd, "numeric argument required", 2);
+	if (count_sign(cmd->name[1]) == 0)
+		return (error_builtins(cmd, "numeric argument required", 2), 0);
 	while (cmd->name[1][i])
 	{
-		while (cmd->name[1][i] || (cmd->name[1][i] >= '0'
+		while (cmd->name[1][i] && (cmd->name[1][i] >= '0'
 			&& cmd->name[1][i] <= '9'))
 		{
-			//printf("cmd arg = %c\n", cmd->name[1][i]);
 			i++;
 		}
 		if (cmd->name[1][i] && (cmd->name[1][i] != '-'
 			&& cmd->name[1][i] != '+'))
 		{
-			error_numeric_arg(cmd);
+			error_builtins(cmd, "numeric argument required", 2);
 			return (0);
 		}
 		if (cmd->name[1][i])
@@ -77,7 +86,7 @@ int	check_arg(t_struct_data *s, t_cmd *cmd, long *exit_code)
 			free_and_exit(s, cmd, 2);
 		if (ft_atol(cmd->name[1], exit_code) == 0)
 		{
-			error_numeric_arg(cmd);
+			error_builtins(cmd, "numeric argument required", 2);
 			free_and_exit(s, cmd, 2);
 		}
 		if (nbr_arg > 2)
@@ -87,17 +96,16 @@ int	check_arg(t_struct_data *s, t_cmd *cmd, long *exit_code)
 			return (0);
 		}
 	}
-
 	return (1);
 }
 
-int	builtin_exit(t_cmd *cmd, t_struct_data *s)
+void	builtin_exit(t_cmd *cmd, t_struct_data *s)
 {
 	long	exit_code;
 
 	exit_code = 0;
 	if (check_arg(s, cmd, &exit_code) == 0)
-		return (0);
+		return ;
 	g_exit = check_exit_code(cmd, exit_code);
 	free_exec(cmd);
 	free_parsing(s);
@@ -111,7 +119,6 @@ int	builtin_exit(t_cmd *cmd, t_struct_data *s)
 		check_close(cmd, &cmd->fd.read);
 	else
 		check_close(cmd, &cmd->fd.tmp);
-	//printf("write = %d\n", cmd->fd.write);
 	if (cmd->nbr == 1)
 		ft_putstr_fd("exit\n", 1);
 	exit(g_exit);

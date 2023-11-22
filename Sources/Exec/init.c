@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 18:52:07 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/21 21:07:06 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/22 21:07:07 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	init_struct(t_cmd *cmd, t_lst_cmd *cmd_list)
 	cmd->fd.pipe[1] = -1;
 	cmd->name = NULL;
 	cmd->pid = malloc(sizeof(pid_t) * cmd->nbr);
-	if (!cmd->pid)//pas sur
+	if (!cmd->pid)
 	{
 		write(1, "pid error\n", 10);
 		return ;

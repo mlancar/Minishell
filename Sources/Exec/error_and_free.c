@@ -6,34 +6,11 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 21:28:45 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/21 22:02:53 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/22 22:32:17 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
-
-void	free_tab(char **tab)
-{
-	int	i;
-
-	i = 0;
-	if (!tab)
-		return ;
-	while (tab[i])
-	{
-		free(tab[i]);
-		i++;
-	}
-	free(tab);
-}
-
-void	free_and_exit(t_struct_data *s, t_cmd *cmd, int exit_code)
-{
-	free_exec(cmd);
-	free_parsing(s);
-	g_exit = exit_code;
-	exit(g_exit);
-}
 
 void	error_access_cmd(t_struct_data *s, t_lst_cmd *cmd_list, t_cmd *cmd)
 {
@@ -45,23 +22,39 @@ void	error_access_cmd(t_struct_data *s, t_lst_cmd *cmd_list, t_cmd *cmd)
 	g_exit = 127;
 }
 
-void	print_error( t_lst_cmd *cmd_list, t_cmd *cmd)
+void	error_open_file(t_cmd *cmd, char *infile, char *outfile)
 {
 	ft_putstr_fd("minishell: ", 2);
-	if (cmd_list->file)
+	if (infile)
+		ft_putstr_fd(infile, 2);
+	else if (outfile)
+		ft_putstr_fd(outfile, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putstr_fd(strerror(errno), 2);
+	ft_putstr_fd("\n", 2);
+	if (cmd->nbr > 0)
 	{
-		if (cmd_list->file->infile)
-			ft_putstr_fd(cmd_list->file->infile, 2);
-		else if (cmd_list->file->outfile)
-			ft_putstr_fd(cmd_list->file->outfile, 2);
+		check_close(cmd, &cmd->fd.pipe[0]);
+		check_close(cmd, &cmd->fd.pipe[1]);
 	}
+	check_close(cmd, &cmd->fd.write);
+	if (cmd->heredoc == 0)
+		check_close(cmd, &cmd->fd.read);
 	else
-		ft_putstr_fd(cmd->name[0], 2);
+		check_close(cmd, &cmd->fd.tmp);
+	if ((cmd->index_pid != cmd->first) && (cmd->index_pid != cmd->last))
+		check_close(cmd, &cmd->fd.other_pipe);
+}
+
+void	print_error(t_lst_cmd *cmd_list, t_cmd *cmd)
+{
+	(void)cmd_list;
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(cmd->name[0], 2);
 	ft_putstr_fd(": ", 2);
 	ft_putstr_fd(strerror(errno), 2);
 	ft_putstr_fd("\n", 2);
 }
-
 
 void	error_exec(t_struct_data *s, t_cmd *cmd, int exit_code)
 {
@@ -93,9 +86,10 @@ void	error_dir(t_cmd *cmd, int exit_code)
 	g_exit = exit_code;
 }
 
-void	error_cmd(t_struct_data *s, t_lst_cmd *cmd_list, t_cmd *cmd, int exit_code)
+void	error_cmd(t_struct_data *s, t_lst_cmd *cmd_list, t_cmd *cmd,
+	int exit_code)
 {
-	if(cmd->name[0])
+	if (cmd->name[0])
 		print_error(cmd_list, cmd);
 	if (cmd->nbr > 0)
 	{

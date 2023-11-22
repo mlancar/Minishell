@@ -3,15 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export_3.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auferran <auferran@student.42.fr>          +#+  +:+       +#+        */
+/*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 17:20:36 by auferran          #+#    #+#             */
-/*   Updated: 2023/11/18 17:20:37 by auferran         ###   ########.fr       */
+/*   Updated: 2023/11/22 15:45:12 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 #include "minishell.h"
+
+void	error_arg_export(t_cmd *cmd)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(cmd->name[0], 2);
+	ft_putstr_fd(": ", 2);
+	ft_putstr_fd("`", 2);
+	ft_putstr_fd(cmd->name[1], 2);
+	ft_putstr_fd("': not a valid identifer\n", 2);
+	g_exit = 1;
+}
 
 void	print_export(t_cmd *cmd, t_lst_env *lst_export)
 {
@@ -23,7 +34,7 @@ void	print_export(t_cmd *cmd, t_lst_env *lst_export)
 	}
 }
 
-int	its_valid(char *str)
+int	its_valid(char *str, t_cmd *cmd)
 {
 	int	i;
 
@@ -31,14 +42,16 @@ int	its_valid(char *str)
 	if (str[i] && str[i] == '=')
 	{
 		g_exit = 1;
-		return (error("minishell: export: invalid argument\n"), 0);
+		error_arg_export(cmd);
+		return (0);
 	}
 	while (str[i] && str[i] != '=')
 	{
 		if (!ft_isalpha(str[i]) && str[i] != '_' && str[i] != '=')
 		{
 			g_exit = 1;
-			return (error("minishell: export: invalid argument\n"), 0);
+			error_arg_export(cmd);
+			return (0);
 		}
 		i++;
 	}

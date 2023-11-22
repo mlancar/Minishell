@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 17:20:47 by auferran          #+#    #+#             */
-/*   Updated: 2023/11/21 22:43:53 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/22 13:53:37 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,15 +99,12 @@ void	lets_unset_export(char *str, t_struct_data *s)
 	}
 }
 
-int	builtin_unset(t_cmd *cmd, t_struct_data *s)
+void	builtin_unset(t_cmd *cmd, t_struct_data *s)
 {
 	int	i;
 
 	if (its_option(cmd->name))
-	{
 		g_exit = 2;
-		return (1);
-	}
 	i = 1;
 	while (cmd->name[i])
 	{
@@ -119,5 +116,4 @@ int	builtin_unset(t_cmd *cmd, t_struct_data *s)
 		i++;
 	}
 	g_exit = 0;
-	return (1);
 }

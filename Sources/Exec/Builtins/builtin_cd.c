@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 18:53:30 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/21 22:51:47 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/22 15:38:08 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int	set_pwd(t_struct_data *s)
 	return (1);
 }
 
-int	builtin_cd(t_cmd *cmd, t_struct_data *s)
+void	builtin_cd(t_cmd *cmd, t_struct_data *s)
 {
 	char	*path;
 	int		i;
@@ -84,7 +84,7 @@ int	builtin_cd(t_cmd *cmd, t_struct_data *s)
 	i = 0;
 	path = cmd->name[1];
 	if (builtin_arg_nbr(cmd) > 2)
-		return (error_builtins(cmd), 0);
+		return (error_builtins(cmd, "too many arguments", 1));
 	if (path == NULL)
 	{
 		i = get_env_line(cmd, "HOME=");
@@ -92,14 +92,13 @@ int	builtin_cd(t_cmd *cmd, t_struct_data *s)
 		{
 			ft_putstr_fd(cmd->name[0], 2);
 			ft_putstr_fd(": HOME not set\n", 2);
-			return (0);
+			return ;
 		}
 		path = &cmd->env[i][5];
 	}
 	if (chdir(path) == -1)
-		return (error_builtins(cmd), 0);
+		return (error_builtins(cmd, NULL, 1));
 	if (!set_oldpwd(s) || !set_pwd(s))
-		return (0);
+		return ;
 	g_exit = 0;
-	return (1);
 }

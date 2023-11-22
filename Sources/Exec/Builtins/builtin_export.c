@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 17:20:42 by auferran          #+#    #+#             */
-/*   Updated: 2023/11/20 15:12:29 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/22 15:38:49 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,31 +105,31 @@ int	push_env(char *str, t_struct_data *s)
 	return (1);
 }
 
-int	builtin_export(t_cmd *cmd, t_struct_data *s)
+void	builtin_export(t_cmd *cmd, t_struct_data *s)
 {
 	int	i;
 
 	i = 1;
 	if (!cmd->name[i])
-		return (print_export(cmd, s->lst_export), 1);
+		return (print_export(cmd, s->lst_export));
 	if (its_option(cmd->name))
 	{
 		g_exit = 2;
-		return (error("minishell: export: invalid option\n"), 1);
+		error_builtins(cmd, "invalid option", 2);
+		return ;
 	}
 	while (cmd->name[i])
 	{
-		if (its_valid(cmd->name[i]))
+		if (its_valid(cmd->name[i], cmd))
 		{
 			if (check_egal(cmd->name[i]))
 			{
 				if (!push_env(cmd->name[i], s))
-					return (0);
+					return ;
 			}
 			else if (!new_line_export(cmd->name[i], s, 0))
-				return (0);
+				return ;
 		}
 		i++;
 	}
-	return (1);
 }

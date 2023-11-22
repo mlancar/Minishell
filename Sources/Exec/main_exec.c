@@ -13,39 +13,3 @@
 #include "exec.h"
 #include "minishell.h"
 
-void	free_exec(t_cmd *cmd)
-{
-	free(cmd->pid);
-	free(cmd->name);
-	free(cmd->env);
-	free(cmd->fd_hd);
-}
-
-void	wait_cmd(t_cmd *cmd)
-{
-	int		status;
-	int		i;
-
-	//printf("pid = %d, indexpid = %d\n", cmd->pid[cmd->index_pid], cmd->index_pid);
-	i = 0;
-	cmd->index_pid--;
-	//printf("pid = %d, indexpid = %d\n", cmd->pid[cmd->index_pid], cmd->index_pid);
-	while (i <= cmd->index_pid)
-	{
-		if (cmd->pid[i] != -1)
-		{
-			waitpid(cmd->pid[i], &status, 0);
-			if (WIFEXITED(status))
-				g_exit = WEXITSTATUS(status);
-			else if (WIFSIGNALED(status))
-			{
-				g_exit = 128 + WTERMSIG(status);
-				if (WTERMSIG(status) == SIGINT)
-					ft_putstr("\n");
-				else if (WTERMSIG(status) == SIGQUIT)
-					ft_putstr_fd("Quit (core dumped)\n", 2);
-			}
-		}
-		i++;
-	}
-}

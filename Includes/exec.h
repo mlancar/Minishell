@@ -64,41 +64,45 @@ typedef struct s_cmd {
 	t_files	files;
 }	t_cmd;
 
-int		open_infile(t_lst_cmd *name, t_cmd *cmd);
-void	open_outfile(t_struct_data *s, t_lst_cmd *name, t_cmd *cmd);
-int		redirections(t_lst_cmd *name, t_cmd *cmd);
-int		set_redirections(t_lst_cmd *name, t_cmd *cmd);
+int		open_infile(t_cmd *cmd, char *infile);
+int		open_outfile(t_lst_cmd *cmd_list, t_cmd *cmd, char *outfile);
 
-int		start_exec(t_lst_cmd *name, t_struct_data *s);
-void	loop_exec(t_lst_cmd *name, t_cmd *cmd, t_struct_data *s);
-int		setup_cmd(t_lst_cmd *name, t_cmd *cmd, t_struct_data *s);
-void	exec_child(t_cmd *cmd, t_struct_data *s, t_lst_cmd *name);
-void	one_cmd_builtin(t_cmd *cmd, t_struct_data *s, t_lst_cmd *name);
+int		redirection_one_cmd(t_lst_cmd *cmd_list, t_cmd *cmd);
+
+int		open_heredoc(t_cmd *cmd, int *fd, t_struct_data *s, char *limiter);
+int		heredoc_redirections(t_lst_cmd *cmd_list, t_cmd *cmd, t_struct_data *s);
+void	get_rand_name(t_struct_data *s, t_cmd *cmd);
+	
+int		start_exec(t_lst_cmd *cmd_list, t_struct_data *s);
+
+void	loop_exec(t_lst_cmd *cmd_list, t_cmd *cmd, t_struct_data *s);
+void	pipe_cmd(t_struct_data *s, t_cmd *cmd, t_lst_cmd *cmd_list);
+
+int		exec(t_struct_data *s, t_cmd *cmd, t_lst_cmd *cmd_list);
+void	exec_child(t_cmd *cmd, t_struct_data *s, t_lst_cmd *cmd_list);
+void	one_cmd_builtin(t_cmd *cmd, t_struct_data *s, t_lst_cmd *cmd_list);
+void	exec_cmd(t_lst_cmd *cmd_list, t_cmd *cmd, t_struct_data *s);
 
 void	close_fd_hd(t_cmd *cmd);
-void	wait_cmd(t_cmd *cmd);
-void	pipe_cmd(t_struct_data *s, t_cmd *cmd, t_lst_cmd *cmd_list);
-int		redirection_one_cmd(t_struct_data *s, t_lst_cmd *name, t_cmd *cmd);
-int		open_heredoc(t_cmd *cmd, t_lst_cmd *name, int *fd, t_struct_data *s);
-int		heredoc_redirections(t_lst_cmd *name, t_cmd *cmd, t_struct_data *s);
-int		redirections(t_lst_cmd *name, t_cmd *cmd);
-int		make_here_doc(t_lst_cmd *name, t_cmd *cmd);
-void	open_and_fill_heredoc(t_cmd *cmd, char *limiter);
-int		setup_heredoc(t_cmd *cmd, t_lst_cmd *name);
-int		fork_heredoc(char *limiter, t_cmd *cmd, t_lst_cmd *name, t_struct_data *s);
-void	fill_here_doc(char **read_line, char *limiter, t_cmd *cmd, t_lst_cmd *name);
-int		is_limiter(char *str, char *limiter);
-void	get_rand_name(t_struct_data *s, t_cmd *cmd);
-int		check_here_doc(t_lst_cmd *name, t_cmd *cmd);
-
-int		check_command(t_lst_cmd *name, t_cmd *cmd);
-int		check_access(t_lst_cmd *name, t_cmd *cmd, char *path);
-int		check_slash_and_access(t_lst_cmd *name, t_cmd *cmd);
-
 void	close_fd_child(t_cmd *cmd);
 void	close_fd_parent(t_cmd *cmd);
 void	close_fd(t_cmd *cmd);
 void	check_close(t_cmd *cmd, int *fd);
+
+void	wait_cmd(t_cmd *cmd);
+
+
+void	open_and_fill_heredoc(t_cmd *cmd, char *limiter);
+int		setup_heredoc(t_cmd *cmd, t_lst_cmd *cmd_list);
+int		fork_heredoc(char *limiter, t_cmd *cmd, t_lst_cmd *cmd_list, t_struct_data *s);
+void	fill_here_doc(char **read_line, char *limiter, t_cmd *cmd, t_lst_cmd *cmd_list);
+int		is_limiter(char *str, char *limiter);
+void	get_rand_cmd_list(t_struct_data *s, t_cmd *cmd);
+int		check_here_doc(t_lst_cmd *cmd_list, t_cmd *cmd);
+
+int		is_command_valid(t_lst_cmd *cmd_list, t_cmd *cmd);
+int		check_access(t_lst_cmd *cmd_list, t_cmd *cmd, char *path);
+int		check_slash_and_access(t_lst_cmd *cmd_list, t_cmd *cmd);
 
 int		ft_strchr(char *str, char c);
 char	**ft_split(char *str, char c);
@@ -113,15 +117,26 @@ int		ft_atol(char *str, long *n);
 char	*ft_strcat(char *dest, char *src);
 void	*ft_calloc(size_t nmemb, size_t size);
 
+void	ignore_signal(void);
+void	restore_signal(void);
+void	signal_heredoc(int signal);
+void	ft_singleton(int mode, t_cmd *cmd, t_lst_cmd *cmd_list,
+	t_struct_data *s);
+
+void	free_and_set(t_cmd *cmd, char **array);
+void	free_exec(t_cmd *cmd);
+void	free_tab(char **tab);
+void	free_and_exit(t_struct_data *s, t_cmd *cmd, int exit_code);
+void	free_and_close_hd(t_struct_data *s, t_cmd *cmd);
+
+void	error_open_file(t_cmd *cmd, char *infile, char *outfile);
 void	error_dir(t_cmd *cmd, int exit_code);
 void	error_exec(t_struct_data *s, t_cmd *cmd, int exit_code);
 void	error_access_cmd(t_struct_data *s, t_lst_cmd *name, t_cmd *cmd);
 void	error_empty_string(t_cmd *cmd);
 void	error_cmd(t_struct_data *s, t_lst_cmd *name, t_cmd *cmd, int exit_code);
-void	free_tab(char **tab);
-void	free_and_exit(t_struct_data *s, t_cmd *cmd, int exit_code);
-void	print_error(t_lst_cmd *name, t_cmd *cmd);
-void	free_exec(t_cmd *cmd);
+void	print_error(t_lst_cmd *cmd_list, t_cmd *cmd);
+
 void	convert_list(t_cmd *cmd, t_lst_cmd *list);
 void	convert_list_env(t_cmd *cmd, t_struct_data *s);
 int		list_size(t_lst_cmd *list);
@@ -129,32 +144,32 @@ int		ft_lst_size_env(t_lst_env *lst_env);
 
 void	init_struct(t_cmd *cmd, t_lst_cmd *name);
 void	init_fd(t_cmd *cmd);
-int		set_redirections(t_lst_cmd *name, t_cmd *cmd);
 
-int		builtin_echo(t_cmd *cmd);
-int		builtin_pwd(t_cmd *cmd);
+
+void	builtin_export(t_cmd *cmd, t_struct_data *s);
+void	builtin_echo(t_cmd *cmd);
+void	builtin_pwd(t_cmd *cmd);
+void	builtin_env(t_cmd *cmd, t_lst_env *env_list);
+void	builtin_cd(t_cmd *cmd, t_struct_data *s);
+void	builtin_unset(t_cmd *cmd, t_struct_data *s);
+void	builtin_exit(t_cmd *cmd, t_struct_data *s);
+
 int		its_pwd(char *str);
-int	its_oldpwd(char *str);
-int		builtin_export(t_cmd *cmd, t_struct_data *s);
+int		its_oldpwd(char *str);
+void	print_export(t_cmd *cmd, t_lst_env *lst_export);
 int		search_replace_export(char *str, t_struct_data *s);
 int		search_content_export(char *str, t_struct_data *s);
 int		new_line_export(char *str, t_struct_data *s, int nb);
 int		new_line_env(char *str, t_struct_data *s);
 char	*lets_join_no_egal(char *s1, char *s2);
-
-int		builtin_env(t_cmd *cmd, t_lst_env *env_list);
-int		builtin_cd(t_cmd *cmd, t_struct_data *s);
-int		builtin_unset(t_cmd *cmd, t_struct_data *s);
-int		builtin_exit(t_cmd *cmd, t_struct_data *s);
 int		check_builtins(t_cmd *cmd);
 int		exec_builtins(t_cmd *cmd, t_struct_data *s);
-void	error_builtins(t_cmd *cmd);
+void	error_builtins(t_cmd *cmd, char *str, int exit_code);
 int		builtin_arg_nbr(t_cmd *cmd);
 int		get_env_line(t_cmd *cmd, char *str);
-
-void	print_export(t_cmd *cmd, t_lst_env *lst_export);
-int		its_valid(char *str);
+int		its_valid(char *str, t_cmd *cmd);
 int		check_egal(char *str);
 int		its_option(char **name);
+
 
 #endif
