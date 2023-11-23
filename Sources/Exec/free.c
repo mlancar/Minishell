@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 13:01:25 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/22 22:43:34 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/23 20:39:04 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,8 @@ void	free_tab(char **tab)
 void	free_and_exit(t_struct_data *s, t_cmd *cmd, int exit_code)
 {
 	free_exec(cmd);
-	free(cmd->path);
+	if (cmd->path)
+		free(cmd->path);
 	free_parsing(s);
 	g_exit = exit_code;
 	exit(g_exit);

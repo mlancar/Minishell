@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 21:28:45 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/23 20:29:26 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/23 20:42:12 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,7 @@ void	error_exec(t_struct_data *s, t_cmd *cmd, int exit_code)
 		check_close(cmd, &cmd->fd.tmp);
 	if ((cmd->index_pid != cmd->first) && (cmd->index_pid != cmd->last))
 		check_close(cmd, &cmd->fd.other_pipe);
-	if (cmd->path)
-		free(cmd->path);
+	
 	free_and_exit(s, cmd, exit_code);
 }
 
