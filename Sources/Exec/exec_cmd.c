@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 13:27:01 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/23 22:59:59 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/23 23:48:01 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@ void	exec_child(t_cmd *cmd, t_struct_data *s)
 	if (check_builtins(cmd) == 1)
 	{
 		if (exec_builtins(cmd, s) == 0)
+		{
+			printf("pwd\n");
 			error_cmd(s, cmd, 126);
+		}
 		close_fd_child(cmd);
 		free_exec(cmd);
 		free_parsing(s);

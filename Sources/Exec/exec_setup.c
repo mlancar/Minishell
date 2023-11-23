@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 14:53:05 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/23 23:00:20 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/23 23:58:19 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,12 @@ void	pipe_cmd(t_struct_data *s, t_cmd *cmd)
 
 void	loop_end(t_lst_cmd *cmd_list, t_cmd *cmd)
 {
+	(void)cmd_list;
 	cmd->index++;
 	if (check_builtins(cmd) == 0)
 		free_and_set(cmd, &cmd->path);
 	if (cmd->name[0] == NULL)
 		check_close(&cmd->fd.tmp);
-	if (cmd_list != NULL)
-		cmd_list = cmd_list->next;
 }
 
 void	loop_exec(t_lst_cmd *cmd_list, t_cmd *cmd, t_struct_data *s)
@@ -81,6 +80,8 @@ void	loop_exec(t_lst_cmd *cmd_list, t_cmd *cmd, t_struct_data *s)
 		else if (setup == -1)
 			return ;
 		loop_end(cmd_list, cmd);
+		if (cmd_list != NULL)
+			cmd_list = cmd_list->next;
 	}
 }
 
