@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 14:53:52 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/23 19:30:00 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/23 22:51:36 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ void	fill_heredoc(char **read_line, char *limiter, t_cmd *cmd,
 		t_lst_cmd *cmd_list)
 {
 	cmd->files.line++;
-	
 	(void)cmd_list;
 	*read_line = readline("> ");
 	if (*read_line == NULL)
@@ -74,13 +73,14 @@ void	ft_singleton(int mode, t_cmd *cmd, t_lst_cmd *cmd_list,
 		free(static_cmd->fd_hd);
 		free(static_cmd->env);
 		free_parsing(static_s);
-		check_close(static_cmd, &static_cmd->fd.tmp);
-		check_close(static_cmd, &static_cmd->fd.write);
-		check_close(static_cmd, &static_cmd->fd.read);
+		check_close(&static_cmd->fd.tmp);
+		check_close(&static_cmd->fd.write);
+		check_close(&static_cmd->fd.read);
 	}
 }
 
-void	child_heredoc(t_struct_data *s, t_cmd *cmd, t_lst_cmd *cmd_list, char *limiter)
+void	child_heredoc(t_struct_data *s, t_cmd *cmd, t_lst_cmd *cmd_list,
+	char *limiter)
 {
 	char	*read_line;
 	int		i;
@@ -96,7 +96,7 @@ void	child_heredoc(t_struct_data *s, t_cmd *cmd, t_lst_cmd *cmd_list, char *limi
 	}
 	while (i < cmd->nbr)
 	{
-		check_close(cmd, &cmd->fd_hd[i]);
+		check_close(&cmd->fd_hd[i]);
 		i++;
 	}
 	free(read_line);
@@ -112,13 +112,13 @@ int	fork_heredoc(char *limiter, t_cmd *cmd, t_lst_cmd *cmd_list,
 	cmd->files.line = 0;
 	pid = fork();
 	if (pid < 0)
-		error_cmd(s, cmd_list, cmd, 1);
+		error_cmd(s, cmd, 1);
 	ft_singleton(0, cmd, cmd_list, s);
 	if (pid == 0)
 		child_heredoc(s, cmd, cmd_list, limiter);
 	else
 	{
-		check_close(cmd, &cmd->fd.tmp);
+		check_close(&cmd->fd.tmp);
 		waitpid(pid, &status, 0);
 		if (!WIFEXITED(status) || WEXITSTATUS(status) == 130)
 		{

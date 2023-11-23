@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 13:28:37 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/22 21:08:16 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/23 22:59:59 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	is_cmd_empty(t_cmd *cmd)
 {
 	if (cmd->name[0] == NULL)
 	{
-		cmd->pid[cmd->index_pid] = -1;
+		cmd->pid[cmd->index] = -1;
 		return (-1);
 	}
 	else if (cmd->name[0][0] == '\0')
@@ -38,7 +38,7 @@ int	is_cmd_empty(t_cmd *cmd)
 	return (1);
 }
 
-int	is_command_valid(t_lst_cmd *cmd_list, t_cmd *cmd)
+int	is_command_valid(t_struct_data *s, t_lst_cmd *cmd_list, t_cmd *cmd)
 {
 	int		path_line;
 	char	*path;
@@ -57,7 +57,7 @@ int	is_command_valid(t_lst_cmd *cmd_list, t_cmd *cmd)
 	path = &cmd->env[path_line][5];
 	if (path_line == 0)
 		path = NULL;
-	if (check_access(cmd_list, cmd, path) == 0)
+	if (check_access(s, cmd_list, cmd, path) == 0)
 		return (0);
 	return (1);
 }

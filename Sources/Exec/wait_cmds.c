@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/18 12:53:39 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/22 15:15:14 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/23 22:59:59 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ void	wait_cmd(t_cmd *cmd)
 	int		i;
 
 	i = 0;
-	cmd->index_pid--;
-	while (i <= cmd->index_pid)
+	cmd->index--;
+	while (i <= cmd->index)
 	{
 		if (cmd->pid[i] != -1)
 		{

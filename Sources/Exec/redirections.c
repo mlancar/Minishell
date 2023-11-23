@@ -6,11 +6,31 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 16:38:01 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/23 20:21:45 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/23 22:59:59 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
+
+int	loop_files(t_cmd *cmd, t_lst_file **file, t_lst_cmd *cmd_list)
+{
+	if ((*file)->infile)
+	{		
+		if (open_infile(cmd, (*file)->infile) == 0)
+			return (0);
+	}
+	else if ((*file)->outfile)
+	{
+		if (open_outfile(cmd_list, cmd, (*file)->outfile) == 0)
+			return (0);
+	}
+	else if ((*file)->limiter)
+	{
+		check_close(&cmd->fd.read);
+		cmd->heredoc = 1;
+	}
+	return (1);
+}
 
 int	redirection_one_cmd(t_lst_cmd *cmd_list, t_cmd *cmd)
 {
@@ -20,27 +40,14 @@ int	redirection_one_cmd(t_lst_cmd *cmd_list, t_cmd *cmd)
 	cmd->heredoc = 0;
 	while (file)
 	{
-		if (file->infile)
-		{
-			if (open_infile(cmd, file->infile) == 0)
-				return (0);
-		}
-		else if (file->outfile)
-		{
-			if (open_outfile(cmd_list, cmd, file->outfile) == 0)
-				return (0);
-		}
-		else if (file->limiter)
-		{
-			check_close(cmd, &cmd->fd.read);
-			cmd->heredoc = 1;
-		}
+		if (loop_files(cmd, &file, cmd_list) == 0)
+			return (0);
 		file = file->next;
 	}
 	if (cmd->heredoc == 1)
-		cmd->fd.read = cmd->fd_hd[cmd->index_pid];
+		cmd->fd.read = cmd->fd_hd[cmd->index];
 	else
-		check_close(cmd, &cmd->fd_hd[cmd->index_pid]);
+		check_close(&cmd->fd_hd[cmd->index]);
 	return (1);
 }
 
@@ -57,10 +64,11 @@ int	heredoc_redirections(t_lst_cmd *cmd_list, t_cmd *cmd, t_struct_data *s)
 		{
 			if (tmp_file->limiter)
 			{
-				check_close(cmd, &cmd->fd_hd[i]);
-				if (open_heredoc(cmd, cmd->fd_hd + i, s, tmp_file->limiter) == -1)
+				check_close(&cmd->fd_hd[i]);
+				if (open_heredoc(cmd, cmd->fd_hd + i, s, tmp_file->limiter)
+					== -1)
 				{
-					cmd->pid[cmd->index_pid] = -1;
+					cmd->pid[cmd->index] = -1;
 					return (0);
 				}
 			}

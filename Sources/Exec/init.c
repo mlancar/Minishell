@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 18:52:07 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/23 20:07:38 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/23 22:59:59 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,22 +20,20 @@ void	init_fd(t_cmd *cmd)
 		cmd->fd.write = 1;
 		cmd->fd.other_pipe = -1;
 	}
-	else if (cmd->index_pid == cmd->first)
+	else if (cmd->index == cmd->first)
 	{
 		cmd->fd.read = 0;
 		cmd->fd.write = cmd->fd.pipe[1];
 		cmd->fd.other_pipe = cmd->fd.pipe[0];
 	}
-	else if (cmd->index_pid == cmd->last)
+	else if (cmd->index == cmd->last)
 	{
-		//printf("fdhd[0] = %d, fdhd[1] = %d\n", cmd->fd_hd[0], cmd->fd_hd[1]);
-		//printf("pipe[0] = %d, pipe[1] = %d\n", cmd->fd.pipe[0], cmd->fd.pipe[1]);
 		cmd->fd.read = cmd->fd.pipe[0];
 		cmd->fd.write = 1;
 		cmd->fd.other_pipe = cmd->fd.pipe[1];
 	}
-	else if ((cmd->index_pid != cmd->first)
-		&& (cmd->index_pid != cmd->last))
+	else if ((cmd->index != cmd->first)
+		&& (cmd->index != cmd->last))
 	{
 		cmd->fd.read = cmd->fd.previous;
 		cmd->fd.write = cmd->fd.pipe[1];
@@ -48,7 +46,7 @@ void	init_struct(t_cmd *cmd, t_lst_cmd *cmd_list)
 	cmd->nbr = list_size(cmd_list);
 	cmd->fd_hd = ft_calloc(cmd->nbr, sizeof(int));
 	cmd->index = 0;
-	cmd->index_pid = 0;
+	cmd->index = 0;
 	cmd->first = 0;
 	cmd->path = NULL;
 	cmd->last = cmd->nbr - 1;

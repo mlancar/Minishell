@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/29 12:13:28 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/23 19:30:39 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/23 22:59:59 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	open_infile(t_cmd *cmd, char *infile)
 {
 	cmd->heredoc = 0;
-	check_close(cmd, &cmd->fd.read);
+	check_close(&cmd->fd.read);
 	cmd->fd.read = open(infile, O_RDONLY);
 	if (cmd->fd.read == -1)
 	{
@@ -30,7 +30,7 @@ int	open_outfile(t_lst_cmd *cmd_list, t_cmd *cmd, char *outfile)
 {
 	if (cmd_list->file->outfile_type == 0)
 	{
-		check_close(cmd, &cmd->fd.write);
+		check_close(&cmd->fd.write);
 		cmd->fd.write = open(outfile, O_RDWR | O_TRUNC
 				| O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 		if (cmd->fd.write == -1)
@@ -41,7 +41,7 @@ int	open_outfile(t_lst_cmd *cmd_list, t_cmd *cmd, char *outfile)
 	}
 	else
 	{
-		check_close(cmd, &cmd->fd.write);
+		check_close(&cmd->fd.write);
 		cmd->fd.write = open(outfile, O_RDWR | O_APPEND
 				| O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 		if (cmd->fd.write == -1)
@@ -57,7 +57,7 @@ int	open_heredoc(t_cmd *cmd, int *fd, t_struct_data *s, char *limiter)
 {
 	cmd->heredoc = 1;
 	get_rand_name(s, cmd);
-	cmd->pid[cmd->index_pid] = -1;
+	cmd->pid[cmd->index] = -1;
 	if (fork_heredoc(limiter, cmd, s->cmd, s) == -1)
 		return (-1);
 	*fd = open(cmd->files.rand_name, O_RDONLY);
@@ -87,7 +87,7 @@ void	get_rand_name(t_struct_data *s, t_cmd *cmd)
 		cmd->files.rand_name[i] = cmd->files.rand_name[i] + 97;
 		i++;
 	}
-	check_close(cmd, &cmd->fd.tmp);
+	check_close(&cmd->fd.tmp);
 	cmd->fd.tmp = open(cmd->files.rand_name, O_WRONLY | O_TRUNC
 			| O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP);
 	if (cmd->fd.tmp == -1)

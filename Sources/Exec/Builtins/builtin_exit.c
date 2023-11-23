@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 13:50:22 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/22 19:05:21 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/23 22:32:44 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,14 +111,14 @@ void	builtin_exit(t_cmd *cmd, t_struct_data *s)
 	free_parsing(s);
 	if (cmd->nbr != 1)
 	{
-		check_close(cmd, &cmd->fd.pipe[0]);
-		check_close(cmd, &cmd->fd.pipe[1]);
+		check_close(&cmd->fd.pipe[0]);
+		check_close(&cmd->fd.pipe[1]);
 	}
-	check_close(cmd, &cmd->fd.write);
+	check_close(&cmd->fd.write);
 	if (cmd->heredoc == 0)
-		check_close(cmd, &cmd->fd.read);
+		check_close(&cmd->fd.read);
 	else
-		check_close(cmd, &cmd->fd.tmp);
+		check_close(&cmd->fd.tmp);
 	if (cmd->nbr == 1)
 		ft_putstr_fd("exit\n", 1);
 	exit(g_exit);

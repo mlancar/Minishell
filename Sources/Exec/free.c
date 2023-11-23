@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 13:01:25 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/23 20:39:04 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/23 23:00:37 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ void	free_and_set(t_cmd *cmd, char **array)
 			*array = NULL;
 		}
 	}
-	
 }
 
 void	free_tab(char **tab)
@@ -66,7 +65,7 @@ void	free_and_close_hd(t_struct_data *s, t_cmd *cmd)
 	free(cmd->path);
 	free(cmd->name);
 	free_parsing(s);
-	check_close(cmd, &cmd->fd.write);
-	check_close(cmd, &cmd->fd.tmp);
+	check_close(&cmd->fd.write);
+	check_close(&cmd->fd.tmp);
 	exit(EXIT_SUCCESS);
 }

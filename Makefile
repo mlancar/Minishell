@@ -6,7 +6,7 @@
 #    By: malancar <malancar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/03 19:06:48 by malancar          #+#    #+#              #
-#    Updated: 2023/11/22 22:08:37 by malancar         ###   ########.fr        #
+#    Updated: 2023/11/23 23:06:53 by malancar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -67,7 +67,7 @@ SOURCES_EXEC =		Builtins/builtin_echo.c				\
 					check.c								\
                     check_access.c						\
                     close.c								\
-                    cmds.c					        	\
+                    wait_cmds.c					       	\
                     convert.c							\
                     here_doc.c							\
                     init.c								\
@@ -75,7 +75,8 @@ SOURCES_EXEC =		Builtins/builtin_echo.c				\
 					exec_setup.c						\
                     utils_exec.c						\
                     utils_exec_2.c						\
-                    error_and_free.c					\
+                    error_and_print.c   				\
+                    error_and_close.c                   \
 					free.c								\
                     ft_split.c							\
                     Get_next_line/get_next_line.c		\
