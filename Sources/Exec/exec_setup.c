@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 14:53:05 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/22 23:09:54 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/23 20:21:36 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,20 @@ int	setup_exec(t_struct_data *s, t_lst_cmd *cmd_list, t_cmd *cmd)
 
 void	pipe_cmd(t_struct_data *s, t_cmd *cmd, t_lst_cmd *cmd_list)
 {
+	//printf("cmd exist = %d\n", cmd->exist);
 	if (cmd->nbr != 1)
 		cmd->fd.previous = cmd->fd.pipe[0];
+	// if (cmd->nbr != 1 && cmd->exist == 1)
+	// 	cmd->fd.previous = cmd->fd.pipe[0];
+	// else if (cmd->nbr != 1 && cmd->exist == 0)
+	// 	check_close(cmd, &cmd->fd.other_pipe);
 	if ((cmd->index_pid != cmd->first)
 		&& (cmd->index_pid != cmd->last))
 	{
 		if (pipe(cmd->fd.pipe) == -1)
 			error_cmd(s, cmd_list, cmd, 1);
 	}
+	//printf("pipe[0] = %d, pipe[1] = %d\n", cmd->fd.pipe[0], cmd->fd.pipe[1]);
 }
 
 void	loop_exec(t_lst_cmd *cmd_list, t_cmd *cmd, t_struct_data *s)
@@ -56,11 +62,14 @@ void	loop_exec(t_lst_cmd *cmd_list, t_cmd *cmd, t_struct_data *s)
 
 	ignore_signal();
 	if (heredoc_redirections(cmd_list, cmd, s) == 0)
-		return ;	
+		return ;
 	if (cmd->nbr != 1 && pipe(cmd->fd.pipe) == -1)
 		error_cmd(s, cmd_list, cmd, 1);
+	//printf("pipe[0] = %d, pipe[1] = %d\n", cmd->fd.pipe[0], cmd->fd.pipe[1]);
+	
 	while (cmd->index_pid < cmd->nbr)
 	{
+		cmd->exist = 0;
 		convert_list(cmd, cmd_list);
 		pipe_cmd(s, cmd, cmd_list);
 		setup = setup_exec(s, cmd_list, cmd);
@@ -75,9 +84,13 @@ void	loop_exec(t_lst_cmd *cmd_list, t_cmd *cmd, t_struct_data *s)
 		if (check_builtins(cmd) == 0)
 			free_and_set(cmd, &cmd->path);
 		if (cmd->name[0] == NULL)
+		{
+			//printf("fd tmp = %d\n", cmd->fd.tmp);
 			check_close(cmd, &cmd->fd.tmp);
+		}
 		if (cmd_list != NULL)
 			cmd_list = cmd_list->next;
+		
 	}
 }
 

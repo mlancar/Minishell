@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 19:05:44 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/22 21:02:12 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/23 17:56:44 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	convert_list(t_cmd *cmd, t_lst_cmd *cmd_list)
 	{
 		if (list_tmp->name != NULL)
 		{
+			cmd->exist = 1;
 			cmd->name[i] = list_tmp->name;
 			i++;
 		}

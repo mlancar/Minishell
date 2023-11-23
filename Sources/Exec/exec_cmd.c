@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 13:27:01 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/22 23:01:14 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/23 20:21:30 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ void	exec_cmd(t_lst_cmd *cmd_list, t_cmd *cmd, t_struct_data *s)
 				error_cmd(s, cmd_list, cmd, 126);
 			close_fd_child(cmd);
 			check_close(cmd, &cmd->fd.tmp);
-			//check_close(cmd, &cmd->fd.tmp);
 		}
 		exec_child(cmd, s, cmd_list);
 	}

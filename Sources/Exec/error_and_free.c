@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 21:28:45 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/22 22:32:17 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/23 20:29:26 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@ void	error_access_cmd(t_struct_data *s, t_lst_cmd *cmd_list, t_cmd *cmd)
 
 void	error_open_file(t_cmd *cmd, char *infile, char *outfile)
 {
+	int	i;
+
+	i = 0;
 	ft_putstr_fd("minishell: ", 2);
 	if (infile)
 		ft_putstr_fd(infile, 2);
@@ -44,6 +47,11 @@ void	error_open_file(t_cmd *cmd, char *infile, char *outfile)
 		check_close(cmd, &cmd->fd.tmp);
 	if ((cmd->index_pid != cmd->first) && (cmd->index_pid != cmd->last))
 		check_close(cmd, &cmd->fd.other_pipe);
+	while (i < cmd->nbr)
+	{
+		check_close(cmd, &cmd->fd_hd[i]);
+		i++;
+	}
 }
 
 void	print_error(t_lst_cmd *cmd_list, t_cmd *cmd)
@@ -89,6 +97,9 @@ void	error_dir(t_cmd *cmd, int exit_code)
 void	error_cmd(t_struct_data *s, t_lst_cmd *cmd_list, t_cmd *cmd,
 	int exit_code)
 {
+	int	i;
+
+	i = 0;
 	if (cmd->name[0])
 		print_error(cmd_list, cmd);
 	if (cmd->nbr > 0)
@@ -103,5 +114,10 @@ void	error_cmd(t_struct_data *s, t_lst_cmd *cmd_list, t_cmd *cmd,
 		check_close(cmd, &cmd->fd.tmp);
 	if ((cmd->index_pid != cmd->first) && (cmd->index_pid != cmd->last))
 		check_close(cmd, &cmd->fd.other_pipe);
+	while (i < cmd->nbr)
+	{
+		check_close(cmd, &cmd->fd_hd[i]);
+		i++;
+	}
 	free_and_exit(s, cmd, exit_code);
 }

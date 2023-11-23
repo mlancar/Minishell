@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 16:38:01 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/22 21:36:03 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/23 20:21:45 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	redirection_one_cmd(t_lst_cmd *cmd_list, t_cmd *cmd)
 			if (open_outfile(cmd_list, cmd, file->outfile) == 0)
 				return (0);
 		}
-		else
+		else if (file->limiter)
 		{
 			check_close(cmd, &cmd->fd.read);
 			cmd->heredoc = 1;
@@ -38,9 +38,9 @@ int	redirection_one_cmd(t_lst_cmd *cmd_list, t_cmd *cmd)
 		file = file->next;
 	}
 	if (cmd->heredoc == 1)
-		cmd->fd.read = cmd->fd_hd[cmd->index];
+		cmd->fd.read = cmd->fd_hd[cmd->index_pid];
 	else
-		check_close(cmd, &cmd->fd_hd[cmd->index]);
+		check_close(cmd, &cmd->fd_hd[cmd->index_pid]);
 	return (1);
 }
 

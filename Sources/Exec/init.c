@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 18:52:07 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/22 21:07:07 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/23 20:07:38 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ void	init_fd(t_cmd *cmd)
 	}
 	else if (cmd->index_pid == cmd->last)
 	{
+		//printf("fdhd[0] = %d, fdhd[1] = %d\n", cmd->fd_hd[0], cmd->fd_hd[1]);
+		//printf("pipe[0] = %d, pipe[1] = %d\n", cmd->fd.pipe[0], cmd->fd.pipe[1]);
 		cmd->fd.read = cmd->fd.pipe[0];
 		cmd->fd.write = 1;
 		cmd->fd.other_pipe = cmd->fd.pipe[1];
@@ -54,6 +56,7 @@ void	init_struct(t_cmd *cmd, t_lst_cmd *cmd_list)
 	cmd->fd.tmp = -1;
 	cmd->fd.read = -1;
 	cmd->fd.write = -1;
+	cmd->fd.other_pipe = -1;
 	cmd->fd.pipe[0] = -1;
 	cmd->fd.pipe[1] = -1;
 	cmd->name = NULL;

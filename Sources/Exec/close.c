@@ -6,7 +6,7 @@
 /*   By: malancar <malancar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 16:23:15 by malancar          #+#    #+#             */
-/*   Updated: 2023/11/22 15:40:53 by malancar         ###   ########.fr       */
+/*   Updated: 2023/11/23 20:13:45 by malancar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,16 @@
 
 void	check_close(t_cmd *cmd, int *fd)
 {
+	
 	(void)cmd;
+	//printf("avant fd = %d\n", *fd);
 	if (*fd > 2)
+	{
 		close(*fd);
-	*fd = -1;
+		*fd = -1;
+	}
+	//printf("apres fd = %d\n", *fd);
+
 }
 
 void	close_fd_hd(t_cmd *cmd)
@@ -41,6 +47,7 @@ void	close_fd_child(t_cmd *cmd)
 
 void	close_fd_parent(t_cmd *cmd)
 {
+	//printf("cmd = %d\n", cmd->index_pid);
 	check_close(cmd, &cmd->fd.read);
 	check_close(cmd, &cmd->fd.write);
 }

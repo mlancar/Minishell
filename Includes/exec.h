@@ -53,7 +53,7 @@ typedef struct s_cmd {
 	int		hd_index;
 	pid_t	*pid;
 	int		index_pid;
-
+	int		exist;
 	int		index;
 	int		nbr;
 	int		first;
